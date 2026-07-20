@@ -1,0 +1,47 @@
+# Sémantická vrstva nad tabulkou `orders` (data/olist.duckdb).
+# Granularita tabulky: 1 řádek = 1 položka objednávky (order_item).
+# Zdroj: Olist Brazilian E-Commerce (flat/joined verze), 2016-10 až 2018-08.
+
+table: orders
+
+metrics:
+  revenue:
+    label: "Celkové tržby"
+    sql: "SUM(payment_value)"
+
+  orders:
+    label: "Počet objednávek"
+    sql: "COUNT(DISTINCT order_id)"
+
+  avg_order_value:
+    label: "Průměrná hodnota objednávky"
+    sql: "SUM(payment_value) / COUNT(DISTINCT order_id)"
+
+  cancellation_rate:
+    label: "Míra zrušených objednávek"
+    sql: "COUNT(DISTINCT order_id) FILTER (WHERE order_status = 'canceled')::FLOAT / COUNT(DISTINCT order_id)"
+
+  delivery_time:
+    label: "Průměrná doba doručení (dny)"
+    sql: "AVG(DATE_DIFF('day', order_purchase_timestamp, order_delivered_customer_date))"
+
+dimensions:
+  time:
+    label: "Čas"
+    column: "order_purchase_timestamp"
+    granularities: [day, week, month, quarter, year]
+
+  category:
+    label: "Kategorie produktu"
+    column: "product_category_name"
+    note: "hodnoty jsou v portugalštině (73 distinct), např. 'cama_mesa_banho', 'beleza_saude'"
+
+  state:
+    label: "Stát zákazníka"
+    column: "customer_state"
+    note: "27 brazilských států, dvoupísmenný kód (RJ, SP, ...)"
+
+  seller:
+    label: "Seller"
+    column: "seller_id"
+    note: "2914 distinct sellerů - vysoká kardinalita, vhodné pro drill-down, ne pro výchozí group-by"
