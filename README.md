@@ -28,7 +28,7 @@ Chainlit (chat UI + Plotly grafy jako message elementy)
     ↕ HTTP
 FastAPI (LangGraph agent)
     ↕
-DuckDB (Olist Parquet) + YAML sémantické schema + GPT-4o
+DuckDB (Olist Parquet) + YAML sémantické schema + Claude (Sonnet)
 ```
 
 Tři soubory konfigurace, žádný Docker nutný pro vývoj, spustíš lokálně za hodinu.
@@ -63,7 +63,7 @@ dimensions:
 
 Jeden stavový graf se třemi uzly: `parse_intent` (LLM rozhodne jaká OLAP operace), `execute_query` (DuckDB přes schema), `generate_response` (LLM vysvětlení + chart spec). State drží aktuální filtry a dimenzi.
 
-Tohle rozšířím o další uzly prompt, improve_prompt, clarify_intent, execute_query, generate_response možná další.
+Tohle rozšířím o další uzly prompt, rag, improve_prompt, clarify_intent, execute_query, generate_response možná další.
 
 **Týden 3 — Chainlit UI**
 
