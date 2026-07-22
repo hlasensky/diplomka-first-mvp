@@ -1,6 +1,42 @@
 import chainlit as cl
 import plotly.graph_objects as go
+import plotly.io as pio
 from graph import graph
+
+
+def get_chainlit_theme(is_dark=True):
+    """Returns a Plotly layout template matched to Chainlit's UI."""
+    if is_dark:
+        text_color = "#F8FAFC"  # Tailwind Slate 50
+        grid_color = "#1E293B"  # Tailwind Slate 800
+        zero_line = "#334155"   # Tailwind Slate 700
+    else:
+        text_color = "#0F172A"  # Tailwind Slate 900
+        grid_color = "#E2E8F0"  # Tailwind Slate 200
+        zero_line = "#CBD5E1"   # Tailwind Slate 300
+
+    return go.layout.Template(
+        layout=go.Layout(
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(color=text_color, family="Inter, system-ui, sans-serif"),
+            colorway=["#F97316", "#3B82F6", "#10B981", "#8B5CF6", "#EC4899"],
+            xaxis=dict(gridcolor=grid_color, zerolinecolor=zero_line, tickcolor=grid_color),
+            yaxis=dict(gridcolor=grid_color, zerolinecolor=zero_line, tickcolor=grid_color),
+            hoverlabel=dict(bgcolor=grid_color, font=dict(color=text_color)),
+            margin=dict(l=40, r=40, t=40, b=40),
+            modebar=dict(
+                bgcolor="rgba(0,0,0,0)",
+                color=text_color,
+                activecolor=zero_line,
+                remove=["select2d", "lasso2d", "autoScale2d", "hoverCompareCartesian", "toggleSpikelines"],
+            ),
+        )
+    )
+
+
+pio.templates["chainlit_dark"] = get_chainlit_theme(is_dark=True)
+pio.templates["chainlit_light"] = get_chainlit_theme(is_dark=False)
 
 
 def build_figure(cs, rows: list[tuple]) -> go.Figure:
@@ -10,7 +46,7 @@ def build_figure(cs, rows: list[tuple]) -> go.Figure:
     if cs.chart_type == "pie":
         y = [r[1] for r in rows]
         fig.add_trace(go.Pie(labels=x, values=y))
-        fig.update_layout(title=cs.title)
+        fig.update_layout(title=cs.title, template="chainlit_dark")
         return fig
 
     # metriky s různou jednotkou (např. R$ vs. počet kusů) jdou na samostatné osy Y,
@@ -27,7 +63,7 @@ def build_figure(cs, rows: list[tuple]) -> go.Figure:
         else:
             fig.add_trace(go.Bar(x=x, y=y, **trace_kwargs))
 
-    layout = {"title": cs.title}
+    layout = {"title": cs.title, "template": "chainlit_dark"}
     if cs.chart_type == "bar":
         layout["barmode"] = "group"
     if use_secondary_axis:
@@ -47,7 +83,27 @@ STEP_LABELS = {
     "execute_query": "Spuštění SQL nad DuckDB",
     "generate_response": "Generování odpovědi",
 }
-
+    
+@cl.set_starters
+async def set_starters():
+    return [
+        cl.Starter(
+            label="Tržby podle kategorie",
+            message="Jaké jsou celkové tržby podle kategorie?",
+        ),
+        cl.Starter(
+            label="Fuzzy vyhledávání kategorie",
+            message="Kolik jsme vydělali na kráse a zdraví podle měsíců?",
+        ),
+        cl.Starter(
+            label="Víc metrik najednou",
+            message="Ukaž mi tržby i počet objednávek podle kategorie",
+        ),
+        cl.Starter(
+            label="Obecná fact+agg metrika",
+            message="Jaká je průměrná cena dopravy podle státu?",
+        ),
+    ]
 
 @cl.on_message
 async def on_message(message: cl.Message):

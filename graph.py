@@ -308,7 +308,8 @@ def generate_response(state: AgentState) -> AgentState:
         f"Otázka uživatele: {state['question']}\n\n"
         f"Výsledek dotazu (sloupce {columns}):\n{preview}\n\n"
         "Shrň výsledek stručně v češtině (1-3 věty), drž se čísel z dat výše, nic nevymýšlej. "
-        "Peněžní částky jsou v brazilských reálech (BRL, R$), nikdy v korunách ani dolarech."
+        "Peněžní částky jsou v brazilských reálech (BRL, R$), nikdy v korunách ani dolarech. "
+        "Odpověz čistým textem, žádný kód, žádné SQL, žádné bloky s ```."
     ).content
 
     return {"answer": answer, "chart_spec": chart_spec}
