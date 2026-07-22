@@ -8,7 +8,10 @@ system_prompt: |
   Jsi analytický asistent nad daty brazilského e-shopu Olist (2016-10 až 2018-08).
   Tvůj úkol: z otázky uživatele v češtině vybrat metriku, volitelně dimenzi a volitelné filtry.
 
-  Dostupné metriky (pole `metric`):
+  Pole `metrics` je SEZNAM - obvykle jedna metrika, ale pokud se uživatel ptá na víc věcí najednou
+  (např. "ukaž mi tržby i počet objednávek podle kategorie"), dej do seznamu víc metrik zároveň.
+
+  Dostupné metriky (pole `metrics`, seznam):
   - revenue: celkové tržby (SUM payment_value)
   - orders: počet objednávek
   - avg_order_value: průměrná hodnota objednávky
@@ -26,7 +29,15 @@ system_prompt: |
   - state_filter: konkrétní dvoupísmenný kód státu
   - date_from / date_to: ve formátu YYYY-MM-DD, podle zmíněného období (např. "Q3 2018" -> 2018-07-01 / 2018-09-30)
 
-  Pokud otázka vůbec nedává smysl vzhledem k dostupným datům nebo je příliš nejasná na to, aby šla metrika určit, nech pole `metric` prázdné (None).
+  Pokud se otázka neshoduje s žádnou z výše uvedených pojmenovaných metrik, ale ptá se na agregaci (součet/průměr/min/max) nad jedním z těchto polí, použij místo `metric` dvojici `fact`+`agg`:
+  - fact: payment_value (agg: sum, avg), freight_value (agg: sum, avg), price (agg: sum, avg, min, max)
+  - agg: sum, avg, min nebo max - musí odpovídat povoleným agregacím pro daný fact
+
+  Pokud otázka vůbec nedává smysl vzhledem k dostupným datům, nebo je příliš nejasná na to, aby šla určit metrika ani fact+agg, nech obojí prázdné (None).
+
+  Pokud uživatel výslovně řekne, jaký typ grafu chce (koláčový/pie, sloupcový/bar, čárový/line),
+  vyplň pole `chart_type_request` odpovídající hodnotou. Jinak ho nech prázdné (None) - typ grafu
+  se pak zvolí automaticky podle dat.
 
   Všechny peněžní částky (payment_value, revenue, avg_order_value) jsou v brazilských reálech (BRL, značka R$), nikdy v korunách ani dolarech.
 
@@ -35,23 +46,36 @@ metrics:
     label: "Celkové tržby"
     sql: "SUM(payment_value)"
     note: "hodnota v BRL (brazilský reál, R$)"
+    additive: true
+    unit: currency
 
   orders:
     label: "Počet objednávek"
     sql: "COUNT(DISTINCT order_id)"
+    additive: true
+    unit: count
 
   avg_order_value:
     label: "Průměrná hodnota objednávky"
     sql: "SUM(payment_value) / COUNT(DISTINCT order_id)"
     note: "hodnota v BRL (brazilský reál, R$)"
+    unit: currency
 
   cancellation_rate:
     label: "Míra zrušených objednávek"
     sql: "COUNT(DISTINCT order_id) FILTER (WHERE order_status = 'canceled')::FLOAT / COUNT(DISTINCT order_id)"
+    unit: ratio
 
   delivery_time:
     label: "Průměrná doba doručení (dny)"
     sql: "AVG(DATE_DIFF('day', order_purchase_timestamp, order_delivered_customer_date))"
+    unit: days
+
+facts:
+  payment_value: {agg: [sum, avg], unit: currency}
+  freight_value: {agg: [sum, avg], unit: currency}
+  price: {agg: [sum, avg, min, max], unit: currency}
+
 
 dimensions:
   time:

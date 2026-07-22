@@ -16,7 +16,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 load_dotenv()
 
@@ -42,20 +42,91 @@ vectorstore = InMemoryVectorStore.from_texts(
 )
 
 
-# hodnoty musí odpovídat klíčům v schema/semantic_schema.yaml
+# metrics/dimension/granularity/fact/agg se validují dynamicky proti schema/semantic_schema.yaml,
+# takže přidání nové metriky/dimenze/faktu vyžaduje úpravu jen YAML, ne téhle třídy.
 class Filters(BaseModel):
-    metric: Literal["revenue", "orders", "avg_order_value", "cancellation_rate", "delivery_time"] | None = None
-    dimension: Literal["category", "state", "seller", "time"] | None = None
+    metrics: list[str] = Field(default_factory=list)
+    # obecná (ne pojmenovaná) metrika: agregační funkce nad libovolným faktem ze SCHEMA["facts"]
+    fact: str | None = None
+    agg: str | None = None
+    dimension: str | None = None
+    granularity: str | None = None
     category_filter: str | None = None
     state_filter: str | None = None
     date_from: str | None = None
     date_to: str | None = None
+    # explicitní přání uživatele na typ grafu (jen když ho v otázce zmíní), jinak se dopočítá automaticky
+    chart_type_request: Literal["bar", "line", "pie"] | None = None
+
+    @field_validator("metrics")
+    @classmethod
+    def validate_metrics(cls, v: list[str]) -> list[str]:
+        return [m for m in v if m in SCHEMA["metrics"]]
+
+    @field_validator("fact")
+    @classmethod
+    def validate_fact(cls, v: str | None) -> str | None:
+        return v if v in SCHEMA.get("facts", {}) else None
+
+    @field_validator("agg")
+    @classmethod
+    def validate_agg(cls, v: str | None) -> str | None:
+        return v if v in {"sum", "avg", "min", "max"} else None
+
+    @model_validator(mode="after")
+    def validate_fact_agg_pair(self) -> "Filters":
+        if self.fact is not None and self.agg is not None:
+            allowed = SCHEMA.get("facts", {}).get(self.fact, {}).get("agg", [])
+            if self.agg not in allowed:
+                self.fact = None
+                self.agg = None
+        return self
+
+    @field_validator("dimension")
+    @classmethod
+    def validate_dimension(cls, v: str | None) -> str | None:
+        return v if v in SCHEMA["dimensions"] else None
+
+    @field_validator("granularity")
+    @classmethod
+    def validate_granularity(cls, v: str | None) -> str | None:
+        valid = SCHEMA["dimensions"].get("time", {}).get("granularities", [])
+        return v if v in valid else None
+
+    def has_metric(self) -> bool:
+        return bool(self.metrics) or (self.fact is not None and self.agg is not None)
+
+    def resolve_metrics(self) -> list[dict]:
+        """Vrátí seznam {sql, alias, label, additive, unit} pro všechny zvolené metriky (pojmenované i fact+agg)."""
+        resolved = [
+            {
+                "sql": SCHEMA["metrics"][m]["sql"],
+                "alias": m,
+                "label": SCHEMA["metrics"][m]["label"],
+                "additive": SCHEMA["metrics"][m].get("additive", False),
+                "unit": SCHEMA["metrics"][m].get("unit", "value"),
+            }
+            for m in self.metrics
+        ]
+        if self.fact is not None and self.agg is not None:
+            alias = f"{self.agg}_{self.fact}"
+            resolved.append({
+                "sql": f"{self.agg.upper()}({self.fact})",
+                "alias": alias,
+                "label": f"{self.agg.upper()} {self.fact}",
+                "additive": self.agg == "sum",
+                "unit": SCHEMA.get("facts", {}).get(self.fact, {}).get("unit", "value"),
+            })
+        if not resolved:
+            raise ValueError("Filters nemá žádnou metriku ani validní `fact`+`agg` pár")
+        return resolved
 
 
 class ChartSpec(BaseModel):
-    chart_type: Literal["bar", "line"]
+    chart_type: Literal["bar", "line", "pie"]
     x: str
-    y: str
+    y: list[str]
+    y_units: list[str]
     title: str
 
 
@@ -95,12 +166,12 @@ def clarify_intent(state: AgentState) -> AgentState:
         SystemMessage(content=SCHEMA["system_prompt"]),
         HumanMessage(content=state["question"]),
     ])
-    is_unclear = intent.metric is None
+    is_unclear = not intent.has_metric()
 
     return {
         "intent": intent,
         "needs_clarification": is_unclear,
-        "clarification_question": "Mohl byste upřesnit co máte na mysli?" if intent.metric is None else None,
+        "clarification_question": "Mohl byste upřesnit co máte na mysli?" if is_unclear else None,
         "attempts": state.get("attempts", 0) if is_unclear else 0
     }
 
@@ -215,13 +286,22 @@ def generate_response(state: AgentState) -> AgentState:
     intent = state["intent"]
 
     chart_spec = None
-    if intent.dimension is not None and len(columns) == 2:
-        chart_spec = ChartSpec(
-            chart_type="line" if intent.dimension == "time" else "bar",
-            x=columns[0],
-            y=columns[1],
-            title=SCHEMA["metrics"][intent.metric]["label"],
-        )
+    if intent.dimension is not None and len(columns) >= 2:
+        metrics = intent.resolve_metrics()
+        y_cols = columns[1:]
+
+        if intent.chart_type_request is not None:
+            chart_type = intent.chart_type_request
+        elif intent.dimension == "time":
+            chart_type = "line"
+        elif len(metrics) == 1 and metrics[0]["additive"] and len(rows) <= 8:
+            chart_type = "pie"
+        else:
+            chart_type = "bar"
+
+        title = metrics[0]["label"] if len(metrics) == 1 else ", ".join(m["label"] for m in metrics)
+        y_units = [m["unit"] for m in metrics]
+        chart_spec = ChartSpec(chart_type=chart_type, x=columns[0], y=y_cols, y_units=y_units, title=title)
 
     preview = "\n".join(str(dict(zip(columns, row))) for row in rows[:20])
     answer = llm.invoke(
@@ -236,7 +316,7 @@ def generate_response(state: AgentState) -> AgentState:
 
 # Conditional routing
 def route_intent(state: AgentState) -> str:
-    if state["intent"].metric is None:
+    if not state["intent"].has_metric():
         return "unclear"
     return "complex" if state["intent"].category_filter is not None else "basic"
 
@@ -247,17 +327,18 @@ def route_clarification(state: AgentState) -> str:
 
 # Helper functions
 def build_sql(intent: Filters) -> tuple[str, list]:
-    metric_sql = SCHEMA["metrics"][intent.metric]["sql"]
-    select = [f"{metric_sql} AS {intent.metric}"]
+    metrics = intent.resolve_metrics()
+    select = [f"{m['sql']} AS {m['alias']}" for m in metrics]
     group_by = ""
-    order_by = f"ORDER BY {intent.metric} DESC"
+    order_by = f"ORDER BY {metrics[0]['alias']} DESC"
     limit = 20
 
     if intent.dimension is not None:
         dim_col = SCHEMA["dimensions"][intent.dimension]["column"]
         if intent.dimension == "time":
-            # časová dimenze se agreguje po týdnech a řadí chronologicky, ne podle hodnoty metriky
-            dim_expr = f"DATE_TRUNC('week', {dim_col})"
+            # časová dimenze se agreguje po týdnech (výchozí) a řadí chronologicky, ne podle hodnoty metriky
+            granularity = intent.granularity or "week"
+            dim_expr = f"DATE_TRUNC('{granularity}', {dim_col})"
             select.insert(0, f"{dim_expr} AS {dim_col}")
             group_by = f"GROUP BY {dim_expr}"
             order_by = f"ORDER BY {dim_expr}"
