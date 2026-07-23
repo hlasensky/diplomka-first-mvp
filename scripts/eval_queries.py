@@ -49,6 +49,42 @@ def check(intent, expected: dict) -> list[str]:
     return mismatches
 
 
+MULTI_TURN_CASES = [
+    {
+        "questions": [
+            "Jaké jsou tržby a počet objednávek podle kategorie?",
+            "ukaž mi průběh objednávek v čase pro kategorii cama_mesa_banho",
+        ],
+        "expected_last": {"dimension": "time", "category_filter": "cama_mesa_banho"},
+    },
+]
+
+
+def run_multi_turn():
+    passed = 0
+    for i, case in enumerate(MULTI_TURN_CASES, 1):
+        thread = {"configurable": {"thread_id": f"eval-multiturn-{i}"}}
+        results = [graph.invoke({"question": q}, config=thread) for q in case["questions"]]
+        result = results[-1]
+
+        intent = result.get("intent")
+        mismatches = check(intent, case["expected_last"])
+        if result.get("validation_error"):
+            mismatches.append(f"SQL chyba: {result['validation_error']}")
+        if result.get("rows") == results[0].get("rows"):
+            mismatches.append("rows stejné jako v prvním tahu - druhý dotaz asi neproběhl s novým intentem")
+
+        ok = not mismatches
+        passed += ok
+        status = "OK " if ok else "FAIL"
+        print(f"[{status}] multi-turn {i}. {' -> '.join(case['questions'])}")
+        for m in mismatches:
+            print(f"        - {m}")
+
+    print(f"Multi-turn přesnost: {passed}/{len(MULTI_TURN_CASES)}")
+    return passed == len(MULTI_TURN_CASES)
+
+
 def main():
     passed = 0
     for i, case in enumerate(TEST_CASES, 1):
@@ -74,6 +110,9 @@ def main():
             print(f"        - SQL chyba: {result['validation_error']}")
 
     print(f"\nPřesnost: {passed}/{len(TEST_CASES)} ({100 * passed / len(TEST_CASES):.0f}%)")
+
+    print()
+    run_multi_turn()
 
 
 if __name__ == "__main__":

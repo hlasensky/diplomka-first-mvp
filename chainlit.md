@@ -14,3 +14,5 @@ We can't wait to see what you create with Chainlit! Happy coding! 💻😊
 To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.
 
 chainlit run app.py -w
+
+uv run chainlit run app.py -w

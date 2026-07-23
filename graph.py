@@ -5,7 +5,7 @@ import duckdb
 import yaml
 from dotenv import load_dotenv
 from langchain_anthropic import ChatAnthropic
-from langchain_core.messages import BaseMessage, HumanMessage
+from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langgraph.graph import START, END, StateGraph
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
@@ -199,14 +199,17 @@ def unclear_query(state: AgentState) -> AgentState:
     """Intent se nepodařilo rozpoznat ani po clarify_intent - ukončí tah a vrátí `clarification_question` uživateli."""
     
     if state["attempts"] >= 3:
+        message = "Omlouvám se, stále nerozumím vaší otázce."
         return {
             "needs_clarification": False,
-            "clarification_question": "Omlouvám se, stále nerozumím vaší otázce."
+            "clarification_question": message,
+            "messages": [AIMessage(content=message)]
         }
     return {
         "attempts": state["attempts"] + 1,
         "needs_clarification": True,
-        "clarification_question": state["clarification_question"]
+        "clarification_question": state["clarification_question"],
+        "messages": [AIMessage(content=state["clarification_question"])]
     }
 
 def embedding_lookup(state: AgentState) -> AgentState:
@@ -275,6 +278,18 @@ def execute_query(state: AgentState) -> AgentState:
         "active_filters": state["intent"]
     }
 
+def _intent_summary(intent: Filters) -> str:
+    """Deterministický rekap resolved Filters pro AIMessage - vstup pro clarify_intent v dalším tahu."""
+    metrics = ", ".join(intent.metrics) if intent.metrics else "-"
+    fact_agg = f"{intent.agg} {intent.fact}" if intent.fact and intent.agg else "-"
+    return (
+        "[KONTEXT PŘEDCHOZÍHO TAHU - jen pro dořešení odkazů, NEKOPÍRUJ automaticky do nové otázky]\n"
+        f"metriky: {metrics} | fact/agg: {fact_agg} | dimenze: {intent.dimension or '-'}\n"
+        f"kategorie_filtr: {intent.category_filter or '-'} | stát_filtr: {intent.state_filter or '-'} | "
+        f"období: {intent.date_from or '-'} až {intent.date_to or '-'}"
+    )
+
+
 def generate_response(state: AgentState) -> AgentState:
     """LLM shrne columns/rows do krátké NL odpovědi (`answer`); `ChartSpec` se odvodí deterministicky z intentu/columns."""
 
@@ -282,7 +297,8 @@ def generate_response(state: AgentState) -> AgentState:
     if has_error:
         return {
             "answer": f"Došlo k chybě při vykonávání dotazu: {state['validation_error']}",
-            "chart_spec": None
+            "chart_spec": None,
+            "messages": [AIMessage(content="[Předchozí dotaz selhal chybou databáze - ignoruj tento kontext]")]
         }
 
     columns = state["columns"]
@@ -316,7 +332,11 @@ def generate_response(state: AgentState) -> AgentState:
         "Odpověz čistým textem, žádný kód, žádné SQL, žádné bloky s ```."
     ).content
 
-    return {"answer": answer, "chart_spec": chart_spec}
+    return {
+        "answer": answer,
+        "chart_spec": chart_spec,
+        "messages": [AIMessage(content=f"{_intent_summary(intent)}\n\nOdpověď uživateli: {answer}")]
+    }
 
 
 # Conditional routing
@@ -396,7 +416,7 @@ workflow.add_edge("basic_query", "execute_query")
 workflow.add_edge("complex_query", "embedding_lookup")
 workflow.add_edge("embedding_lookup", "improve_prompt")
 workflow.add_conditional_edges("improve_prompt", route_clarification, {
-    "user_input": "user_input",
+    "user_input": "clarify_intent",  # user_input by jen znovu přidal identickou HumanMessage, nic nemění
     "execute_query": "execute_query",
 })
 
