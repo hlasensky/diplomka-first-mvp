@@ -3,8 +3,5 @@ __pycache__/
 *.pyc
 .env
 
-data/raw/
-data/*.duckdb
-
 .files/
 .chainlit/translations/
