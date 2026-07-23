@@ -164,8 +164,12 @@ def clarify_intent(state: AgentState) -> AgentState:
     structured_llm = llm.with_structured_output(Filters)
     intent = structured_llm.invoke([
         SystemMessage(content=SCHEMA["system_prompt"]),
-        HumanMessage(content=state["question"]),
+        *state["messages"]
     ])
+    
+    active_filters = state.get("active_filters", Filters())
+    intent.metrics = intent.metrics or active_filters.metrics
+
     is_unclear = not intent.has_metric()
 
     return {
@@ -261,14 +265,14 @@ def execute_query(state: AgentState) -> AgentState:
             rows = result
         except Exception as e:
             error = str(e)
-
     
     return {
         "columns": columns,
         "rows": rows,
         "needs_clarification": False,
         "clarification_question": None,
-        "validation_error": error
+        "validation_error": error,
+        "active_filters": state["intent"]
     }
 
 def generate_response(state: AgentState) -> AgentState:
