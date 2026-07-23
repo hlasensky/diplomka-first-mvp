@@ -5,6 +5,8 @@ import duckdb
 import yaml
 from dotenv import load_dotenv
 from langchain_anthropic import ChatAnthropic
+from langchain_ollama import ChatOllama
+
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langgraph.graph import START, END, StateGraph
 from langgraph.checkpoint.memory import InMemorySaver
@@ -23,7 +25,10 @@ load_dotenv()
 ROOT = Path(__file__).parent
 SCHEMA = yaml.safe_load((ROOT / "schema" / "semantic_schema.yaml").read_text())
 
-llm = ChatAnthropic(model="claude-haiku-4-5-20251001", temperature=0, max_tokens=1000)
+#llm = ChatAnthropic(model="claude-haiku-4-5-20251001", temperature=0, max_tokens=1000)
+llm = ChatOllama(model="qwen2.5:14b", temperature=0)
+#llm = ChatOllama(model="qwen2.5:7b-instruct", temperature=0)
+
 
 all_db_categories = None
 with duckdb.connect(database=str(ROOT / "data" / "olist.duckdb")) as conn:
