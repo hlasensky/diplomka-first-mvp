@@ -75,6 +75,7 @@ def build_figure(cs, rows: list[tuple]) -> go.Figure:
 STEP_LABELS = {
     "user_input": "Zpracování vstupu",
     "clarify_intent": "Rozpoznávání záměru",
+    "generate_sql_freeform": "Generování SQL (free Text-to-SQL)",
     "basic_query": "Sestavení SQL (basic)",
     "complex_query": "Příprava fuzzy vyhledávání kategorie",
     "embedding_lookup": "Fuzzy vyhledávání kategorie",

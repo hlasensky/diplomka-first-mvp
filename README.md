@@ -82,3 +82,34 @@ Z-score nad časovou řadou tržeb po týdnech. Pokud Z > 2.5, LLM dostane konte
 Připrav 20 testovacích dotazů nad Olist daty, změř přesnost OLAP operací (správná dimenze? správný filtr?). Toto jsou tvá čísla do experimentální kapitoly DP.
 
 ---
+
+## Dva režimy generování SQL (`SQL_MODE`)
+
+Aplikace umí dvě strategie převodu otázky na SQL, přepínatelné proměnnou prostředí `SQL_MODE`
+(čte se v `graph.py`, výchozí `builder`):
+
+- **`builder`** (výchozí) — rigidní sémantická vrstva: LLM vyplní validovaný `Filters` objekt
+  (metrika/dimenze/filtry) a Python deterministicky složí SQL (`build_sql`). Bezpečné, ale omezené
+  na předdefinované metriky/dimenze.
+- **`freesql`** — free Text-to-SQL: LLM napíše přímo raw read-only `SELECT` nad tabulkou `orders`
+  (schéma se injektuje do promptu přes `DESCRIBE`). Kategorie (portugalština) řeší přes tool
+  `resolve_category` (embeddingy), finální dotaz předá přes `submit_sql`. Guardrail
+  `ensure_read_only_select` povolí jen jeden read-only SELECT/WITH a vynutí `LIMIT`; při DB chybě
+  běží self-correction smyčka (max 3 pokusy). Graf se odvodí heuristicky z tvaru výsledku.
+
+```bash
+# builder režim (výchozí)
+chainlit run app.py
+
+# free Text-to-SQL režim
+SQL_MODE=freesql chainlit run app.py
+
+# eval: guardrail unit checky + přesnost
+python scripts/eval_queries.py            # builder (intent accuracy)
+python scripts/eval_queries.py --freesql  # free-SQL (úspěšnost provedení, potřebuje běžící LLM)
+```
+
+Oba režimy sdílejí `execute_query` (read-only DuckDB) i `generate_response`. Prompty pro LLM jsou
+v angličtině; odpověď uživateli je ve stejném jazyce jako dotaz.
+
+---

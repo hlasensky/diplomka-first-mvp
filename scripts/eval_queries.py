@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from graph import graph  # noqa: E402
+from graph import graph, build_graph, ensure_read_only_select  # noqa: E402
 
 TEST_CASES = [
     {"question": "Jaké jsou celkové tržby?", "expected": {"metric": "revenue", "dimension": None}},
@@ -85,6 +85,70 @@ def run_multi_turn():
     return passed == len(MULTI_TURN_CASES)
 
 
+def guardrail_checks() -> bool:
+    """Rychlé unit checky pro `ensure_read_only_select` (bez LLM/DB)."""
+    must_reject = [
+        "DROP TABLE orders;",
+        "SELECT 1; DROP TABLE orders",
+        "UPDATE orders SET price = 0",
+        "DELETE FROM orders",
+        "INSERT INTO orders VALUES (1)",
+        "PRAGMA database_list",
+        "ATTACH 'evil.db'",
+        "",
+    ]
+    must_pass = [
+        "SELECT product_category_name, SUM(payment_value) AS revenue FROM orders GROUP BY 1",
+        "WITH t AS (SELECT * FROM orders) SELECT COUNT(*) FROM t",
+    ]
+    passed = 0
+    total = len(must_reject) + len(must_pass)
+    for sql in must_reject:
+        try:
+            ensure_read_only_select(sql)
+            print(f"[FAIL] guardrail should have rejected: {sql!r}")
+        except ValueError:
+            passed += 1
+    for sql in must_pass:
+        try:
+            out = ensure_read_only_select(sql)
+            assert "limit" in out.lower(), "chybí vynucený LIMIT"
+            passed += 1
+        except (ValueError, AssertionError) as e:
+            print(f"[FAIL] guardrail should have passed: {sql!r} ({e})")
+    print(f"Guardrail checks: {passed}/{total}")
+    return passed == total
+
+
+def run_freesql() -> bool:
+    """Free Text-to-SQL eval: bez `intent` kontrolujeme jen úspěšné provedení a neprázdný výsledek."""
+    fs_graph = build_graph("freesql")
+    passed = 0
+    for i, case in enumerate(TEST_CASES, 1):
+        thread = {"configurable": {"thread_id": f"eval-freesql-{i}"}}
+        result = fs_graph.invoke({"question": case["question"]}, config=thread)
+
+        unclear = case["expected"].get("unclear", False)
+        error = result.get("validation_error")
+        rows = result.get("rows") or []
+
+        if unclear:
+            ok = True  # nesmyslné dotazy jen nesmí spadnout tvrdě; prázdný/degradovaný výstup je OK
+        else:
+            ok = error is None and len(rows) > 0
+
+        passed += ok
+        status = "OK " if ok else "FAIL"
+        print(f"[{status}] free-SQL {i:2d}. {case['question']}")
+        if not ok and error:
+            print(f"        - SQL chyba: {error}")
+        elif not ok:
+            print("        - prázdný výsledek")
+
+    print(f"\nFree-SQL úspěšnost: {passed}/{len(TEST_CASES)} ({100 * passed / len(TEST_CASES):.0f}%)")
+    return passed == len(TEST_CASES)
+
+
 def main():
     passed = 0
     for i, case in enumerate(TEST_CASES, 1):
@@ -116,4 +180,12 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # `--freesql` = eval free Text-to-SQL režimu (potřebuje běžící LLM); guardrail checky jsou vždy.
+    if "--freesql" in sys.argv:
+        guardrail_checks()
+        print()
+        run_freesql()
+    else:
+        guardrail_checks()
+        print()
+        main()
