@@ -1,84 +1,84 @@
-Perfektní — to je nejchytřejší přístup pro DP. Jeden dataset, jeden use case, funkční demo. Tady je konkrétní plán.
+Perfect — this is the smartest approach for a master's thesis. One dataset, one use case, a working demo. Here is the concrete plan.
 
 ---
 
 ## Dataset: Olist Brazilian E-commerce
 
-Použij Olist — máš ho zmíněný v paměti z dřívějších rozhovorů a je ideální protože je zdarma na Kaggle, má přirozené OLAP dimenze (čas, produkt, kategorie, stát, seller), obsahuje časové řady objednávek vhodné pro detekci anomálií, a je dostatečně velký aby demo vypadalo reálně (~100k objednávek).
+Use Olist — you have it mentioned in memory from earlier conversations and it's ideal because it's free on Kaggle, it has natural OLAP dimensions (time, product, category, state, seller), it contains order time series suitable for anomaly detection, and it's large enough for the demo to look real (~100k orders).
 
 ---
 
-## Jeden use case: Sales Performance Analysis
+## One use case: Sales Performance Analysis
 
-Konkrétně: uživatel se ptá na prodejní výkonnost, naviguje přes OLAP operace, systém detekuje anomálie v časové řadě tržeb a vysvětlí je přirozeným jazykem s grafem.
+Specifically: the user asks about sales performance, navigates via OLAP operations, the system detects anomalies in the revenue time series and explains them in natural language with a chart.
 
-Tři demonstrovatelné věci na obhajobě:
-- drill-down z kategorie → produkt
-- slice podle státu nebo časového období  
-- detekce anomálie v tržbách s narativním vysvětlením
+Three demonstrable things for the defense:
+- drill-down from category → product
+- slice by state or time period
+- revenue anomaly detection with a narrative explanation
 
 ---
 
-## MVP architektura — co vynechat, co zachovat
+## MVP architecture — what to drop, what to keep
 
-Oproti plné architektuře MVP vynechá Laravel Queue/WebSocket (synchronní HTTP stačí), Qdrant (jednoduchý YAML přímo v paměti), anomály detektor bude statistický (Z-score nebo IQR, ne full AXIS framework), a frontend bude Chainlit místo React+Laravel.
+Compared to the full architecture, the MVP drops Laravel Queue/WebSocket (synchronous HTTP is enough), Qdrant (a simple YAML directly in memory), the anomaly detector will be statistical (Z-score or IQR, not the full AXIS framework), and the frontend will be Chainlit instead of React+Laravel.
 
 ```
-Chainlit (chat UI + Plotly grafy jako message elementy)
+Chainlit (chat UI + Plotly charts as message elements)
     ↕ HTTP
 FastAPI (LangGraph agent)
     ↕
-DuckDB (Olist Parquet) + YAML sémantické schema + Claude (Sonnet)
+DuckDB (Olist Parquet) + YAML semantic schema + Claude (Sonnet)
 ```
 
-Tři soubory konfigurace, žádný Docker nutný pro vývoj, spustíš lokálně za hodinu.
+Three config files, no Docker needed for development, you can run it locally within an hour.
 
 ---
 
-## Fáze MVP — 6 týdnů
+## MVP phases — 6 weeks
 
-**Týden 1 — data a schema**
+**Week 1 — data and schema**
 
-Stáhni Olist z Kaggle, načti do DuckDB jako Parquet. Napiš YAML sémantické schema — definuj 5 metrik (revenue, orders, avg\_order\_value, cancellation\_rate, delivery\_time) a 4 dimenze (čas, kategorie, stát, seller). Toto je základ všeho ostatního.
+Download Olist from Kaggle, load it into DuckDB as Parquet. Write the YAML semantic schema — define 5 metrics (revenue, orders, avg\_order\_value, cancellation\_rate, delivery\_time) and 4 dimensions (time, category, state, seller). This is the foundation of everything else.
 
 ```yaml
 metrics:
   revenue:
-    label: "Celkové tržby"
+    label: "Total revenue"
     sql: "SUM(payment_value)"
   orders:
-    label: "Počet objednávek"  
+    label: "Order count"
     sql: "COUNT(order_id)"
 
 dimensions:
   category:
-    label: "Kategorie produktu"
+    label: "Product category"
     column: "product_category_name"
   state:
-    label: "Stát zákazníka"
+    label: "Customer state"
     column: "customer_state"
 ```
 
-**Týden 2 — LangGraph agent**
+**Week 2 — LangGraph agent**
 
-Jeden stavový graf se třemi uzly: `parse_intent` (LLM rozhodne jaká OLAP operace), `execute_query` (DuckDB přes schema), `generate_response` (LLM vysvětlení + chart spec). State drží aktuální filtry a dimenzi.
+One state graph with three nodes: `parse_intent` (LLM decides which OLAP operation), `execute_query` (DuckDB via schema), `generate_response` (LLM explanation + chart spec). State holds the current filters and dimension.
 
-Tohle rozšířím o další uzly prompt, rag, improve_prompt, clarify_intent, execute_query, generate_response možná další.
+I'll extend this with more nodes: prompt, rag, improve_prompt, clarify_intent, execute_query, generate_response, possibly more.
 
-**Týden 3 — Chainlit UI**
+**Week 3 — Chainlit UI**
 
-`@cl.on_message` napojený na LangGraph agenta, Plotly graf pod každou odpovědí jako `cl.Plotly()` element, sidebar/starter zprávy se stavem aktuální analýzy (aktivní filtry). Pár hodin práce pokud znáš Python.
+`@cl.on_message` wired to the LangGraph agent, a Plotly chart under each answer as a `cl.Plotly()` element, sidebar/starter messages with the current analysis state (active filters). A few hours of work if you know Python.
 
-**Týden 4 — OLAP operace**
+**Week 4 — OLAP operations**
 
-Drill-down a slice jako explicitní nástroje (LangChain tools) které agent volá. Otestuj 10 konverzačních scénářů ručně.
+Drill-down and slice as explicit tools (LangChain tools) that the agent calls. Test 10 conversational scenarios manually.
 
-**Týden 5 — anomálie**
+**Week 5 — anomalies**
 
-Z-score nad časovou řadou tržeb po týdnech. Pokud Z > 2.5, LLM dostane kontext anomálie a vygeneruje narativní vysvětlení. Stačí 30 řádků Pythonu.
+Z-score over the weekly revenue time series. If Z > 2.5, the LLM gets the anomaly context and generates a narrative explanation. 30 lines of Python is enough.
 
-**Týden 6 — evaluace**
+**Week 6 — evaluation**
 
-Připrav 20 testovacích dotazů nad Olist daty, změř přesnost OLAP operací (správná dimenze? správný filtr?). Toto jsou tvá čísla do experimentální kapitoly DP.
+Prepare 20 test queries over the Olist data, measure OLAP operation accuracy (correct dimension? correct filter?). These are your numbers for the experimental chapter of the thesis.
 
 ---

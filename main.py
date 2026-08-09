@@ -3,7 +3,7 @@ from graph import graph
 def main():
     thread = {"configurable": {"thread_id": "demo-1"}}
     while True:
-        question = input("Ty: ")
+        question = input("You: ")
         if question.strip().lower() in {"exit", "quit"}:
             break
         result = graph.invoke({"question": question}, config=thread)

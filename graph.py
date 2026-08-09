@@ -47,11 +47,11 @@ vectorstore = InMemoryVectorStore.from_texts(
 )
 
 
-# metrics/dimension/granularity/fact/agg se validují dynamicky proti schema/semantic_schema.yaml,
-# takže přidání nové metriky/dimenze/faktu vyžaduje úpravu jen YAML, ne téhle třídy.
+# metrics/dimension/granularity/fact/agg are validated dynamically against schema/semantic_schema.yaml,
+# so adding a new metric/dimension/fact only requires editing the YAML, not this class.
 class Filters(BaseModel):
     metrics: list[str] = Field(default_factory=list)
-    # obecná (ne pojmenovaná) metrika: agregační funkce nad libovolným faktem ze SCHEMA["facts"]
+    # generic (unnamed) metric: aggregation function over any fact from SCHEMA["facts"]
     fact: str | None = None
     agg: str | None = None
     dimension: str | None = None
@@ -60,7 +60,7 @@ class Filters(BaseModel):
     state_filter: str | None = None
     date_from: str | None = None
     date_to: str | None = None
-    # explicitní přání uživatele na typ grafu (jen když ho v otázce zmíní), jinak se dopočítá automaticky
+    # explicit user request for chart type (only when mentioned in the question), otherwise computed automatically
     chart_type_request: Literal["bar", "line", "pie"] | None = None
 
     @field_validator("metrics")
@@ -102,7 +102,7 @@ class Filters(BaseModel):
         return bool(self.metrics) or (self.fact is not None and self.agg is not None)
 
     def resolve_metrics(self) -> list[dict]:
-        """Vrátí seznam {sql, alias, label, additive, unit} pro všechny zvolené metriky (pojmenované i fact+agg)."""
+        """Return a list of {sql, alias, label, additive, unit} for all chosen metrics (named as well as fact+agg)."""
         resolved = [
             {
                 "sql": SCHEMA["metrics"][m]["sql"],
@@ -123,7 +123,7 @@ class Filters(BaseModel):
                 "unit": SCHEMA.get("facts", {}).get(self.fact, {}).get("unit", "value"),
             })
         if not resolved:
-            raise ValueError("Filters nemá žádnou metriku ani validní `fact`+`agg` pár")
+            raise ValueError("Filters has no metric nor a valid `fact`+`agg` pair")
         return resolved
 
 
@@ -136,7 +136,7 @@ class ChartSpec(BaseModel):
 
 
 class AgentState(TypedDict):
-    # perzistentní - přežívá napříč tahy (díky checkpointeru)
+    # persistent - survives across turns (thanks to the checkpointer)
     messages: Annotated[list[BaseMessage], add_messages]
     active_filters: Filters
     attempts: int
@@ -154,17 +154,17 @@ class AgentState(TypedDict):
     columns: list[str]
     rows: list[tuple]
 
-    # výstup
+    # output
     chart_spec: ChartSpec | None
     answer: str
 
 def user_input(state: AgentState) -> AgentState:
-    """Vstupní uzel: zabalí `question` (z initial state při invoke()) do HumanMessage v historii."""
+    """Entry node: wraps `question` (from the initial state at invoke()) into a HumanMessage in the history."""
     return {"messages": [HumanMessage(content=state["question"])]}
 
 def clarify_intent(state: AgentState) -> AgentState:
-    """LLM rozparsuje otázku do `Filters` (sloučené s `active_filters` z minula).
-    Nastaví `intent=None` + `needs_clarification`/`clarification_question`, když je dotaz nejednoznačný."""
+    """LLM parses the question into `Filters` (merged with `active_filters` from before).
+    Sets `intent=None` + `needs_clarification`/`clarification_question` when the query is ambiguous."""
 
     structured_llm = llm.with_structured_output(Filters)
     intent = structured_llm.invoke([
@@ -180,12 +180,12 @@ def clarify_intent(state: AgentState) -> AgentState:
     return {
         "intent": intent,
         "needs_clarification": is_unclear,
-        "clarification_question": "Mohl byste upřesnit co máte na mysli?" if is_unclear else None,
+        "clarification_question": "Could you clarify what you mean?" if is_unclear else None,
         "attempts": state.get("attempts", 0) if is_unclear else 0
     }
 
 def basic_query(state: AgentState) -> AgentState:
-    """Jednoduchá větev: metrika (+dimenze) je jasná, žádný fuzzy lookup není potřeba, jde rovnou na execute_query."""
+    """Simple branch: metric (+dimension) is clear, no fuzzy lookup needed, goes straight to execute_query."""
 
     sql, params = build_sql(state["intent"])
     
@@ -197,14 +197,14 @@ def basic_query(state: AgentState) -> AgentState:
     }
 
 def complex_query(state: AgentState) -> AgentState:
-    """Větev, kde je potřeba dořešit nejasnou referenci (např. kategorie napsaná volným textem) před sestavením SQL."""
+    """Branch where an ambiguous reference (e.g. a category written as free text) must be resolved before building SQL."""
     return {"category_query_text": state["intent"].category_filter}
 
 def unclear_query(state: AgentState) -> AgentState:
-    """Intent se nepodařilo rozpoznat ani po clarify_intent - ukončí tah a vrátí `clarification_question` uživateli."""
-    
+    """Intent could not be recognized even after clarify_intent - ends the turn and returns `clarification_question` to the user."""
+
     if state["attempts"] >= 3:
-        message = "Omlouvám se, stále nerozumím vaší otázce."
+        message = "Sorry, I still don't understand your question."
         return {
             "needs_clarification": False,
             "clarification_question": message,
@@ -218,7 +218,7 @@ def unclear_query(state: AgentState) -> AgentState:
     }
 
 def embedding_lookup(state: AgentState) -> AgentState:
-    """Fuzzy matchne uživatelův text (např. "beauty products") na `product_category_name` (73 PT hodnot) přes embeddings, výsledek do `category_candidates`."""
+    """Fuzzy-matches the user's text (e.g. "beauty products") to `product_category_name` (73 PT values) via embeddings, result into `category_candidates`."""
 
     query = state["category_query_text"].strip().replace("_", " ")
     results = vectorstore.similarity_search_with_score(query, k=3)
@@ -227,20 +227,20 @@ def embedding_lookup(state: AgentState) -> AgentState:
 
 
 def improve_prompt(state: AgentState) -> AgentState:
-    """Self-check: ověří, že resolved intent/SQL dává smysl; při problému zvýší `attempts` a vrátí ke clarify_intent (do limitu), jinak pokračuje na execute_query."""
-    
+    """Self-check: verifies the resolved intent/SQL makes sense; on a problem increments `attempts` and returns to clarify_intent (up to the limit), otherwise proceeds to execute_query."""
+
     candidates_have_good_score = any(score > 0.5 for _, score in state["category_candidates"] or [])
-    
+
     if not candidates_have_good_score:
         if state["attempts"] >= 3:
             return {
                 "needs_clarification": False,
-                "clarification_question": "Omlouvám se, stále nerozumím vaší otázce."
+                "clarification_question": "Sorry, I still don't understand your question."
             }
         return {
             "attempts": state["attempts"] + 1,
             "needs_clarification": True,
-            "clarification_question": "Mohl byste upřesnit co máte na mysli?"
+            "clarification_question": "Could you clarify what you mean?"
         }
     
     intent = state["intent"].model_copy(update={"category_filter": state["category_candidates"][0][0]})
@@ -259,7 +259,7 @@ def improve_prompt(state: AgentState) -> AgentState:
 
 
 def execute_query(state: AgentState) -> AgentState:
-    """Z `intent`/`active_filters` a schema/semantic_schema.yaml sestaví parametrizované SQL a spustí ho nad data/olist.duckdb -> columns/rows."""
+    """Builds parametrized SQL from `intent`/`active_filters` and schema/semantic_schema.yaml and runs it against data/olist.duckdb -> columns/rows."""
     
     sql = state["sql"]
     params = state["params"]
@@ -284,26 +284,26 @@ def execute_query(state: AgentState) -> AgentState:
     }
 
 def _intent_summary(intent: Filters) -> str:
-    """Deterministický rekap resolved Filters pro AIMessage - vstup pro clarify_intent v dalším tahu."""
+    """Deterministic recap of the resolved Filters for AIMessage - input for clarify_intent in the next turn."""
     metrics = ", ".join(intent.metrics) if intent.metrics else "-"
     fact_agg = f"{intent.agg} {intent.fact}" if intent.fact and intent.agg else "-"
     return (
-        "[KONTEXT PŘEDCHOZÍHO TAHU - jen pro dořešení odkazů, NEKOPÍRUJ automaticky do nové otázky]\n"
-        f"metriky: {metrics} | fact/agg: {fact_agg} | dimenze: {intent.dimension or '-'}\n"
-        f"kategorie_filtr: {intent.category_filter or '-'} | stát_filtr: {intent.state_filter or '-'} | "
-        f"období: {intent.date_from or '-'} až {intent.date_to or '-'}"
+        "[PREVIOUS TURN CONTEXT - only for resolving references, DO NOT automatically copy into the new question]\n"
+        f"metrics: {metrics} | fact/agg: {fact_agg} | dimension: {intent.dimension or '-'}\n"
+        f"category_filter: {intent.category_filter or '-'} | state_filter: {intent.state_filter or '-'} | "
+        f"period: {intent.date_from or '-'} to {intent.date_to or '-'}"
     )
 
 
 def generate_response(state: AgentState) -> AgentState:
-    """LLM shrne columns/rows do krátké NL odpovědi (`answer`); `ChartSpec` se odvodí deterministicky z intentu/columns."""
+    """LLM summarizes columns/rows into a short NL answer (`answer`); `ChartSpec` is derived deterministically from the intent/columns."""
 
     has_error = state["validation_error"] is not None
     if has_error:
         return {
-            "answer": f"Došlo k chybě při vykonávání dotazu: {state['validation_error']}",
+            "answer": f"An error occurred while executing the query: {state['validation_error']}",
             "chart_spec": None,
-            "messages": [AIMessage(content="[Předchozí dotaz selhal chybou databáze - ignoruj tento kontext]")]
+            "messages": [AIMessage(content="[The previous query failed with a database error - ignore this context]")]
         }
 
     columns = state["columns"]
@@ -330,17 +330,17 @@ def generate_response(state: AgentState) -> AgentState:
 
     preview = "\n".join(str(dict(zip(columns, row))) for row in rows[:20])
     answer = llm.invoke(
-        f"Otázka uživatele: {state['question']}\n\n"
-        f"Výsledek dotazu (sloupce {columns}):\n{preview}\n\n"
-        "Shrň výsledek stručně v češtině (1-3 věty), drž se čísel z dat výše, nic nevymýšlej. "
-        "Peněžní částky jsou v brazilských reálech (BRL, R$), nikdy v korunách ani dolarech. "
-        "Odpověz čistým textem, žádný kód, žádné SQL, žádné bloky s ```."
+        f"User question: {state['question']}\n\n"
+        f"Query result (columns {columns}):\n{preview}\n\n"
+        "Summarize the result briefly in English (1-3 sentences), stick to the numbers from the data above, don't make anything up. "
+        "Monetary amounts are in Brazilian reais (BRL, R$), never in korunas or dollars. "
+        "Answer in plain text, no code, no SQL, no ``` blocks."
     ).content
 
     return {
         "answer": answer,
         "chart_spec": chart_spec,
-        "messages": [AIMessage(content=f"{_intent_summary(intent)}\n\nOdpověď uživateli: {answer}")]
+        "messages": [AIMessage(content=f"{_intent_summary(intent)}\n\nAnswer to the user: {answer}")]
     }
 
 
@@ -366,7 +366,7 @@ def build_sql(intent: Filters) -> tuple[str, list]:
     if intent.dimension is not None:
         dim_col = SCHEMA["dimensions"][intent.dimension]["column"]
         if intent.dimension == "time":
-            # časová dimenze se agreguje po týdnech (výchozí) a řadí chronologicky, ne podle hodnoty metriky
+            # the time dimension is aggregated by week (default) and sorted chronologically, not by metric value
             granularity = intent.granularity or "week"
             dim_expr = f"DATE_TRUNC('{granularity}', {dim_col})"
             select.insert(0, f"{dim_expr} AS {dim_col}")
@@ -421,7 +421,7 @@ workflow.add_edge("basic_query", "execute_query")
 workflow.add_edge("complex_query", "embedding_lookup")
 workflow.add_edge("embedding_lookup", "improve_prompt")
 workflow.add_conditional_edges("improve_prompt", route_clarification, {
-    "user_input": "clarify_intent",  # user_input by jen znovu přidal identickou HumanMessage, nic nemění
+    "user_input": "clarify_intent",  # user_input would only re-add an identical HumanMessage, changes nothing
     "execute_query": "execute_query",
 })
 

@@ -1,8 +1,8 @@
-"""Evaluace přesnosti OLAP operací (týden 6 z plánu) - 20 testovacích dotazů.
+"""Evaluation of OLAP operation accuracy (week 6 of the plan) - 20 test queries.
 
-Pro každý dotaz zkontroluje, že agent rozpoznal očekávanou metriku/fact+agg/dimenzi/filtry
-a že dotaz nad DuckDB proběhl bez chyby. Nekontroluje přesné znění `answer` (to je na LLM),
-jen strukturovaný `intent` a úspěšnost provedení.
+For each query it checks that the agent recognized the expected metric/fact+agg/dimension/filters
+and that the query over DuckDB ran without error. It does not check the exact wording of `answer` (that's up to the LLM),
+only the structured `intent` and execution success.
 """
 
 import sys
@@ -12,26 +12,26 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from graph import graph  # noqa: E402
 
 TEST_CASES = [
-    {"question": "Jaké jsou celkové tržby?", "expected": {"metric": "revenue", "dimension": None}},
-    {"question": "Kolik bylo objednávek v roce 2017?", "expected": {"metric": "orders"}},
-    {"question": "Jaká je průměrná hodnota objednávky?", "expected": {"metric": "avg_order_value"}},
-    {"question": "Jaká je míra zrušených objednávek?", "expected": {"metric": "cancellation_rate"}},
-    {"question": "Jak dlouho v průměru trvá doručení?", "expected": {"metric": "delivery_time"}},
-    {"question": "Ukaž mi tržby podle kategorie", "expected": {"metric": "revenue", "dimension": "category"}},
-    {"question": "Rozděl počet objednávek podle státu", "expected": {"metric": "orders", "dimension": "state"}},
-    {"question": "Jaké jsou tržby podle týdnů?", "expected": {"metric": "revenue", "dimension": "time"}},
-    {"question": "Jaké jsou tržby podle měsíců?", "expected": {"metric": "revenue", "dimension": "time", "granularity": "month"}},
-    {"question": "Kolik jsme vydělali na kráse a zdraví?", "expected": {"metric": "revenue", "category_filter": "beleza_saude"}},
-    {"question": "Jaké byly tržby v kategorii cama_mesa_banho ve třetím čtvrtletí 2018?", "expected": {"metric": "revenue", "category_filter": "cama_mesa_banho"}},
-    {"question": "Jaké byly tržby v SP?", "expected": {"metric": "revenue", "state_filter": "SP"}},
-    {"question": "Jaká je průměrná cena dopravy?", "expected": {"fact": "freight_value", "agg": "avg"}},
-    {"question": "Jaká je maximální cena produktu podle kategorie?", "expected": {"fact": "price", "agg": "max", "dimension": "category"}},
-    {"question": "Jaký je celkový součet cen produktů podle sellera?", "expected": {"fact": "price", "agg": "sum", "dimension": "seller"}},
-    {"question": "Kolik vyděláváme na sportovním vybavení?", "expected": {"metric": "revenue", "category_filter": "esporte_lazer"}},
-    {"question": "Jaké jsou tržby podle sellera?", "expected": {"metric": "revenue", "dimension": "seller"}},
-    {"question": "Jaká je průměrná doba doručení v RJ?", "expected": {"metric": "delivery_time", "state_filter": "RJ"}},
-    {"question": "Jaké bylo počasí včera v Praze?", "expected": {"unclear": True}},
-    {"question": "asdkjaskdj nesmyslny text xyz", "expected": {"unclear": True}},
+    {"question": "What is the total revenue?", "expected": {"metric": "revenue", "dimension": None}},
+    {"question": "How many orders were there in 2017?", "expected": {"metric": "orders"}},
+    {"question": "What is the average order value?", "expected": {"metric": "avg_order_value"}},
+    {"question": "What is the cancellation rate?", "expected": {"metric": "cancellation_rate"}},
+    {"question": "How long does delivery take on average?", "expected": {"metric": "delivery_time"}},
+    {"question": "Show me revenue by category", "expected": {"metric": "revenue", "dimension": "category"}},
+    {"question": "Break down order count by state", "expected": {"metric": "orders", "dimension": "state"}},
+    {"question": "What is the revenue by week?", "expected": {"metric": "revenue", "dimension": "time"}},
+    {"question": "What is the revenue by month?", "expected": {"metric": "revenue", "dimension": "time", "granularity": "month"}},
+    {"question": "How much did we earn on beauty and health?", "expected": {"metric": "revenue", "category_filter": "beleza_saude"}},
+    {"question": "What was the revenue in the cama_mesa_banho category in the third quarter of 2018?", "expected": {"metric": "revenue", "category_filter": "cama_mesa_banho"}},
+    {"question": "What was the revenue in SP?", "expected": {"metric": "revenue", "state_filter": "SP"}},
+    {"question": "What is the average freight cost?", "expected": {"fact": "freight_value", "agg": "avg"}},
+    {"question": "What is the maximum product price by category?", "expected": {"fact": "price", "agg": "max", "dimension": "category"}},
+    {"question": "What is the total sum of product prices by seller?", "expected": {"fact": "price", "agg": "sum", "dimension": "seller"}},
+    {"question": "How much do we earn on sports equipment?", "expected": {"metric": "revenue", "category_filter": "esporte_lazer"}},
+    {"question": "What is the revenue by seller?", "expected": {"metric": "revenue", "dimension": "seller"}},
+    {"question": "What is the average delivery time in RJ?", "expected": {"metric": "delivery_time", "state_filter": "RJ"}},
+    {"question": "What was the weather yesterday in Prague?", "expected": {"unclear": True}},
+    {"question": "asdkjaskdj nonsense text xyz", "expected": {"unclear": True}},
 ]
 
 
@@ -39,21 +39,21 @@ def check(intent, expected: dict) -> list[str]:
     mismatches = []
     if expected.get("unclear"):
         if intent is not None and intent.has_metric():
-            mismatches.append(f"čekal jsem 'unclear', ale intent má metric/fact+agg: {intent}")
+            mismatches.append(f"expected 'unclear', but intent has metric/fact+agg: {intent}")
         return mismatches
 
     for field, value in expected.items():
         actual = getattr(intent, field, None) if intent is not None else None
         if actual != value:
-            mismatches.append(f"{field}: čekal '{value}', dostal '{actual}'")
+            mismatches.append(f"{field}: expected '{value}', got '{actual}'")
     return mismatches
 
 
 MULTI_TURN_CASES = [
     {
         "questions": [
-            "Jaké jsou tržby a počet objednávek podle kategorie?",
-            "ukaž mi průběh objednávek v čase pro kategorii cama_mesa_banho",
+            "What is the revenue and order count by category?",
+            "show me the trend of orders over time for the category cama_mesa_banho",
         ],
         "expected_last": {"dimension": "time", "category_filter": "cama_mesa_banho"},
     },
@@ -70,9 +70,9 @@ def run_multi_turn():
         intent = result.get("intent")
         mismatches = check(intent, case["expected_last"])
         if result.get("validation_error"):
-            mismatches.append(f"SQL chyba: {result['validation_error']}")
+            mismatches.append(f"SQL error: {result['validation_error']}")
         if result.get("rows") == results[0].get("rows"):
-            mismatches.append("rows stejné jako v prvním tahu - druhý dotaz asi neproběhl s novým intentem")
+            mismatches.append("rows same as in the first turn - the second query probably didn't run with a new intent")
 
         ok = not mismatches
         passed += ok
@@ -81,7 +81,7 @@ def run_multi_turn():
         for m in mismatches:
             print(f"        - {m}")
 
-    print(f"Multi-turn přesnost: {passed}/{len(MULTI_TURN_CASES)}")
+    print(f"Multi-turn accuracy: {passed}/{len(MULTI_TURN_CASES)}")
     return passed == len(MULTI_TURN_CASES)
 
 
@@ -96,7 +96,7 @@ def main():
 
         exec_ok = not case["expected"].get("unclear") and result.get("validation_error") is None
         if case["expected"].get("unclear"):
-            exec_ok = True  # unclear dotazy se do execute_query vůbec nedostanou
+            exec_ok = True  # unclear queries never reach execute_query at all
 
         ok = not mismatches and exec_ok
         passed += ok
@@ -107,9 +107,9 @@ def main():
             for m in mismatches:
                 print(f"        - {m}")
         if not case["expected"].get("unclear") and result.get("validation_error"):
-            print(f"        - SQL chyba: {result['validation_error']}")
+            print(f"        - SQL error: {result['validation_error']}")
 
-    print(f"\nPřesnost: {passed}/{len(TEST_CASES)} ({100 * passed / len(TEST_CASES):.0f}%)")
+    print(f"\nAccuracy: {passed}/{len(TEST_CASES)} ({100 * passed / len(TEST_CASES):.0f}%)")
 
     print()
     run_multi_turn()

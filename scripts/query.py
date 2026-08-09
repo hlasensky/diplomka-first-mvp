@@ -22,17 +22,17 @@ def build_query(metric: str, dimension: str | None = None, filters: str | None =
 
 
 if __name__ == "__main__":
-    print("--- tržby podle kategorie (top 5) ---")
+    print("--- revenue by category (top 5) ---")
     q = build_query("revenue", dimension="category", limit=5)
     print(q)
     print(con.execute(q).fetchdf().to_string())
 
-    print("\n--- drill-down: cama_mesa_banho podle státu (top 5) ---")
+    print("\n--- drill-down: cama_mesa_banho by state (top 5) ---")
     q = build_query("revenue", dimension="state", filters="product_category_name = 'cama_mesa_banho'", limit=5)
     print(q)
     print(con.execute(q).fetchdf().to_string())
 
-    print("\n--- slice: tržby za Q3 2018 podle kategorie (top 5) ---")
+    print("\n--- slice: revenue for Q3 2018 by category (top 5) ---")
     q = build_query(
         "revenue",
         dimension="category",
@@ -42,6 +42,6 @@ if __name__ == "__main__":
     print(q)
     print(con.execute(q).fetchdf().to_string())
 
-    print("\n--- avg_order_value a delivery_time celkem ---")
+    print("\n--- avg_order_value and delivery_time overall ---")
     print(con.execute(build_query("avg_order_value", limit=1)).fetchdf().to_string())
     print(con.execute(build_query("delivery_time", limit=1)).fetchdf().to_string())

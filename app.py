@@ -49,8 +49,8 @@ def build_figure(cs, rows: list[tuple]) -> go.Figure:
         fig.update_layout(title=cs.title, template="chainlit_dark")
         return fig
 
-    # metriky s různou jednotkou (např. R$ vs. počet kusů) jdou na samostatné osy Y,
-    # ať se jedna neschová kvůli jinému měřítku (viz screenshot revenue+orders na jedné ose)
+    # metrics with different units (e.g. R$ vs. item count) go on separate Y axes,
+    # so one isn't hidden due to a different scale (see the revenue+orders on one axis screenshot)
     distinct_units = list(dict.fromkeys(cs.y_units))
     use_secondary_axis = len(distinct_units) == 2
 
@@ -73,35 +73,35 @@ def build_figure(cs, rows: list[tuple]) -> go.Figure:
     return fig
 
 STEP_LABELS = {
-    "user_input": "Zpracování vstupu",
-    "clarify_intent": "Rozpoznávání záměru",
-    "basic_query": "Sestavení SQL (basic)",
-    "complex_query": "Příprava fuzzy vyhledávání kategorie",
-    "embedding_lookup": "Fuzzy vyhledávání kategorie",
-    "improve_prompt": "Self-check a sestavení SQL",
-    "unclear_query": "Vyhodnocení nejasného dotazu",
-    "execute_query": "Spuštění SQL nad DuckDB",
-    "generate_response": "Generování odpovědi",
+    "user_input": "Processing input",
+    "clarify_intent": "Recognizing intent",
+    "basic_query": "Building SQL (basic)",
+    "complex_query": "Preparing fuzzy category search",
+    "embedding_lookup": "Fuzzy category search",
+    "improve_prompt": "Self-check and SQL build",
+    "unclear_query": "Evaluating unclear query",
+    "execute_query": "Running SQL over DuckDB",
+    "generate_response": "Generating response",
 }
     
 @cl.set_starters
 async def set_starters():
     return [
         cl.Starter(
-            label="Tržby podle kategorie",
-            message="Jaké jsou celkové tržby podle kategorie?",
+            label="Revenue by category",
+            message="What is the total revenue by category?",
         ),
         cl.Starter(
-            label="Fuzzy vyhledávání kategorie",
-            message="Kolik jsme vydělali na kráse a zdraví podle měsíců?",
+            label="Fuzzy category search",
+            message="How much did we earn on beauty and health by month?",
         ),
         cl.Starter(
-            label="Víc metrik najednou",
-            message="Ukaž mi tržby i počet objednávek podle kategorie",
+            label="Multiple metrics at once",
+            message="Show me revenue and order count by category",
         ),
         cl.Starter(
-            label="Obecná fact+agg metrika",
-            message="Jaká je průměrná cena dopravy podle státu?",
+            label="Generic fact+agg metric",
+            message="What is the average freight cost by state?",
         ),
     ]
 

@@ -1,88 +1,88 @@
-# Sémantická vrstva nad tabulkou `orders` (data/olist.duckdb).
-# Granularita tabulky: 1 řádek = 1 položka objednávky (order_item).
-# Zdroj: Olist Brazilian E-Commerce (flat/joined verze), 2016-10 až 2018-08.
+# Semantic layer over the `orders` table (data/olist.duckdb).
+# Table granularity: 1 row = 1 order item (order_item).
+# Source: Olist Brazilian E-Commerce (flat/joined version), 2016-10 to 2018-08.
 
 table: orders
 
 system_prompt: |
-  Jsi analytický asistent nad daty brazilského e-shopu Olist (2016-10 až 2018-08).
-  Tvůj úkol: z otázky uživatele v češtině vybrat metriku, volitelně dimenzi a volitelné filtry.
+  You are an analytics assistant over data from the Brazilian e-shop Olist (2016-10 to 2018-08).
+  Your task: from the user's question in English, pick a metric, optionally a dimension and optional filters.
 
-  DŮLEŽITÉ - konverzace má víc tahů: dostaneš celou historii zpráv, ne jen aktuální otázku.
-  `HumanMessage` = otázky uživatele, `AIMessage` = strukturovaný rekap toho, co bylo vyřešeno
-  v minulém tahu (označený "[KONTEXT PŘEDCHOZÍHO TAHU]"), plus daná odpověď.
-  VŽDY vycházej hlavně z POSLEDNÍ `HumanMessage` - to je aktuální otázka, na kterou odpovídáš.
-  Starší zprávy (Human i AI) použij jen k dořešení explicitních odkazů/návazností
-  ("a v čase", "a za poslední čtvrtletí", "stejné, ale pro stát SP") - nikdy je nekopíruj jako
-  šablonu, kterou by šlo mlčky opakovat. Pokud poslední otázka nezmiňuje dimenzi, kategorii, stát
-  nebo období, které bylo vyřešené v minulém tahu, nech dané pole prázdné (None) - i když bylo
-  dřív nastavené. Jedinou výjimkou je `metrics`: pokud ho poslední otázka nezmiňuje, klidně ho
-  nech prázdné, kód si sám dosadí metriku z minulého tahu.
-  Příklad: otázka 1 "tržby podle kategorie" -> dimension=category. Otázka 2 "ukaž mi průběh
-  objednávek v čase pro kategorii cama_mesa_banho" -> NOVÁ samostatná otázka: dimension=time,
-  category_filter=cama_mesa_banho, metrics=[orders] (ignoruj, že otázka 1 měla jinou dimenzi
-  a žádný filtr kategorie).
+  IMPORTANT - the conversation has multiple turns: you receive the full message history, not just the current question.
+  `HumanMessage` = user questions, `AIMessage` = a structured recap of what was resolved
+  in the previous turn (marked "[PREVIOUS TURN CONTEXT]"), plus the given answer.
+  ALWAYS base your answer mainly on the LAST `HumanMessage` - that is the current question you are answering.
+  Use older messages (both Human and AI) only to resolve explicit references/follow-ups
+  ("and over time", "and for the last quarter", "same, but for state SP") - never copy them as
+  a template to be silently repeated. If the last question does not mention a dimension, category, state
+  or period that was resolved in the previous turn, leave that field empty (None) - even if it was
+  set earlier. The only exception is `metrics`: if the last question does not mention it, feel free to
+  leave it empty, the code will fill in the metric from the previous turn itself.
+  Example: question 1 "revenue by category" -> dimension=category. Question 2 "show me the trend of
+  orders over time for the category cama_mesa_banho" -> a NEW standalone question: dimension=time,
+  category_filter=cama_mesa_banho, metrics=[orders] (ignore that question 1 had a different dimension
+  and no category filter).
 
-  Pole `metrics` je SEZNAM - obvykle jedna metrika, ale pokud se uživatel ptá na víc věcí najednou
-  (např. "ukaž mi tržby i počet objednávek podle kategorie"), dej do seznamu víc metrik zároveň.
+  The `metrics` field is a LIST - usually one metric, but if the user asks about multiple things at once
+  (e.g. "show me revenue and order count by category"), put several metrics in the list at the same time.
 
-  Dostupné metriky (pole `metrics`, seznam):
-  - revenue: celkové tržby (SUM payment_value)
-  - orders: počet objednávek
-  - avg_order_value: průměrná hodnota objednávky
-  - cancellation_rate: míra zrušených objednávek (pozor: v datech je jen 7 zrušených z ~95 000 objednávek, skoro vždy 0)
-  - delivery_time: průměrná doba doručení ve dnech
+  Available metrics (`metrics` field, list):
+  - revenue: total revenue (SUM payment_value)
+  - orders: order count
+  - avg_order_value: average order value
+  - cancellation_rate: cancellation rate (note: the data has only 7 canceled out of ~95,000 orders, almost always 0)
+  - delivery_time: average delivery time in days
 
-  Dostupné dimenze (pole `dimension`), nepovinné - vynech, když uživatel nechce rozpad podle ničeho:
-  - category: kategorie produktu (product_category_name) - hodnoty jsou v portugalštině, např. cama_mesa_banho, beleza_saude, informatica_acessorios
-  - state: stát zákazníka - dvoupísmenný brazilský kód, např. SP, RJ, MG
-  - seller: seller_id - vysoká kardinalita, použij jen když se uživatel výslovně ptá na sellery
-  - time: časové období
+  Available dimensions (`dimension` field), optional - omit when the user doesn't want a breakdown by anything:
+  - category: product category (product_category_name) - values are in Portuguese, e.g. cama_mesa_banho, beleza_saude, informatica_acessorios
+  - state: customer state - two-letter Brazilian code, e.g. SP, RJ, MG
+  - seller: seller_id - high cardinality, use only when the user explicitly asks about sellers
+  - time: time period
 
-  Filtry:
-  - category_filter: konkrétní hodnota product_category_name (přelož běžný název na portugalský ekvivalent, pokud ho znáš)
-  - state_filter: konkrétní dvoupísmenný kód státu
-  - date_from / date_to: ve formátu YYYY-MM-DD, podle zmíněného období (např. "Q3 2018" -> 2018-07-01 / 2018-09-30)
+  Filters:
+  - category_filter: a specific product_category_name value (translate a common name to the Portuguese equivalent, if you know it)
+  - state_filter: a specific two-letter state code
+  - date_from / date_to: in YYYY-MM-DD format, based on the mentioned period (e.g. "Q3 2018" -> 2018-07-01 / 2018-09-30)
 
-  Pokud se otázka neshoduje s žádnou z výše uvedených pojmenovaných metrik, ale ptá se na agregaci (součet/průměr/min/max) nad jedním z těchto polí, použij místo `metric` dvojici `fact`+`agg`:
+  If the question does not match any of the named metrics above but asks for an aggregation (sum/avg/min/max) over one of these fields, use the `fact`+`agg` pair instead of `metric`:
   - fact: payment_value (agg: sum, avg), freight_value (agg: sum, avg), price (agg: sum, avg, min, max)
-  - agg: sum, avg, min nebo max - musí odpovídat povoleným agregacím pro daný fact
+  - agg: sum, avg, min or max - must match the allowed aggregations for the given fact
 
-  Pokud otázka vůbec nedává smysl vzhledem k dostupným datům, nebo je příliš nejasná na to, aby šla určit metrika ani fact+agg, nech obojí prázdné (None).
+  If the question makes no sense at all given the available data, or is too vague to determine a metric or fact+agg, leave both empty (None).
 
-  Pokud uživatel výslovně řekne, jaký typ grafu chce (koláčový/pie, sloupcový/bar, čárový/line),
-  vyplň pole `chart_type_request` odpovídající hodnotou. Jinak ho nech prázdné (None) - typ grafu
-  se pak zvolí automaticky podle dat.
+  If the user explicitly says what chart type they want (pie, bar, line),
+  fill the `chart_type_request` field with the corresponding value. Otherwise leave it empty (None) - the chart type
+  is then chosen automatically based on the data.
 
-  Všechny peněžní částky (payment_value, revenue, avg_order_value) jsou v brazilských reálech (BRL, značka R$), nikdy v korunách ani dolarech.
+  All monetary amounts (payment_value, revenue, avg_order_value) are in Brazilian reais (BRL, symbol R$), never in korunas or dollars.
 
 metrics:
   revenue:
-    label: "Celkové tržby"
+    label: "Total revenue"
     sql: "SUM(payment_value)"
-    note: "hodnota v BRL (brazilský reál, R$)"
+    note: "value in BRL (Brazilian real, R$)"
     additive: true
     unit: currency
 
   orders:
-    label: "Počet objednávek"
+    label: "Order count"
     sql: "COUNT(DISTINCT order_id)"
     additive: true
     unit: count
 
   avg_order_value:
-    label: "Průměrná hodnota objednávky"
+    label: "Average order value"
     sql: "SUM(payment_value) / COUNT(DISTINCT order_id)"
-    note: "hodnota v BRL (brazilský reál, R$)"
+    note: "value in BRL (Brazilian real, R$)"
     unit: currency
 
   cancellation_rate:
-    label: "Míra zrušených objednávek"
+    label: "Cancellation rate"
     sql: "COUNT(DISTINCT order_id) FILTER (WHERE order_status = 'canceled')::FLOAT / COUNT(DISTINCT order_id)"
     unit: ratio
 
   delivery_time:
-    label: "Průměrná doba doručení (dny)"
+    label: "Average delivery time (days)"
     sql: "AVG(DATE_DIFF('day', order_purchase_timestamp, order_delivered_customer_date))"
     unit: days
 
@@ -94,21 +94,21 @@ facts:
 
 dimensions:
   time:
-    label: "Čas"
+    label: "Time"
     column: "order_purchase_timestamp"
     granularities: [day, week, month, quarter, year]
 
   category:
-    label: "Kategorie produktu"
+    label: "Product category"
     column: "product_category_name"
-    note: "hodnoty jsou v portugalštině (73 distinct), např. 'cama_mesa_banho', 'beleza_saude'"
+    note: "values are in Portuguese (73 distinct), e.g. 'cama_mesa_banho', 'beleza_saude'"
 
   state:
-    label: "Stát zákazníka"
+    label: "Customer state"
     column: "customer_state"
-    note: "27 brazilských států, dvoupísmenný kód (RJ, SP, ...)"
+    note: "27 Brazilian states, two-letter code (RJ, SP, ...)"
 
   seller:
     label: "Seller"
     column: "seller_id"
-    note: "2914 distinct sellerů - vysoká kardinalita, vhodné pro drill-down, ne pro výchozí group-by"
+    note: "2914 distinct sellers - high cardinality, good for drill-down, not for default group-by"
