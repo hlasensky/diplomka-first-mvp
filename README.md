@@ -1,84 +1,86 @@
-Perfect — this is the smartest approach for a master's thesis. One dataset, one use case, a working demo. Here is the concrete plan.
+# diplomka
 
----
+An LLM analytics agent over the [Olist Brazilian E-Commerce](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) dataset. Ask questions in natural language ("revenue by category", "average freight cost by state") and get a short answer plus a chart. Built with **LangGraph** (agent orchestration), **DuckDB** (query engine), a **YAML semantic layer** (metrics/dimensions/facts), and **Chainlit** (chat UI).
 
-## Dataset: Olist Brazilian E-commerce
-
-Use Olist — you have it mentioned in memory from earlier conversations and it's ideal because it's free on Kaggle, it has natural OLAP dimensions (time, product, category, state, seller), it contains order time series suitable for anomaly detection, and it's large enough for the demo to look real (~100k orders).
-
----
-
-## One use case: Sales Performance Analysis
-
-Specifically: the user asks about sales performance, navigates via OLAP operations, the system detects anomalies in the revenue time series and explains them in natural language with a chart.
-
-Three demonstrable things for the defense:
-- drill-down from category → product
-- slice by state or time period
-- revenue anomaly detection with a narrative explanation
-
----
-
-## MVP architecture — what to drop, what to keep
-
-Compared to the full architecture, the MVP drops Laravel Queue/WebSocket (synchronous HTTP is enough), Qdrant (a simple YAML directly in memory), the anomaly detector will be statistical (Z-score or IQR, not the full AXIS framework), and the frontend will be Chainlit instead of React+Laravel.
+## Architecture
 
 ```
-Chainlit (chat UI + Plotly charts as message elements)
-    ↕ HTTP
-FastAPI (LangGraph agent)
-    ↕
-DuckDB (Olist Parquet) + YAML semantic schema + Claude (Sonnet)
+Chainlit UI (apps/chainlit_app.py)  ──►  LangGraph agent (diplomka.graph)
+                                              │
+        ┌─────────────────────────────────────┼───────────────────────────────┐
+        ▼                    ▼                 ▼               ▼                ▼
+  clarify_intent      embedding_lookup    build_sql      execute_query   generate_response
+  (LLM structured)    (fuzzy category)    (semantic      (DuckDB)        (LLM summary +
+                                           schema)                        deterministic ChartSpec)
 ```
 
-Three config files, no Docker needed for development, you can run it locally within an hour.
+The semantic layer lives in [`schema/semantic_schema.yaml`](schema/semantic_schema.yaml) — adding a metric, dimension or fact is a YAML edit, not a code change.
 
----
+## Project layout
 
-## MVP phases — 6 weeks
-
-**Week 1 — data and schema**
-
-Download Olist from Kaggle, load it into DuckDB as Parquet. Write the YAML semantic schema — define 5 metrics (revenue, orders, avg\_order\_value, cancellation\_rate, delivery\_time) and 4 dimensions (time, category, state, seller). This is the foundation of everything else.
-
-```yaml
-metrics:
-  revenue:
-    label: "Total revenue"
-    sql: "SUM(payment_value)"
-  orders:
-    label: "Order count"
-    sql: "COUNT(order_id)"
-
-dimensions:
-  category:
-    label: "Product category"
-    column: "product_category_name"
-  state:
-    label: "Customer state"
-    column: "customer_state"
+```
+src/diplomka/        # the package
+  config.py          # paths + environment settings (single source of truth)
+  schema.py          # loads the YAML semantic layer
+  models.py          # Filters (parsed intent), ChartSpec, AgentState
+  sql.py             # deterministic SQL builder
+  llm.py             # chat-model factory (Ollama / Anthropic)
+  db.py              # DuckDB connection helper
+  retrieval.py       # lazy embeddings + vector store for fuzzy category lookup
+  nodes.py           # LangGraph node functions + routing
+  graph.py           # graph assembly -> get_graph()
+  charts.py          # Plotly figure builder
+  cli.py             # REPL entry point
+  eval.py            # shared evaluation dataset
+apps/chainlit_app.py # Chainlit UI entry point
+scripts/             # load_data, query smoke test, eval report, render_graph
+tests/               # pytest (fast unit + slow integration)
+data/  schema/       # DuckDB database + semantic schema
+docs/plan.md         # thesis MVP plan
 ```
 
-**Week 2 — LangGraph agent**
+## Setup
 
-One state graph with three nodes: `parse_intent` (LLM decides which OLAP operation), `execute_query` (DuckDB via schema), `generate_response` (LLM explanation + chart spec). State holds the current filters and dimension.
+Requires [uv](https://docs.astral.sh/uv/) and Python 3.13.
 
-I'll extend this with more nodes: prompt, rag, improve_prompt, clarify_intent, execute_query, generate_response, possibly more.
+```bash
+uv sync
+```
 
-**Week 3 — Chainlit UI**
+Configuration is via environment variables (a `.env` file is loaded automatically):
 
-`@cl.on_message` wired to the LangGraph agent, a Plotly chart under each answer as a `cl.Plotly()` element, sidebar/starter messages with the current analysis state (active filters). A few hours of work if you know Python.
+| Variable          | Default                        | Purpose                                   |
+|-------------------|--------------------------------|-------------------------------------------|
+| `LLM_BACKEND`     | `ollama`                       | `ollama` (local) or `anthropic`           |
+| `OLLAMA_MODEL`    | `qwen2.5:14b`                  | model when backend is ollama              |
+| `ANTHROPIC_MODEL` | `claude-haiku-4-5-20251001`    | model when backend is anthropic           |
+| `ANTHROPIC_API_KEY` | —                            | required when backend is anthropic        |
 
-**Week 4 — OLAP operations**
+The DuckDB database (`data/olist.duckdb`) is committed. To rebuild it from the raw CSV:
 
-Drill-down and slice as explicit tools (LangChain tools) that the agent calls. Test 10 conversational scenarios manually.
+```bash
+uv run python scripts/load_data.py
+```
 
-**Week 5 — anomalies**
+## Running
 
-Z-score over the weekly revenue time series. If Z > 2.5, the LLM gets the anomaly context and generates a narrative explanation. 30 lines of Python is enough.
+```bash
+# Chat UI
+uv run chainlit run apps/chainlit_app.py -w
 
-**Week 6 — evaluation**
+# CLI REPL
+uv run diplomka
 
-Prepare 20 test queries over the Olist data, measure OLAP operation accuracy (correct dimension? correct filter?). These are your numbers for the experimental chapter of the thesis.
+# Regenerate the graph diagram (graph.png)
+uv run python scripts/render_graph.py
+```
 
----
+## Development
+
+```bash
+uv run ruff check .            # lint
+uv run ruff format .           # format
+uv run pytest -m "not slow"    # fast unit tests (no LLM)
+uv run pytest -m slow          # intent-accuracy integration tests (LLM + DuckDB)
+uv run python scripts/eval_queries.py   # human-readable accuracy report
+```

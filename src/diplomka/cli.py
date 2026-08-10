@@ -1,6 +1,10 @@
-from graph import graph
+"""Interactive command-line REPL for the analytics agent."""
 
-def main():
+from diplomka.graph import get_graph
+
+
+def main() -> None:
+    graph = get_graph()
     thread = {"configurable": {"thread_id": "demo-1"}}
     while True:
         question = input("You: ")
@@ -12,4 +16,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

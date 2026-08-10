@@ -1,11 +1,9 @@
 """Minimal proof that the YAML semantic schema maps to valid SQL over DuckDB."""
-import duckdb
-import yaml
 
-with open("schema/semantic_schema.yaml") as f:
-    SCHEMA = yaml.safe_load(f)
+from diplomka.db import connect
+from diplomka.schema import SCHEMA
 
-con = duckdb.connect("data/olist.duckdb", read_only=True)
+con = connect(read_only=True)
 
 
 def build_query(metric: str, dimension: str | None = None, filters: str | None = None, limit: int = 10) -> str:
