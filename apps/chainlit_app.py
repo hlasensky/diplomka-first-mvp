@@ -10,10 +10,11 @@ graph = get_graph()
 STEP_LABELS = {
     "user_input": "Processing input",
     "clarify_intent": "Recognizing intent",
-    "basic_query": "Building SQL (basic)",
     "complex_query": "Preparing fuzzy category search",
     "embedding_lookup": "Fuzzy category search",
-    "improve_prompt": "Self-check and SQL build",
+    "improve_prompt": "Resolving category match",
+    "generate_sql": "Generating SQL",
+    "validate_sql": "Validating SQL",
     "unclear_query": "Evaluating unclear query",
     "execute_query": "Running SQL over DuckDB",
     "generate_response": "Generating response",

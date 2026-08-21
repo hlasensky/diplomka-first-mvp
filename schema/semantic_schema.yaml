@@ -39,6 +39,10 @@ system_prompt: |
   - seller: seller_id - high cardinality, use only when the user explicitly asks about sellers
   - time: time period
 
+  When `dimension` is `time`, also fill `granularity` from how the user phrased the breakdown
+  (day, week, month, quarter or year - e.g. "by month" -> month, "yearly trend" -> year).
+  If they didn't say, leave it empty (None) - it defaults to week.
+
   Filters:
   - category_filter: a specific product_category_name value (translate a common name to the Portuguese equivalent, if you know it)
   - state_filter: a specific two-letter state code

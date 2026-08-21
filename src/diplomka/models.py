@@ -66,33 +66,6 @@ class Filters(BaseModel):
     def has_metric(self) -> bool:
         return bool(self.metrics) or (self.fact is not None and self.agg is not None)
 
-    def resolve_metrics(self) -> list[dict]:
-        """Return a list of {sql, alias, label, additive, unit} for all chosen metrics (named as well as fact+agg)."""
-        resolved = [
-            {
-                "sql": SCHEMA["metrics"][m]["sql"],
-                "alias": m,
-                "label": SCHEMA["metrics"][m]["label"],
-                "additive": SCHEMA["metrics"][m].get("additive", False),
-                "unit": SCHEMA["metrics"][m].get("unit", "value"),
-            }
-            for m in self.metrics
-        ]
-        if self.fact is not None and self.agg is not None:
-            alias = f"{self.agg}_{self.fact}"
-            resolved.append(
-                {
-                    "sql": f"{self.agg.upper()}({self.fact})",
-                    "alias": alias,
-                    "label": f"{self.agg.upper()} {self.fact}",
-                    "additive": self.agg == "sum",
-                    "unit": SCHEMA.get("facts", {}).get(self.fact, {}).get("unit", "value"),
-                }
-            )
-        if not resolved:
-            raise ValueError("Filters has no metric nor a valid `fact`+`agg` pair")
-        return resolved
-
 
 class ChartSpec(BaseModel):
     chart_type: Literal["bar", "line", "pie"]
@@ -100,6 +73,17 @@ class ChartSpec(BaseModel):
     y: list[str]
     y_units: list[str]
     title: str
+
+
+class SqlGeneration(BaseModel):
+    """LLM-generated SQL plus its own read on how to chart the result (same reasoning, one call)."""
+
+    sql: str
+    chart_type: Literal["bar", "line", "pie"] | None = None
+    x: str | None = None
+    y: list[str] = Field(default_factory=list)
+    y_units: list[str] = Field(default_factory=list)
+    title: str = ""
 
 
 class AgentState(TypedDict):
@@ -113,8 +97,9 @@ class AgentState(TypedDict):
     category_query_text: str | None
     category_candidates: list[tuple[str, float]] | None
     intent: Filters | None
-    sql: str | None
-    params: list | None
+    sql_generation: SqlGeneration | None
+    sql_error: str | None
+    sql_attempts: int
     validation_error: str | None
     needs_clarification: bool
     clarification_question: str | None
@@ -143,8 +128,9 @@ class PartialAgentState(TypedDict, total=False):
     category_query_text: str | None
     category_candidates: list[tuple[str, float]] | None
     intent: Filters | None
-    sql: str | None
-    params: list | None
+    sql_generation: SqlGeneration | None
+    sql_error: str | None
+    sql_attempts: int
     validation_error: str | None
     needs_clarification: bool
     clarification_question: str | None

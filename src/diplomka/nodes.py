@@ -4,10 +4,12 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from diplomka.db import connect
 from diplomka.llm import get_llm
-from diplomka.models import AgentState, ChartSpec, Filters, PartialAgentState
+from diplomka.models import AgentState, ChartSpec, Filters, PartialAgentState, SqlGeneration
 from diplomka.retrieval import lookup_categories
 from diplomka.schema import SCHEMA
-from diplomka.sql import build_sql
+from diplomka.sql import MAX_ROWS, build_schema_context
+
+MAX_SQL_ATTEMPTS = 2
 
 
 def user_input(state: AgentState) -> PartialAgentState:
@@ -33,23 +35,14 @@ def clarify_intent(state: AgentState) -> PartialAgentState:
         "needs_clarification": is_unclear,
         "clarification_question": "Could you clarify what you mean?" if is_unclear else None,
         "attempts": state.get("attempts", 0) if is_unclear else 0,
+        "sql_attempts": 0,
+        "sql_error": None,
     }
-
-
-def basic_query(state: AgentState) -> PartialAgentState:
-    """Simple branch: metric (+dimension) is clear, no fuzzy lookup needed;
-    goes straight to execute_query."""
-
-    intent = state["intent"]
-    assert intent is not None
-    sql, params = build_sql(intent)
-
-    return {"sql": sql, "params": params, "needs_clarification": False, "clarification_question": None}
 
 
 def complex_query(state: AgentState) -> PartialAgentState:
     """Branch where an ambiguous reference (e.g. a category written as free text)
-    must be resolved before building SQL."""
+    must be resolved before generating SQL."""
     intent = state["intent"]
     assert intent is not None
     return {"category_query_text": intent.category_filter}
@@ -85,8 +78,8 @@ def embedding_lookup(state: AgentState) -> PartialAgentState:
 
 
 def improve_prompt(state: AgentState) -> PartialAgentState:
-    """Self-check: verifies the resolved intent/SQL makes sense; on a problem increments
-    `attempts` and returns to clarify_intent (up to the limit), otherwise proceeds to execute_query."""
+    """Self-check: verifies the resolved category makes sense; on a problem increments
+    `attempts` and returns to clarify_intent (up to the limit), otherwise proceeds to generate_sql."""
 
     candidates = state["category_candidates"] or []
     candidates_have_good_score = any(score > 0.5 for _, score in candidates)
@@ -107,34 +100,79 @@ def improve_prompt(state: AgentState) -> PartialAgentState:
     assert intent is not None
     intent = intent.model_copy(update={"category_filter": candidates[0][0]})
 
-    sql, params = build_sql(intent)
-
     return {
         "intent": intent,
-        "sql": sql,
-        "params": params,
         "needs_clarification": False,
         "clarification_question": None,
     }
 
 
-def execute_query(state: AgentState) -> PartialAgentState:
-    """Builds parametrized SQL from `intent`/`active_filters` and schema/semantic_schema.yaml
-    and runs it against data/olist.duckdb -> columns/rows."""
+def _intent_summary(intent: Filters) -> str:
+    """Deterministic recap of the resolved Filters - used both as input for `generate_sql` and
+    for the AIMessage that `clarify_intent` reads back in the next turn."""
+    metrics = ", ".join(intent.metrics) if intent.metrics else "-"
+    fact_agg = f"{intent.agg} {intent.fact}" if intent.fact and intent.agg else "-"
+    return (
+        "[PREVIOUS TURN CONTEXT - only for resolving references, DO NOT automatically copy into the new question]\n"
+        f"metrics: {metrics} | fact/agg: {fact_agg} | dimension: {intent.dimension or '-'} | "
+        f"granularity: {intent.granularity or 'week (default)'}\n"
+        f"category_filter: {intent.category_filter or '-'} | state_filter: {intent.state_filter or '-'} | "
+        f"period: {intent.date_from or '-'} to {intent.date_to or '-'} | "
+        f"chart_type_request: {intent.chart_type_request or '-'}"
+    )
 
-    sql = state["sql"]
-    params = state["params"]
+
+def generate_sql(state: AgentState) -> PartialAgentState:
+    """LLM writes free SQL (DuckDB dialect) grounded in the semantic schema, from the resolved
+    intent; also emits its own chart hint (chart_type/x/y/y_units/title) for that same query.
+    On a retry (`sql_error` set), the previous DuckDB error is fed back for a fix."""
+
     intent = state["intent"]
-    assert sql is not None
+    assert intent is not None
+
+    human = f"Resolved intent:\n{_intent_summary(intent)}\n\nWrite the SQL query."
+    if state["sql_error"]:
+        human += f"\n\nThe previous attempt failed with this DuckDB error - fix it:\n{state['sql_error']}"
+
+    structured_llm = get_llm().with_structured_output(SqlGeneration)
+    generation = structured_llm.invoke([SystemMessage(content=build_schema_context()), HumanMessage(content=human)])
+    assert isinstance(generation, SqlGeneration)
+
+    return {"sql_generation": generation, "sql_error": None}
+
+
+def validate_sql(state: AgentState) -> PartialAgentState:
+    """Checks the LLM-generated SQL is valid DuckDB (via EXPLAIN, on a read-only connection)
+    before ever executing it for real. On failure, records the error for a retry in generate_sql."""
+
+    generation = state["sql_generation"]
+    assert generation is not None
+
+    try:
+        with connect(read_only=True) as conn:
+            conn.execute(f"EXPLAIN {generation.sql}")
+        return {"sql_error": None}
+    except Exception as e:
+        return {"sql_error": str(e), "sql_attempts": state["sql_attempts"] + 1}
+
+
+def execute_query(state: AgentState) -> PartialAgentState:
+    """Runs the LLM-generated SQL (read-only connection) against data/olist.duckdb -> columns/rows.
+    Also reached after exhausting sql retries - a still-broken query fails here the normal way,
+    surfacing as `validation_error` in generate_response."""
+
+    generation = state["sql_generation"]
+    intent = state["intent"]
+    assert generation is not None
     assert intent is not None
 
     columns, rows = [], []
     error = None
-    with connect() as conn:
+    with connect(read_only=True) as conn:
         try:
-            result = conn.execute(sql, params).fetchall()
+            result = conn.execute(generation.sql).fetchall()
             columns = [desc[0] for desc in conn.description]
-            rows = result
+            rows = result[:MAX_ROWS]
         except Exception as e:
             error = str(e)
 
@@ -148,21 +186,9 @@ def execute_query(state: AgentState) -> PartialAgentState:
     }
 
 
-def _intent_summary(intent: Filters) -> str:
-    """Deterministic recap of the resolved Filters for AIMessage - input for clarify_intent in the next turn."""
-    metrics = ", ".join(intent.metrics) if intent.metrics else "-"
-    fact_agg = f"{intent.agg} {intent.fact}" if intent.fact and intent.agg else "-"
-    return (
-        "[PREVIOUS TURN CONTEXT - only for resolving references, DO NOT automatically copy into the new question]\n"
-        f"metrics: {metrics} | fact/agg: {fact_agg} | dimension: {intent.dimension or '-'}\n"
-        f"category_filter: {intent.category_filter or '-'} | state_filter: {intent.state_filter or '-'} | "
-        f"period: {intent.date_from or '-'} to {intent.date_to or '-'}"
-    )
-
-
 def generate_response(state: AgentState) -> PartialAgentState:
-    """LLM summarizes columns/rows into a short NL answer (`answer`); `ChartSpec` is derived
-    deterministically from the intent/columns."""
+    """LLM summarizes columns/rows into a short NL answer (`answer`); `ChartSpec` is taken from
+    generate_sql's chart hint, validated against the query's real result columns."""
 
     has_error = state["validation_error"] is not None
     if has_error:
@@ -175,25 +201,24 @@ def generate_response(state: AgentState) -> PartialAgentState:
     columns = state["columns"]
     rows = state["rows"]
     intent = state["intent"]
+    generation = state["sql_generation"]
     assert intent is not None
+    assert generation is not None
 
     chart_spec = None
-    if intent.dimension is not None and len(columns) >= 2:
-        metrics = intent.resolve_metrics()
-        y_cols = columns[1:]
-
-        if intent.chart_type_request is not None:
-            chart_type = intent.chart_type_request
-        elif intent.dimension == "time":
-            chart_type = "line"
-        elif len(metrics) == 1 and metrics[0]["additive"] and len(rows) <= 8:
-            chart_type = "pie"
-        else:
-            chart_type = "bar"
-
-        title = metrics[0]["label"] if len(metrics) == 1 else ", ".join(m["label"] for m in metrics)
-        y_units = [m["unit"] for m in metrics]
-        chart_spec = ChartSpec(chart_type=chart_type, x=columns[0], y=y_cols, y_units=y_units, title=title)
+    if (
+        generation.chart_type is not None
+        and generation.x in columns
+        and generation.y
+        and all(y in columns for y in generation.y)
+    ):
+        chart_spec = ChartSpec(
+            chart_type=generation.chart_type,
+            x=generation.x,
+            y=generation.y,
+            y_units=generation.y_units or ["value"] * len(generation.y),
+            title=generation.title or ", ".join(generation.y),
+        )
 
     preview = "\n".join(str(dict(zip(columns, row, strict=False))) for row in rows[:20])
     content = get_llm().invoke(
@@ -213,6 +238,7 @@ def generate_response(state: AgentState) -> PartialAgentState:
     }
 
 
+
 # Conditional routing
 def route_intent(state: AgentState) -> str:
     intent = state["intent"]
@@ -225,4 +251,10 @@ def route_intent(state: AgentState) -> str:
 def route_clarification(state: AgentState) -> str:
     if state["needs_clarification"]:
         return "user_input"
-    return "execute_query"
+    return "proceed"
+
+
+def route_sql_validation(state: AgentState) -> str:
+    if state["sql_error"] is None or state["sql_attempts"] >= MAX_SQL_ATTEMPTS:
+        return "proceed"
+    return "retry"
