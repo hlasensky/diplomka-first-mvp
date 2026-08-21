@@ -19,8 +19,10 @@ from diplomka.nodes import (
     route_clarification,
     route_intent,
     route_sql_validation,
+    route_validate_chart_spec,
     unclear_query,
     user_input,
+    validate_chart_spec,
     validate_sql,
 )
 
@@ -37,6 +39,7 @@ def _build_workflow() -> StateGraph[AgentState, None, GraphInput, AgentState]:
     workflow.add_node("validate_sql", validate_sql)
     workflow.add_node("execute_query", execute_query)
     workflow.add_node("generate_response", generate_response)
+    workflow.add_node("validate_chart_spec", validate_chart_spec)
 
     workflow.add_edge(START, "user_input")
     workflow.add_edge("user_input", "clarify_intent")
@@ -74,7 +77,15 @@ def _build_workflow() -> StateGraph[AgentState, None, GraphInput, AgentState]:
     )
 
     workflow.add_edge("execute_query", "generate_response")
-    workflow.add_edge("generate_response", END)
+    workflow.add_edge("generate_response", "validate_chart_spec")
+    workflow.add_conditional_edges(
+        "validate_chart_spec",
+        route_validate_chart_spec,
+        {
+            "proceed": END,
+            "retry": "generate_sql",  # chart critique is fed back into the next generate_sql call
+        },
+    )
     return workflow
 
 

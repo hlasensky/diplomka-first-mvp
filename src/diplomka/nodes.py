@@ -4,12 +4,13 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from diplomka.db import connect
 from diplomka.llm import get_llm
-from diplomka.models import AgentState, ChartSpec, Filters, PartialAgentState, SqlGeneration
+from diplomka.models import AgentState, ChartCritique, ChartSpec, Filters, PartialAgentState, SqlGeneration
 from diplomka.retrieval import lookup_categories
 from diplomka.schema import SCHEMA
 from diplomka.sql import MAX_ROWS, build_schema_context
 
 MAX_SQL_ATTEMPTS = 2
+MAX_CHART_ATTEMPTS = 2
 
 
 def user_input(state: AgentState) -> PartialAgentState:
@@ -37,6 +38,8 @@ def clarify_intent(state: AgentState) -> PartialAgentState:
         "attempts": state.get("attempts", 0) if is_unclear else 0,
         "sql_attempts": 0,
         "sql_error": None,
+        "chart_attempts": 0,
+        "chart_validation_error": None,
     }
 
 
@@ -125,7 +128,8 @@ def _intent_summary(intent: Filters) -> str:
 def generate_sql(state: AgentState) -> PartialAgentState:
     """LLM writes free SQL (DuckDB dialect) grounded in the semantic schema, from the resolved
     intent; also emits its own chart hint (chart_type/x/y/y_units/title) for that same query.
-    On a retry (`sql_error` set), the previous DuckDB error is fed back for a fix."""
+    On a retry, the previous DuckDB error (`sql_error`) or chart critique (`chart_validation_error`)
+    is fed back for a fix."""
 
     intent = state["intent"]
     assert intent is not None
@@ -133,12 +137,17 @@ def generate_sql(state: AgentState) -> PartialAgentState:
     human = f"Resolved intent:\n{_intent_summary(intent)}\n\nWrite the SQL query."
     if state["sql_error"]:
         human += f"\n\nThe previous attempt failed with this DuckDB error - fix it:\n{state['sql_error']}"
+    if state["chart_validation_error"]:
+        human += (
+            "\n\nThe previous chart choice had this problem - keep the same SQL logic but fix "
+            f"chart_type/x/y/y_units/title:\n{state['chart_validation_error']}"
+        )
 
     structured_llm = get_llm().with_structured_output(SqlGeneration)
     generation = structured_llm.invoke([SystemMessage(content=build_schema_context()), HumanMessage(content=human)])
     assert isinstance(generation, SqlGeneration)
 
-    return {"sql_generation": generation, "sql_error": None}
+    return {"sql_generation": generation, "sql_error": None, "chart_validation_error": None}
 
 
 def validate_sql(state: AgentState) -> PartialAgentState:
@@ -186,6 +195,29 @@ def execute_query(state: AgentState) -> PartialAgentState:
     }
 
 
+def _valid_chart_generation(generation: SqlGeneration, columns: list[str]) -> bool:
+    """Checks generation's chart hint actually matches the query's real result columns, with
+    arity rules that depend on chart_type (e.g. histogram needs no y, heatmap needs a z)."""
+
+    if generation.chart_type is None:
+        print("No chart_type in generation")
+        return False
+    if generation.chart_type == "table":
+        return True
+    if generation.x is None or generation.x not in columns:
+        return False
+    if generation.chart_type == "histogram":
+        return True
+    if not generation.y or not all(y in columns for y in generation.y):
+        return False
+    if generation.chart_type in ("pie", "scatter", "box") and len(generation.y) != 1:
+        return False
+    if generation.chart_type == "heatmap" and (generation.z is None or generation.z not in columns):
+        return False
+    print(f"Valid chart generation: {generation.chart_type} x={generation.x} y={generation.y} z={generation.z}")
+    return True
+
+
 def generate_response(state: AgentState) -> PartialAgentState:
     """LLM summarizes columns/rows into a short NL answer (`answer`); `ChartSpec` is taken from
     generate_sql's chart hint, validated against the query's real result columns."""
@@ -206,18 +238,15 @@ def generate_response(state: AgentState) -> PartialAgentState:
     assert generation is not None
 
     chart_spec = None
-    if (
-        generation.chart_type is not None
-        and generation.x in columns
-        and generation.y
-        and all(y in columns for y in generation.y)
-    ):
+    if _valid_chart_generation(generation, columns):
+        assert generation.chart_type is not None
         chart_spec = ChartSpec(
             chart_type=generation.chart_type,
             x=generation.x,
             y=generation.y,
             y_units=generation.y_units or ["value"] * len(generation.y),
-            title=generation.title or ", ".join(generation.y),
+            z=generation.z,
+            title=generation.title or (", ".join(generation.y) if generation.y else generation.x or ""),
         )
 
     preview = "\n".join(str(dict(zip(columns, row, strict=False))) for row in rows[:20])
@@ -237,6 +266,51 @@ def generate_response(state: AgentState) -> PartialAgentState:
         "messages": [AIMessage(content=f"{_intent_summary(intent)}\n\nAnswer to the user: {answer}")],
     }
 
+def validate_chart_spec(state: AgentState) -> PartialAgentState:
+    """LLM second-opinion on the chosen `ChartSpec` (chart_type fits the data shape, axes not
+    swapped, title not empty, etc). `chart_spec=None` (no chartable breakdown) always proceeds -
+    nothing to critique. On a real problem, feeds it back to generate_sql for a redo, up to
+    MAX_CHART_ATTEMPTS; if still unresolved, drops the chart rather than show a bad one."""
+
+    chart_spec = state["chart_spec"]
+    if chart_spec is None or chart_spec.chart_type == "table":
+        return {"chart_validation_error": None}
+
+    preview = "\n".join(str(dict(zip(state["columns"], row, strict=False))) for row in state["rows"][:10])
+    structured_llm = get_llm().with_structured_output(ChartCritique)
+    critique = structured_llm.invoke(
+        [
+            SystemMessage(
+                content=(
+                    "You review a chart choice for a data question, for correctness and basic design "
+                    "quality. Flag it (ok=False) only for real problems: wrong chart_type for the data "
+                    "shape - a pie/box/scatter with more than one y column, a pie with a time x-axis or "
+                    "more than 8 slices, a line/area chart with a non-time categorical x-axis, a scatter "
+                    "or histogram computed over already-aggregated/grouped rows instead of raw ones, a "
+                    "heatmap missing its z (color) column, x/y swapped, an empty or unhelpful title, or a "
+                    "y_units length that doesn't match y. Do not flag mere stylistic preference - a "
+                    "reasonable, correctly-shaped chart is always fine even if a different type could "
+                    "also have worked."
+                )
+            ),
+            HumanMessage(
+                content=(
+                    f"User question: {state['question']}\n"
+                    f"Chart: chart_type={chart_spec.chart_type}, x={chart_spec.x}, y={chart_spec.y}, "
+                    f"y_units={chart_spec.y_units}, z={chart_spec.z}, title={chart_spec.title!r}\n"
+                    f"Sample rows:\n{preview}"
+                )
+            ),
+        ]
+    )
+    assert isinstance(critique, ChartCritique)
+
+    if critique.ok:
+        return {"chart_validation_error": None}
+    if state["chart_attempts"] >= MAX_CHART_ATTEMPTS:
+        # give up - show the result without a chart rather than a bad one
+        return {"chart_validation_error": None, "chart_spec": None}
+    return {"chart_validation_error": critique.issue, "chart_attempts": state["chart_attempts"] + 1}
 
 
 # Conditional routing
@@ -258,3 +332,6 @@ def route_sql_validation(state: AgentState) -> str:
     if state["sql_error"] is None or state["sql_attempts"] >= MAX_SQL_ATTEMPTS:
         return "proceed"
     return "retry"
+
+def route_validate_chart_spec(state: AgentState) -> str:
+    return "retry" if state["chart_validation_error"] is not None else "proceed"

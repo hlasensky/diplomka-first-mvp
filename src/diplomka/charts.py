@@ -1,5 +1,6 @@
 """Plotly rendering: Chainlit-matched themes and ``build_figure`` from a ``ChartSpec``."""
 
+import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
 
@@ -41,33 +42,73 @@ pio.templates["chainlit_dark"] = get_chainlit_theme(is_dark=True)
 pio.templates["chainlit_light"] = get_chainlit_theme(is_dark=False)
 
 
-def build_figure(cs: ChartSpec, rows: list[tuple]) -> go.Figure:
-    x = [r[0] for r in rows]
+def build_figure(cs: ChartSpec, columns: list[str], rows: list[tuple]) -> go.Figure:
+    """Renders a `ChartSpec` (whose x/y/z name real result columns, looked up by name here -
+    not assumed to be in column order) into the matching Plotly figure for its chart_type."""
+
     fig = go.Figure()
 
+    if cs.chart_type == "table":
+        fig.add_trace(go.Table(header=dict(values=columns), cells=dict(values=list(zip(*rows, strict=False)))))
+        fig.update_layout(title=cs.title, template="chainlit_dark")
+        return fig
+
+    assert cs.x is not None
+    x = [r[columns.index(cs.x)] for r in rows]
+
     if cs.chart_type == "pie":
-        y = [r[1] for r in rows]
+        y = [r[columns.index(cs.y[0])] for r in rows]
         fig.add_trace(go.Pie(labels=x, values=y))
         fig.update_layout(title=cs.title, template="chainlit_dark")
         return fig
 
+    if cs.chart_type == "histogram":
+        fig.add_trace(go.Histogram(x=x))
+        fig.update_layout(title=cs.title, template="chainlit_dark")
+        return fig
+
+    if cs.chart_type == "scatter":
+        y = [r[columns.index(cs.y[0])] for r in rows]
+        fig.add_trace(go.Scatter(x=x, y=y, mode="markers"))
+        fig.update_layout(title=cs.title, template="chainlit_dark")
+        return fig
+
+    if cs.chart_type == "box":
+        y = [r[columns.index(cs.y[0])] for r in rows]
+        fig.add_trace(go.Box(x=x, y=y))
+        fig.update_layout(title=cs.title, template="chainlit_dark")
+        return fig
+
+    if cs.chart_type == "heatmap":
+        assert cs.z is not None
+        df = pd.DataFrame(rows, columns=columns)
+        pivot = df.pivot_table(index=cs.y[0], columns=cs.x, values=cs.z, aggfunc="sum")
+        fig.add_trace(go.Heatmap(z=pivot.to_numpy(), x=pivot.columns, y=pivot.index, colorbar=dict(title=cs.z)))
+        fig.update_layout(title=cs.title, template="chainlit_dark")
+        return fig
+
+    # bar / stacked_bar / line / area - one or more y metrics against the same x
     # metrics with different units (e.g. R$ vs. item count) go on separate Y axes,
     # so one isn't hidden due to a different scale (see the revenue+orders on one axis screenshot)
     distinct_units = list(dict.fromkeys(cs.y_units))
     use_secondary_axis = len(distinct_units) == 2
 
-    for i, y_col in enumerate(cs.y, start=1):
-        y = [r[i] for r in rows]
-        on_secondary = use_secondary_axis and cs.y_units[i - 1] == distinct_units[1]
+    for i, y_col in enumerate(cs.y):
+        y = [r[columns.index(y_col)] for r in rows]
+        on_secondary = use_secondary_axis and cs.y_units[i] == distinct_units[1]
         trace_kwargs = {"name": y_col, "yaxis": "y2" if on_secondary else "y"}
         if cs.chart_type == "line":
             fig.add_trace(go.Scatter(x=x, y=y, mode="lines", **trace_kwargs))
+        elif cs.chart_type == "area":
+            fig.add_trace(go.Scatter(x=x, y=y, mode="lines", fill="tozeroy", **trace_kwargs))
         else:
             fig.add_trace(go.Bar(x=x, y=y, **trace_kwargs))
 
     fig.update_layout(title=cs.title, template="chainlit_dark")
     if cs.chart_type == "bar":
         fig.update_layout(barmode="group")
+    elif cs.chart_type == "stacked_bar":
+        fig.update_layout(barmode="stack")
     if use_secondary_axis:
         fig.update_layout(
             yaxis=dict(title=distinct_units[0]),

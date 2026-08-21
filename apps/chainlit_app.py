@@ -18,6 +18,7 @@ STEP_LABELS = {
     "unclear_query": "Evaluating unclear query",
     "execute_query": "Running SQL over DuckDB",
     "generate_response": "Generating response",
+    "validate_chart_spec": "Reviewing chart choice",
 }
 
 
@@ -60,7 +61,7 @@ async def on_message(message: cl.Message):
 
     elements = []
     if result.get("chart_spec"):
-        fig = build_figure(result["chart_spec"], result["rows"])
+        fig = build_figure(result["chart_spec"], result["columns"], result["rows"])
         elements.append(cl.Plotly(name="chart", figure=fig))
 
     await cl.Message(content=result["answer"], elements=elements).send()

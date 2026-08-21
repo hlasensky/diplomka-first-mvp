@@ -13,6 +13,8 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 
 from diplomka.schema import SCHEMA
 
+ChartType = Literal["bar", "stacked_bar", "line", "area", "pie", "scatter", "histogram", "box", "heatmap", "table"]
+
 
 class Filters(BaseModel):
     metrics: list[str] = Field(default_factory=list)
@@ -26,7 +28,7 @@ class Filters(BaseModel):
     date_from: str | None = None
     date_to: str | None = None
     # explicit user request for chart type (only when mentioned in the question), otherwise computed automatically
-    chart_type_request: Literal["bar", "line", "pie"] | None = None
+    chart_type_request: ChartType | None = None
 
     @field_validator("metrics")
     @classmethod
@@ -68,22 +70,39 @@ class Filters(BaseModel):
 
 
 class ChartSpec(BaseModel):
-    chart_type: Literal["bar", "line", "pie"]
-    x: str
-    y: list[str]
-    y_units: list[str]
-    title: str
+    """x/y/z meaning depends on chart_type:
+    - bar/stacked_bar/line/area: x = category or time; y = 1+ metric columns
+    - pie/histogram/box/scatter: x = labels/numeric/category/numeric; y = 0 or 1 value column
+      (histogram needs none, the rest need exactly one)
+    - heatmap: x, y = the two dimension columns; z = the value/color column
+    - table: none of x/y/z used - render the raw result as-is
+    """
+
+    chart_type: ChartType
+    x: str | None = None
+    y: list[str] = Field(default_factory=list)
+    y_units: list[str] = Field(default_factory=list)
+    z: str | None = None
+    title: str = ""
 
 
 class SqlGeneration(BaseModel):
     """LLM-generated SQL plus its own read on how to chart the result (same reasoning, one call)."""
 
     sql: str
-    chart_type: Literal["bar", "line", "pie"] | None = None
+    chart_type: ChartType | None = None
     x: str | None = None
     y: list[str] = Field(default_factory=list)
     y_units: list[str] = Field(default_factory=list)
+    z: str | None = None
     title: str = ""
+
+
+class ChartCritique(BaseModel):
+    """LLM's second opinion on a chosen `ChartSpec`, used by `validate_chart_spec`."""
+
+    ok: bool
+    issue: str = ""
 
 
 class AgentState(TypedDict):
@@ -108,6 +127,8 @@ class AgentState(TypedDict):
 
     # output
     chart_spec: ChartSpec | None
+    chart_validation_error: str | None
+    chart_attempts: int
     answer: str
 
 
@@ -137,4 +158,6 @@ class PartialAgentState(TypedDict, total=False):
     columns: list[str]
     rows: list[tuple]
     chart_spec: ChartSpec | None
+    chart_validation_error: str | None
+    chart_attempts: int
     answer: str
