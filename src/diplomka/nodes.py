@@ -115,10 +115,11 @@ def _intent_summary(intent: Filters) -> str:
     for the AIMessage that `clarify_intent` reads back in the next turn."""
     metrics = ", ".join(intent.metrics) if intent.metrics else "-"
     fact_agg = f"{intent.agg} {intent.fact}" if intent.fact and intent.agg else "-"
+    granularity = (intent.granularity or "week (default)") if intent.dimension == "time" else "-"
     return (
         "[PREVIOUS TURN CONTEXT - only for resolving references, DO NOT automatically copy into the new question]\n"
         f"metrics: {metrics} | fact/agg: {fact_agg} | dimension: {intent.dimension or '-'} | "
-        f"granularity: {intent.granularity or 'week (default)'}\n"
+        f"granularity: {granularity}\n"
         f"category_filter: {intent.category_filter or '-'} | state_filter: {intent.state_filter or '-'} | "
         f"period: {intent.date_from or '-'} to {intent.date_to or '-'} | "
         f"chart_type_request: {intent.chart_type_request or '-'}"
@@ -134,7 +135,13 @@ def generate_sql(state: AgentState) -> PartialAgentState:
     intent = state["intent"]
     assert intent is not None
 
-    human = f"Resolved intent:\n{_intent_summary(intent)}\n\nWrite the SQL query."
+    human = (
+        f"User question: {state['question']}\n\n"
+        f"Resolved intent:\n{_intent_summary(intent)}\n\n"
+        "Write the SQL query. The resolved intent gives you the metric/dimension/filters, but "
+        "re-read the user question literally for anything the intent doesn't capture - row limits "
+        "('top 10', 'bottom 5'), sort direction, thresholds ('at least 50 orders'), exclusions, etc."
+    )
     if state["sql_error"]:
         human += f"\n\nThe previous attempt failed with this DuckDB error - fix it:\n{state['sql_error']}"
     if state["chart_validation_error"]:
@@ -290,7 +297,13 @@ def validate_chart_spec(state: AgentState) -> PartialAgentState:
                     "heatmap missing its z (color) column, x/y swapped, an empty or unhelpful title, or a "
                     "y_units length that doesn't match y. Do not flag mere stylistic preference - a "
                     "reasonable, correctly-shaped chart is always fine even if a different type could "
-                    "also have worked."
+                    "also have worked.\n"
+                    "One specific check: read the chart_type value literally, character for character, "
+                    "before judging it - do not assume or recall a different chart_type than the one "
+                    "actually given. Only flag mixed-unit y columns (e.g. currency + count) when "
+                    "chart_type is literally 'stacked_bar' (name 'bar' as the fix). A plain 'bar' with "
+                    "mixed-unit y columns is exactly correct as-is - do NOT flag it, and do NOT describe "
+                    "it as 'stacked' in your issue text."
                 )
             ),
             HumanMessage(

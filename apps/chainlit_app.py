@@ -1,6 +1,9 @@
 """Chainlit UI entry point. Run with: uv run chainlit run apps/chainlit_app.py -w"""
 
+import time
+
 import chainlit as cl
+from langchain_core.callbacks import UsageMetadataCallbackHandler
 
 from diplomka.charts import build_figure
 from diplomka.graph import get_graph
@@ -44,15 +47,34 @@ async def set_starters():
     ]
 
 
+async def _send_usage_step(usage_cb: UsageMetadataCallbackHandler, elapsed: float, sql: str | None) -> None:
+    """Native Chainlit Step (collapsible, consistent with the pipeline trace steps above it) -
+    elapsed time, per-model token usage, the SQL that ran."""
+
+    total_tokens = sum(u["total_tokens"] for u in usage_cb.usage_metadata.values())
+    lines = [f"{elapsed:.1f}s" + (f" - {total_tokens} tokens" if total_tokens else "")]
+    for model, u in usage_cb.usage_metadata.items():
+        lines.append(f"- `{model}`: {u['input_tokens']} in / {u['output_tokens']} out ({u['total_tokens']} total)")
+    if sql:
+        lines.append(f"\n```sql\n{sql.strip()}\n```")
+
+    async with cl.Step(name="Usage & SQL", type="tool") as step:
+        step.output = "\n".join(lines)
+
+
 @cl.on_message
 async def on_message(message: cl.Message):
     thread = {"configurable": {"thread_id": cl.context.session.id}}
+    usage_cb = UsageMetadataCallbackHandler()
+    config = {**thread, "callbacks": [usage_cb]}
+    start = time.monotonic()
 
-    async for update in graph.astream({"question": message.content}, config=thread, stream_mode="updates"):
+    async for update in graph.astream({"question": message.content}, config=config, stream_mode="updates"):
         for node_name, node_output in update.items():
             async with cl.Step(name=STEP_LABELS.get(node_name, node_name), type="tool") as step:
                 step.output = "\n".join(f"{k}: {v}" for k, v in node_output.items())
 
+    elapsed = time.monotonic() - start
     result = (await graph.aget_state(thread)).values
 
     if result.get("needs_clarification"):
@@ -63,5 +85,8 @@ async def on_message(message: cl.Message):
     if result.get("chart_spec"):
         fig = build_figure(result["chart_spec"], result["columns"], result["rows"])
         elements.append(cl.Plotly(name="chart", figure=fig))
+
+    sql_generation = result.get("sql_generation")
+    await _send_usage_step(usage_cb, elapsed, sql_generation.sql if sql_generation else None)
 
     await cl.Message(content=result["answer"], elements=elements).send()
