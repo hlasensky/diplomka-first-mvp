@@ -12,7 +12,10 @@ def build_llm() -> BaseChatModel:
     if config.LLM_BACKEND == "anthropic":
         from langchain_anthropic import ChatAnthropic
 
-        return ChatAnthropic(model=config.ANTHROPIC_MODEL, temperature=0, max_tokens=1000)
+        # pyright's pydantic-constructor synthesis picks the by-alias overload here and
+        # complains about these by-name kwargs, even though ChatAnthropic accepts both
+        # (validate_by_alias=True, populate_by_name=True) - false positive, works at runtime.
+        return ChatAnthropic(model=config.ANTHROPIC_MODEL, temperature=0, max_tokens=1000)  # pyright: ignore[reportCallIssue]
 
     from langchain_ollama import ChatOllama
 

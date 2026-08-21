@@ -124,3 +124,31 @@ class AgentState(TypedDict):
     # output
     chart_spec: ChartSpec | None
     answer: str
+
+
+class GraphInput(TypedDict):
+    """What a caller must supply to `graph.invoke()` - everything else in `AgentState` is
+    per-turn scratch or defaulted by the nodes themselves."""
+
+    question: str
+
+
+class PartialAgentState(TypedDict, total=False):
+    """Same fields as `AgentState`, all optional - what a LangGraph node actually returns (a partial update)."""
+
+    messages: Annotated[list[BaseMessage], add_messages]
+    active_filters: Filters
+    attempts: int
+    question: str
+    category_query_text: str | None
+    category_candidates: list[tuple[str, float]] | None
+    intent: Filters | None
+    sql: str | None
+    params: list | None
+    validation_error: str | None
+    needs_clarification: bool
+    clarification_question: str | None
+    columns: list[str]
+    rows: list[tuple]
+    chart_spec: ChartSpec | None
+    answer: str

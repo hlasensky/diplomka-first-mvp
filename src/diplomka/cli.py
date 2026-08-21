@@ -1,11 +1,13 @@
 """Interactive command-line REPL for the analytics agent."""
 
+from langchain_core.runnables import RunnableConfig
+
 from diplomka.graph import get_graph
 
 
 def main() -> None:
     graph = get_graph()
-    thread = {"configurable": {"thread_id": "demo-1"}}
+    thread: RunnableConfig = {"configurable": {"thread_id": "demo-1"}}
     while True:
         question = input("You: ")
         if question.strip().lower() in {"exit", "quit"}:

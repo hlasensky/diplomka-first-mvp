@@ -65,11 +65,12 @@ def build_figure(cs: ChartSpec, rows: list[tuple]) -> go.Figure:
         else:
             fig.add_trace(go.Bar(x=x, y=y, **trace_kwargs))
 
-    layout = {"title": cs.title, "template": "chainlit_dark"}
+    fig.update_layout(title=cs.title, template="chainlit_dark")
     if cs.chart_type == "bar":
-        layout["barmode"] = "group"
+        fig.update_layout(barmode="group")
     if use_secondary_axis:
-        layout["yaxis"] = dict(title=distinct_units[0])
-        layout["yaxis2"] = dict(title=distinct_units[1], overlaying="y", side="right")
-    fig.update_layout(**layout)
+        fig.update_layout(
+            yaxis=dict(title=distinct_units[0]),
+            yaxis2=dict(title=distinct_units[1], overlaying="y", side="right"),
+        )
     return fig

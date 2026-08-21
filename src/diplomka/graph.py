@@ -5,8 +5,9 @@ from functools import lru_cache
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
 from langgraph.graph import END, START, StateGraph
+from langgraph.graph.state import CompiledStateGraph
 
-from diplomka.models import AgentState
+from diplomka.models import AgentState, GraphInput
 from diplomka.nodes import (
     basic_query,
     clarify_intent,
@@ -22,8 +23,8 @@ from diplomka.nodes import (
 )
 
 
-def _build_workflow() -> StateGraph:
-    workflow = StateGraph(AgentState)
+def _build_workflow() -> StateGraph[AgentState, None, GraphInput, AgentState]:
+    workflow = StateGraph(AgentState, input_schema=GraphInput)
     workflow.add_node("user_input", user_input)
     workflow.add_node("clarify_intent", clarify_intent)
     workflow.add_node("basic_query", basic_query)
@@ -67,7 +68,7 @@ def _build_workflow() -> StateGraph:
 
 
 @lru_cache(maxsize=1)
-def get_graph():
+def get_graph() -> CompiledStateGraph[AgentState, None, GraphInput, AgentState]:
     """Compile (once) and return the agent graph with an in-memory checkpointer."""
     checkpointer = InMemorySaver(
         serde=JsonPlusSerializer(
