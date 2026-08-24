@@ -12,6 +12,7 @@ con.execute(f"""
     FROM read_csv_auto('{RAW_CSV}', header=True, quote='"', sample_size=-1)
 """)
 
-n = con.execute("SELECT COUNT(*) FROM orders").fetchone()[0]
+row = con.execute("SELECT COUNT(*) FROM orders").fetchone()
+n = row[0] if row is not None else 0
 print(f"Loaded {n} rows into {DUCKDB_PATH} (table: orders)")
 con.close()

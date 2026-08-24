@@ -7,6 +7,8 @@ Marked ``slow`` so they can be deselected in fast runs:
 
 import pytest
 
+from langchain_core.runnables import RunnableConfig
+
 from diplomka.eval import MULTI_TURN_CASES, TEST_CASES, check
 from diplomka.graph import get_graph
 
@@ -14,7 +16,7 @@ from diplomka.graph import get_graph
 @pytest.mark.slow
 @pytest.mark.parametrize("case", TEST_CASES, ids=lambda c: c["question"][:40])
 def test_intent_recognition(case):
-    thread = {"configurable": {"thread_id": f"test-{case['question'][:20]}"}}
+    thread: RunnableConfig = {"configurable": {"thread_id": f"test-{case['question'][:20]}"}}
     result = get_graph().invoke({"question": case["question"]}, config=thread)
 
     mismatches = check(result.get("intent"), case["expected"])
@@ -27,7 +29,7 @@ def test_intent_recognition(case):
 @pytest.mark.slow
 @pytest.mark.parametrize("case", MULTI_TURN_CASES, ids=lambda c: c["questions"][-1][:40])
 def test_multi_turn(case):
-    thread = {"configurable": {"thread_id": f"test-mt-{case['questions'][-1][:20]}"}}
+    thread: RunnableConfig = {"configurable": {"thread_id": f"test-mt-{case['questions'][-1][:20]}"}}
     graph = get_graph()
     results = [graph.invoke({"question": q}, config=thread) for q in case["questions"]]
     result = results[-1]

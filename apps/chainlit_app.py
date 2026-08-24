@@ -4,6 +4,7 @@ import time
 
 import chainlit as cl
 from langchain_core.callbacks import UsageMetadataCallbackHandler
+from langchain_core.runnables import RunnableConfig
 
 from diplomka.charts import build_figure
 from diplomka.graph import get_graph
@@ -24,9 +25,7 @@ STEP_LABELS = {
     "validate_chart_spec": "Reviewing chart choice",
 }
 
-
-@cl.set_starters
-async def set_starters():
+def get_starters() -> list[cl.Starter]:
     return [
         cl.Starter(
             label="Revenue by category",
@@ -46,6 +45,10 @@ async def set_starters():
         ),
     ]
 
+@cl.set_starters
+async def set_starters(get_starters) -> list[cl.Starter]:
+    return get_starters()
+
 
 async def _send_usage_step(usage_cb: UsageMetadataCallbackHandler, elapsed: float, sql: str | None) -> None:
     """Native Chainlit Step (collapsible, consistent with the pipeline trace steps above it) -
@@ -64,9 +67,9 @@ async def _send_usage_step(usage_cb: UsageMetadataCallbackHandler, elapsed: floa
 
 @cl.on_message
 async def on_message(message: cl.Message):
-    thread = {"configurable": {"thread_id": cl.context.session.id}}
+    thread: RunnableConfig = {"configurable": {"thread_id": cl.context.session.id}}
     usage_cb = UsageMetadataCallbackHandler()
-    config = {**thread, "callbacks": [usage_cb]}
+    config: RunnableConfig = {**thread, "callbacks": [usage_cb]}
     start = time.monotonic()
 
     async for update in graph.astream({"question": message.content}, config=config, stream_mode="updates"):

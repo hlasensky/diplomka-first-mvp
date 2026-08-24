@@ -7,6 +7,8 @@ It does not check the exact wording of `answer` (that's up to the LLM), only the
 `intent` and execution success.
 """
 
+from langchain_core.runnables import RunnableConfig
+
 from diplomka.eval import MULTI_TURN_CASES, TEST_CASES, check
 from diplomka.graph import get_graph
 
@@ -16,7 +18,7 @@ graph = get_graph()
 def run_multi_turn() -> bool:
     passed = 0
     for i, case in enumerate(MULTI_TURN_CASES, 1):
-        thread = {"configurable": {"thread_id": f"eval-multiturn-{i}"}}
+        thread: RunnableConfig = {"configurable": {"thread_id": f"eval-multiturn-{i}"}}
         results = [graph.invoke({"question": q}, config=thread) for q in case["questions"]]
         result = results[-1]
 
@@ -41,7 +43,7 @@ def run_multi_turn() -> bool:
 def main() -> None:
     passed = 0
     for i, case in enumerate(TEST_CASES, 1):
-        thread = {"configurable": {"thread_id": f"eval-{i}"}}
+        thread: RunnableConfig = {"configurable": {"thread_id": f"eval-{i}"}}
         result = graph.invoke({"question": case["question"]}, config=thread)
 
         intent = result.get("intent")
