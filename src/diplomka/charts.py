@@ -49,7 +49,16 @@ def build_figure(cs: ChartSpec, columns: list[str], rows: list[tuple]) -> go.Fig
     fig = go.Figure()
 
     if cs.chart_type == "table":
-        fig.add_trace(go.Table(header=dict(values=columns), cells=dict(values=list(zip(*rows, strict=False)))))
+        # go.Table doesn't pick up the template's font/background - default cell fill is
+        # near-white, which combined with the forced-white theme font is invisible text.
+        fig.add_trace(
+            go.Table(
+                header=dict(values=columns, fill_color="#1E293B", font=dict(color="#F8FAFC")),
+                cells=dict(
+                    values=list(zip(*rows, strict=False)), fill_color="#0F172A", font=dict(color="#F8FAFC")
+                ),
+            )
+        )
         fig.update_layout(title=cs.title, template="chainlit_dark")
         return fig
 

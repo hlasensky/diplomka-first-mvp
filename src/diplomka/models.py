@@ -91,8 +91,16 @@ class SqlGeneration(BaseModel):
 
     sql: str
     chart_type: ChartType | None = None
-    x: str | None = None
-    y: list[str] = Field(default_factory=list)
+    x: str | None = Field(
+        default=None,
+        description="X-axis/category column alias. Required whenever chart_type is set (including "
+        "pie, where it's the slice-label column) except histogram/table.",
+    )
+    y: list[str] = Field(
+        default_factory=list,
+        description="Y-axis metric column alias(es). Required whenever chart_type is set "
+        "(including pie, where it's the single slice-value column) except histogram/table.",
+    )
     y_units: list[str] = Field(default_factory=list)
     z: str | None = None
     title: str = ""
