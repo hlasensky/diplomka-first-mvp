@@ -1,6 +1,7 @@
 """LangGraph node functions and conditional routing for the analytics agent."""
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_core.runnables import RunnableConfig
 
 from diplomka.db import connect
 from diplomka.llm import get_llm
@@ -13,16 +14,21 @@ MAX_SQL_ATTEMPTS = 2
 MAX_CHART_ATTEMPTS = 2
 
 
+def _selected_model(config: RunnableConfig) -> str | None:
+    """Runtime model override (e.g. from a UI picker), passed as config={"configurable": {"model": ...}}."""
+    return config.get("configurable", {}).get("model")
+
+
 def user_input(state: AgentState) -> PartialAgentState:
     """Entry node: wraps `question` (from the initial state at invoke()) into a HumanMessage in the history."""
     return {"messages": [HumanMessage(content=state["question"])]}
 
 
-def clarify_intent(state: AgentState) -> PartialAgentState:
+def clarify_intent(state: AgentState, config: RunnableConfig) -> PartialAgentState:
     """LLM parses the question into `Filters` (merged with `active_filters` from before).
     Sets `intent=None` + `needs_clarification`/`clarification_question` when the query is ambiguous."""
 
-    structured_llm = get_llm().with_structured_output(Filters)
+    structured_llm = get_llm(_selected_model(config)).with_structured_output(Filters)
     intent = structured_llm.invoke([SystemMessage(content=SCHEMA["system_prompt"]), *state["messages"]])
     assert isinstance(intent, Filters)
 
@@ -126,7 +132,7 @@ def _intent_summary(intent: Filters) -> str:
     )
 
 
-def generate_sql(state: AgentState) -> PartialAgentState:
+def generate_sql(state: AgentState, config: RunnableConfig) -> PartialAgentState:
     """LLM writes free SQL (DuckDB dialect) grounded in the semantic schema, from the resolved
     intent; also emits its own chart hint (chart_type/x/y/y_units/title) for that same query.
     On a retry, the previous DuckDB error (`sql_error`) or chart critique (`chart_validation_error`)
@@ -150,7 +156,7 @@ def generate_sql(state: AgentState) -> PartialAgentState:
             f"chart_type/x/y/y_units/title:\n{state['chart_validation_error']}"
         )
 
-    structured_llm = get_llm().with_structured_output(SqlGeneration)
+    structured_llm = get_llm(_selected_model(config)).with_structured_output(SqlGeneration)
     generation = structured_llm.invoke([SystemMessage(content=build_schema_context()), HumanMessage(content=human)])
     assert isinstance(generation, SqlGeneration)
 
@@ -225,7 +231,7 @@ def _valid_chart_generation(generation: SqlGeneration, columns: list[str]) -> bo
     return True
 
 
-def generate_response(state: AgentState) -> PartialAgentState:
+def generate_response(state: AgentState, config: RunnableConfig) -> PartialAgentState:
     """LLM summarizes columns/rows into a short NL answer (`answer`); `ChartSpec` is taken from
     generate_sql's chart hint, validated against the query's real result columns."""
 
@@ -257,7 +263,7 @@ def generate_response(state: AgentState) -> PartialAgentState:
         )
 
     preview = "\n".join(str(dict(zip(columns, row, strict=False))) for row in rows[:20])
-    content = get_llm().invoke(
+    content = get_llm(_selected_model(config)).invoke(
         f"User question: {state['question']}\n\n"
         f"Query result (columns {columns}):\n{preview}\n\n"
         "Summarize the result briefly in English (1-3 sentences), stick to the numbers "
@@ -273,7 +279,7 @@ def generate_response(state: AgentState) -> PartialAgentState:
         "messages": [AIMessage(content=f"{_intent_summary(intent)}\n\nAnswer to the user: {answer}")],
     }
 
-def validate_chart_spec(state: AgentState) -> PartialAgentState:
+def validate_chart_spec(state: AgentState, config: RunnableConfig) -> PartialAgentState:
     """LLM second-opinion on the chosen `ChartSpec` (chart_type fits the data shape, axes not
     swapped, title not empty, etc). `chart_spec=None` (no chartable breakdown) always proceeds -
     nothing to critique. On a real problem, feeds it back to generate_sql for a redo, up to
@@ -284,7 +290,7 @@ def validate_chart_spec(state: AgentState) -> PartialAgentState:
         return {"chart_validation_error": None}
 
     preview = "\n".join(str(dict(zip(state["columns"], row, strict=False))) for row in state["rows"][:10])
-    structured_llm = get_llm().with_structured_output(ChartCritique)
+    structured_llm = get_llm(_selected_model(config)).with_structured_output(ChartCritique)
     critique = structured_llm.invoke(
         [
             SystemMessage(

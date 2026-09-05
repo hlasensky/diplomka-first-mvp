@@ -21,9 +21,11 @@ RAW_CSV = DATA_DIR / "raw" / "olist.csv"
 SCHEMA_PATH = PROJECT_ROOT / "schema" / "semantic_schema.yaml"
 GRAPH_PNG = PROJECT_ROOT / "graph.png"
 
-# LLM backend selection. "ollama" (default, local) or "anthropic".
+# LLM backend selection. "ollama" (default, local), "anthropic", or "openrouter".
 LLM_BACKEND = os.getenv("LLM_BACKEND", "ollama")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:14b")
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
+OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")

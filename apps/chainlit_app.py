@@ -3,13 +3,29 @@
 import time
 
 import chainlit as cl
+from chainlit.input_widget import Select
 from langchain_core.callbacks import UsageMetadataCallbackHandler
 from langchain_core.runnables import RunnableConfig
 
+from diplomka import config
 from diplomka.charts import build_figure
 from diplomka.graph import get_graph
 
 graph = get_graph()
+
+# Models offered in the OpenRouter picker (id -> https://openrouter.ai/models). Only shown
+# when LLM_BACKEND=openrouter; picking one overrides OPENROUTER_MODEL for that chat session.
+OPENROUTER_MODELS = [
+    "openai/gpt-4o-mini",
+    "openai/gpt-4o",
+    "anthropic/claude-sonnet-4.5",
+    "anthropic/claude-3-haiku",
+    "google/gemini-2.5-pro",
+    "google/gemini-2.5-flash",
+    "meta-llama/llama-3.3-70b-instruct",
+    "deepseek/deepseek-chat",
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+]
 
 STEP_LABELS = {
     "user_input": "Processing input",
@@ -46,8 +62,28 @@ def get_starters() -> list[cl.Starter]:
     ]
 
 @cl.set_starters
-async def set_starters(get_starters) -> list[cl.Starter]:
+async def set_starters(user: cl.User | None, chat_profile: str | None) -> list[cl.Starter]:
     return get_starters()
+
+
+@cl.on_chat_start
+async def on_chat_start() -> None:
+    if config.LLM_BACKEND == "openrouter":
+        await cl.ChatSettings(
+            [
+                Select(
+                    id="model",
+                    label="OpenRouter model",
+                    values=OPENROUTER_MODELS,
+                    initial_value=config.OPENROUTER_MODEL,
+                )
+            ]
+        ).send()
+
+
+@cl.on_settings_update
+async def on_settings_update(settings: dict) -> None:
+    cl.user_session.set("model", settings.get("model"))
 
 
 async def _send_usage_step(usage_cb: UsageMetadataCallbackHandler, elapsed: float, sql: str | None) -> None:
@@ -67,7 +103,8 @@ async def _send_usage_step(usage_cb: UsageMetadataCallbackHandler, elapsed: floa
 
 @cl.on_message
 async def on_message(message: cl.Message):
-    thread: RunnableConfig = {"configurable": {"thread_id": cl.context.session.id}}
+    model = cl.user_session.get("model")
+    thread: RunnableConfig = {"configurable": {"thread_id": cl.context.session.id, "model": model}}
     usage_cb = UsageMetadataCallbackHandler()
     config: RunnableConfig = {**thread, "callbacks": [usage_cb]}
     start = time.monotonic()

@@ -51,10 +51,12 @@ Configuration is via environment variables (a `.env` file is loaded automaticall
 
 | Variable          | Default                        | Purpose                                   |
 |-------------------|--------------------------------|-------------------------------------------|
-| `LLM_BACKEND`     | `ollama`                       | `ollama` (local) or `anthropic`           |
+| `LLM_BACKEND`     | `ollama`                       | `ollama` (local), `anthropic`, or `openrouter` |
 | `OLLAMA_MODEL`    | `qwen2.5:14b`                  | model when backend is ollama              |
 | `ANTHROPIC_MODEL` | `claude-haiku-4-5-20251001`    | model when backend is anthropic           |
 | `ANTHROPIC_API_KEY` | —                            | required when backend is anthropic        |
+| `OPENROUTER_MODEL` | `openai/gpt-4o-mini`         | model when backend is openrouter          |
+| `OPENROUTER_API_KEY` | —                           | required when backend is openrouter       |
 
 The DuckDB database (`data/olist.duckdb`) is committed. To rebuild it from the raw CSV:
 
