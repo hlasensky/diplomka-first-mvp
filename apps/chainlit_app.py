@@ -19,7 +19,7 @@ OPENROUTER_MODELS = [
     "openai/gpt-4o-mini",
     "openai/gpt-4o",
     "anthropic/claude-sonnet-4.5",
-    "anthropic/claude-3-haiku",
+    "anthropic/claude-haiku-4.5",
     "google/gemini-2.5-pro",
     "google/gemini-2.5-flash",
     "meta-llama/llama-3.3-70b-instruct",

@@ -1,10 +1,15 @@
 """LLM factory. Selects the chat backend from config and caches a single instance."""
 
 from functools import lru_cache
+from typing import TypeVar, cast
 
-from langchain_core.language_models import BaseChatModel
+from langchain_core.language_models import BaseChatModel, LanguageModelInput
+from langchain_core.runnables import Runnable
+from pydantic import BaseModel
 
 from diplomka import config
+
+SchemaT = TypeVar("SchemaT", bound=BaseModel)
 
 
 def build_llm(model: str | None = None) -> BaseChatModel:
@@ -30,6 +35,10 @@ def build_llm(model: str | None = None) -> BaseChatModel:
             api_key=SecretStr(config.OPENROUTER_API_KEY) if config.OPENROUTER_API_KEY else None,
             base_url="https://openrouter.ai/api/v1",
             temperature=0,
+            # Some OpenRouter-routed providers (e.g. Anthropic models via Amazon Bedrock)
+            # reject the `parallel_tool_calls` param that with_structured_output sends for
+            # single-tool "function_calling" mode - never send it, for any model here.
+            disabled_params={"parallel_tool_calls": None},
         )
 
     from langchain_ollama import ChatOllama
@@ -41,3 +50,15 @@ def build_llm(model: str | None = None) -> BaseChatModel:
 def get_llm(model: str | None = None) -> BaseChatModel:
     """Return a cached chat model for ``model`` (or the backend's configured default), built on first use."""
     return build_llm(model)
+
+
+def get_structured_llm(schema: type[SchemaT], model: str | None = None) -> Runnable[LanguageModelInput, SchemaT]:
+    """``get_llm(model).with_structured_output(schema)``, forced onto tool-calling.
+
+    The default structured-output method varies by backend - ``ChatOpenAI`` prefers OpenAI's
+    strict ``json_schema`` response format, which most non-OpenAI models routed through
+    OpenRouter don't honor properly (they echo plain text back instead, breaking parsing).
+    ``function_calling`` is the one method broadly supported across backends and models.
+    """
+    structured = get_llm(model).with_structured_output(schema, method="function_calling")
+    return cast("Runnable[LanguageModelInput, SchemaT]", structured)

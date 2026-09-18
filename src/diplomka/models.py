@@ -105,6 +105,12 @@ class SqlGeneration(BaseModel):
     z: str | None = None
     title: str = ""
 
+    @field_validator("y", "y_units", mode="before")
+    @classmethod
+    def _coerce_scalar_to_list(cls, v: object) -> object:
+        """Weaker models occasionally emit a bare string instead of a single-item list here."""
+        return [v] if isinstance(v, str) else v
+
 
 class ChartCritique(BaseModel):
     """LLM's second opinion on a chosen `ChartSpec`, used by `validate_chart_spec`."""

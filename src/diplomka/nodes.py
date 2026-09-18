@@ -4,7 +4,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
 
 from diplomka.db import connect
-from diplomka.llm import get_llm
+from diplomka.llm import get_llm, get_structured_llm
 from diplomka.models import AgentState, ChartCritique, ChartSpec, Filters, PartialAgentState, SqlGeneration
 from diplomka.retrieval import lookup_categories
 from diplomka.schema import SCHEMA
@@ -28,7 +28,7 @@ def clarify_intent(state: AgentState, config: RunnableConfig) -> PartialAgentSta
     """LLM parses the question into `Filters` (merged with `active_filters` from before).
     Sets `intent=None` + `needs_clarification`/`clarification_question` when the query is ambiguous."""
 
-    structured_llm = get_llm(_selected_model(config)).with_structured_output(Filters)
+    structured_llm = get_structured_llm(Filters, _selected_model(config))
     intent = structured_llm.invoke([SystemMessage(content=SCHEMA["system_prompt"]), *state["messages"]])
     assert isinstance(intent, Filters)
 
@@ -156,7 +156,7 @@ def generate_sql(state: AgentState, config: RunnableConfig) -> PartialAgentState
             f"chart_type/x/y/y_units/title:\n{state['chart_validation_error']}"
         )
 
-    structured_llm = get_llm(_selected_model(config)).with_structured_output(SqlGeneration)
+    structured_llm = get_structured_llm(SqlGeneration, _selected_model(config))
     generation = structured_llm.invoke([SystemMessage(content=build_schema_context()), HumanMessage(content=human)])
     assert isinstance(generation, SqlGeneration)
 
@@ -290,7 +290,7 @@ def validate_chart_spec(state: AgentState, config: RunnableConfig) -> PartialAge
         return {"chart_validation_error": None}
 
     preview = "\n".join(str(dict(zip(state["columns"], row, strict=False))) for row in state["rows"][:10])
-    structured_llm = get_llm(_selected_model(config)).with_structured_output(ChartCritique)
+    structured_llm = get_structured_llm(ChartCritique, _selected_model(config))
     critique = structured_llm.invoke(
         [
             SystemMessage(
