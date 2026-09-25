@@ -1,0 +1,94 @@
+// Proposed LangGraph agent following the analyst protocol (steps 1-9).
+// Render: dot -Tpng docs/proposed_graph.dot -o docs/proposed_graph.png
+digraph proposed {
+    graph [rankdir=TB, fontname="Helvetica", fontsize=12, nodesep=0.35, ranksep=0.45, pad=0.3,
+           label="Proposed agent graph  (grey = existing, blue = modified, orange = new; [n] = protocol step)",
+           labelloc=t, fontsize=16];
+    node  [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, fillcolor="#E5E7EB", color="#6B7280"];
+    edge  [fontname="Helvetica", fontsize=9, color="#4B5563"];
+
+    // existing / modified / new
+    node [fillcolor="#E5E7EB"];
+    start [label="START", shape=circle, fillcolor="#111827", fontcolor="white", width=0.6];
+    end   [label="END",   shape=doublecircle, fillcolor="#111827", fontcolor="white", width=0.5];
+    user_input;
+
+    classify_intent [label="classify_intent  [1]\nFilters + intent class:\ndescribe | assess | explain | predict | suggest", fillcolor="#BFDBFE", color="#2563EB"];
+    answerability   [label="answerability  [1]\nlevels/measures have data?\nintent supported?", fillcolor="#FED7AA", color="#EA580C"];
+    cannot_answer   [label="cannot_answer\nsay why + what is possible", fillcolor="#FED7AA", color="#EA580C"];
+    unclear_query   [label="unclear_query\n(specific clarification)"];
+
+    subgraph cluster_resolve {
+        label="value resolution  [1]"; style="rounded,dashed"; color="#9CA3AF"; fontsize=10;
+        complex_query; embedding_lookup; improve_prompt;
+    }
+
+    subgraph cluster_query {
+        label="OLAP query tool (reused by every analysis node)"; style="rounded,filled"; fillcolor="#F9FAFB"; color="#9CA3AF"; fontsize=10;
+        generate_sql [label="generate_sql"];
+        validate_sql [label="validate_sql\nEXPLAIN + semantic rules R1-R3"];
+        execute_query [label="execute_query\n(runtime error -> retry)", fillcolor="#BFDBFE", color="#2563EB"];
+    }
+
+    subgraph cluster_analysis {
+        label="deterministic analysis (tools, no LLM on raw series)"; style="rounded"; color="#EA580C"; fontsize=10;
+        baseline        [label="baseline  [2]\nexpected value: peers / own history /\nseasonal (STL)", fillcolor="#FED7AA", color="#EA580C"];
+        detect          [label="detect  [3]\nz-score / IQR / STL residual\n-> anomaly type + magnitude", fillcolor="#FED7AA", color="#EA580C"];
+        define_reference [label="define_reference  [4]\nanomaly set vs hold-out set", fillcolor="#FED7AA", color="#EA580C"];
+        localize        [label="localize  [5]\ntop-down drill-down, competing hypotheses\nmin support, step budget", fillcolor="#FED7AA", color="#EA580C"];
+        generalize      [label="generalize  [6]\nroll-up: colony -> cell -> state", fillcolor="#FED7AA", color="#EA580C"];
+        verify          [label="verify_counterfactual  [7]\nremove subset: anomaly gone?\nhold-out unchanged?", fillcolor="#FED7AA", color="#EA580C"];
+    }
+
+    narrate        [label="narrate  [8]\nselected insights, each bound to query_id\n(was generate_response)", fillcolor="#BFDBFE", color="#2563EB"];
+    claim_check    [label="claim_check  [8]\nevery number in text\nmatches a query result", fillcolor="#FED7AA", color="#EA580C"];
+    validate_chart_spec [label="validate_chart_spec"];
+    suggest_next   [label="suggest_next  [9]\nfollow-ups as options", fillcolor="#FED7AA", color="#EA580C"];
+
+    // entry and intent
+    start -> user_input -> classify_intent;
+    classify_intent -> unclear_query [label="no metric"];
+    unclear_query -> end;
+    classify_intent -> answerability [label="clear"];
+    answerability -> cannot_answer [label="not answerable"];
+    cannot_answer -> end;
+    answerability -> complex_query [label="free-text\nfilter value"];
+    complex_query -> embedding_lookup -> improve_prompt;
+    improve_prompt -> classify_intent [label="no match", style=dashed, constraint=false];
+
+    // routing by intent class
+    answerability -> generate_sql [label="describe"];
+    improve_prompt -> generate_sql [label="describe"];
+    answerability -> baseline [label="assess | explain"];
+    improve_prompt -> baseline [label="assess | explain"];
+    answerability -> suggest_next [label="suggest", style=dotted, constraint=false];
+
+    // query tool loop
+    generate_sql -> validate_sql;
+    validate_sql -> generate_sql [label="retry\n(feedback)", style=dashed];
+    validate_sql -> execute_query [label="ok"];
+    execute_query -> generate_sql [label="runtime\nerror", style=dashed];
+    execute_query -> narrate [label="describe"];
+
+    // analysis chain (each node issues queries through the query tool)
+    baseline -> detect;
+    detect -> narrate [label="assess"];
+    detect -> define_reference [label="explain"];
+    define_reference -> localize;
+    localize -> localize [label="next hypothesis\n(budget left)", style=dashed];
+    localize -> generalize [label="explained share\n>= threshold"];
+    generalize -> verify;
+    verify -> localize [label="fails:\nbacktrack", style=dashed, color="#DC2626", fontcolor="#DC2626", constraint=false];
+    verify -> narrate [label="holds"];
+    tool_note [shape=note, style=filled, fillcolor="#FFFBEB", color="#D97706", fontsize=9,
+               label="every orange analysis node\nruns its queries through\nthe OLAP query tool"];
+    tool_note -> generate_sql [style=dotted, color="#D97706", arrowhead=vee];
+
+    // narration and output
+    narrate -> claim_check;
+    claim_check -> narrate [label="mismatch", style=dashed, color="#DC2626", fontcolor="#DC2626", constraint=false];
+    claim_check -> validate_chart_spec [label="ok"];
+    validate_chart_spec -> generate_sql [label="chart\nretry", style=dashed, constraint=false];
+    validate_chart_spec -> suggest_next;
+    suggest_next -> end;
+}
