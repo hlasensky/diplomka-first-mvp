@@ -1,0 +1,33 @@
+cases:
+  - question: "What is the average center temperature?"
+    expected: {measures: [{measure: t_center, agg: avg}], group_by: []}
+  - question: "What is the average center temperature by month?"
+    expected: {measures: [{measure: t_center, agg: avg}], group_by: [month]}
+  - question: "What is the maximum outside temperature per year?"
+    expected: {measures: [{measure: t_outside, agg: max}], group_by: [year]}
+  - question: "Show the average in-hive humidity by season"
+    expected: {measures: [{measure: humidity, agg: avg}], group_by: [season]}
+  - question: "What is the total weight gain of each colony?"
+    expected: {measures: [{measure: weight_gain_kg, agg: sum}], group_by: [colony_key]}
+  - question: "How much honey flow was there per month?"
+    expected: {measures: [{measure: weight_gain_kg, agg: sum}], group_by: [month]}
+  - question: "Compare the average temperature at each sensor position"
+    expected: {measures: [{measure: temp_c, agg: avg}], group_by: [sensor_pos]}
+  - question: "How many swarming events were recorded per year?"
+    expected: {metrics: [event_count], group_by: [year], filters: {event_type: swarming}}
+  - question: "How often was a swarm cell found?"
+    expected: {metrics: [event_count], filters: {event_type: queencell}}
+  - question: "How many honey harvests were recorded by colony?"
+    expected: {metrics: [event_count], group_by: [colony_key], filters: {event_type: honey}}
+  - question: "How many colonies are there in each location cell?"
+    expected: {metrics: [colony_count], group_by: [cell_id]}
+  - question: "What was the weather yesterday in Berlin?"
+    expected: {unclear: true}
+  - question: "asdkjaskdj nonsense text xyz"
+    expected: {unclear: true}
+
+multi_turn:
+  - questions:
+      - "What is the average center temperature by month?"
+      - "and the average humidity by season"
+    expected_last: {measures: [{measure: humidity, agg: avg}], group_by: [season]}
