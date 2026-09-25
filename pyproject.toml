@@ -1,7 +1,7 @@
 [project]
 name = "diplomka"
 version = "0.1.0"
-description = "LLM analytics agent (LangGraph + Chainlit + DuckDB) over the Olist e-commerce dataset."
+description = "LLM analytics agent (LangGraph + Chainlit + DuckDB) over pluggable datasets described by a YAML semantic layer."
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
 dependencies = [
@@ -18,6 +18,7 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "pyyaml>=6.0.3",
     "sentence-transformers>=5.6.0",
+    "sqlglot>=30.19.0",
     "uvicorn>=0.51.0",
 ]
 

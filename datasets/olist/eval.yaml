@@ -1,0 +1,47 @@
+cases:
+  - question: "What is the total revenue?"
+    expected: {metrics: [revenue], group_by: []}
+  - question: "How many orders were there in 2017?"
+    expected: {metrics: [orders]}
+  - question: "What is the average order value?"
+    expected: {metrics: [avg_order_value]}
+  - question: "What is the cancellation rate?"
+    expected: {metrics: [cancellation_rate]}
+  - question: "How long does delivery take on average?"
+    expected: {metrics: [delivery_time]}
+  - question: "Show me revenue by category"
+    expected: {metrics: [revenue], group_by: [product_category_name]}
+  - question: "Break down order count by state"
+    expected: {metrics: [orders], group_by: [customer_state]}
+  - question: "What is the revenue by week?"
+    expected: {metrics: [revenue], group_by: [week]}
+  - question: "What is the revenue by month?"
+    expected: {metrics: [revenue], group_by: [month]}
+  - question: "How much did we earn on beauty and health?"
+    expected: {metrics: [revenue], filters: {product_category_name: beleza_saude}}
+  - question: "What was the revenue in the cama_mesa_banho category in the third quarter of 2018?"
+    expected: {metrics: [revenue], filters: {product_category_name: cama_mesa_banho}}
+  - question: "What was the revenue in SP?"
+    expected: {metrics: [revenue], filters: {customer_state: SP}}
+  - question: "What is the average freight cost?"
+    expected: {measures: [{measure: freight_value, agg: avg}]}
+  - question: "What is the maximum product price by category?"
+    expected: {measures: [{measure: price, agg: max}], group_by: [product_category_name]}
+  - question: "What is the total sum of product prices by seller?"
+    expected: {measures: [{measure: price, agg: sum}], group_by: [seller_id]}
+  - question: "How much do we earn on sports equipment?"
+    expected: {metrics: [revenue], filters: {product_category_name: esporte_lazer}}
+  - question: "What is the revenue by seller?"
+    expected: {metrics: [revenue], group_by: [seller_id]}
+  - question: "What is the average delivery time in RJ?"
+    expected: {metrics: [delivery_time], filters: {customer_state: RJ}}
+  - question: "What was the weather yesterday in Prague?"
+    expected: {unclear: true}
+  - question: "asdkjaskdj nonsense text xyz"
+    expected: {unclear: true}
+
+multi_turn:
+  - questions:
+      - "What is the revenue and order count by category?"
+      - "show me the trend of orders over time for the category cama_mesa_banho"
+    expected_last: {filters: {product_category_name: cama_mesa_banho}}

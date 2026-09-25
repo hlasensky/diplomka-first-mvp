@@ -10,6 +10,7 @@ from langchain_core.runnables import RunnableConfig
 from diplomka import config
 from diplomka.charts import build_figure
 from diplomka.graph import get_graph
+from diplomka.schema import LAYER
 
 graph = get_graph()
 
@@ -30,9 +31,9 @@ OPENROUTER_MODELS = [
 STEP_LABELS = {
     "user_input": "Processing input",
     "clarify_intent": "Recognizing intent",
-    "complex_query": "Preparing fuzzy category search",
-    "embedding_lookup": "Fuzzy category search",
-    "improve_prompt": "Resolving category match",
+    "complex_query": "Preparing fuzzy value search",
+    "embedding_lookup": "Fuzzy value search",
+    "improve_prompt": "Resolving value match",
     "generate_sql": "Generating SQL",
     "validate_sql": "Validating SQL",
     "unclear_query": "Evaluating unclear query",
@@ -41,25 +42,11 @@ STEP_LABELS = {
     "validate_chart_spec": "Reviewing chart choice",
 }
 
+
 def get_starters() -> list[cl.Starter]:
-    return [
-        cl.Starter(
-            label="Revenue by category",
-            message="What is the total revenue by category?",
-        ),
-        cl.Starter(
-            label="Fuzzy category search",
-            message="How much did we earn on beauty and health by month?",
-        ),
-        cl.Starter(
-            label="Multiple metrics at once",
-            message="Show me revenue and order count by category",
-        ),
-        cl.Starter(
-            label="Generic fact+agg metric",
-            message="What is the average freight cost by state?",
-        ),
-    ]
+    """Example questions of the active dataset pack (`starters` in its semantic layer)."""
+    return [cl.Starter(label=starter["label"], message=starter["message"]) for starter in LAYER.starters]
+
 
 @cl.set_starters
 async def set_starters(user: cl.User | None, chat_profile: str | None) -> list[cl.Starter]:

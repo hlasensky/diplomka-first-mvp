@@ -2,6 +2,10 @@
 
 Every path in the codebase is derived from ``PROJECT_ROOT`` here, so modules and
 scripts work regardless of the current working directory.
+
+Everything dataset-specific lives in a *dataset pack* under ``datasets/<DATASET>/``
+(semantic layer, build SQL, eval cases); the code itself is dataset-agnostic.
+Switch datasets with the ``DATASET`` environment variable.
 """
 
 import os
@@ -14,12 +18,24 @@ load_dotenv()
 # src/diplomka/config.py -> parents[2] == repo root
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-DATA_DIR = PROJECT_ROOT / "data"
-DUCKDB_PATH = DATA_DIR / "olist.duckdb"
-RAW_CSV = DATA_DIR / "raw" / "olist.csv"
+DATASET = os.getenv("DATASET", "senger")
 
-SCHEMA_PATH = PROJECT_ROOT / "schema" / "semantic_schema.yaml"
+# Dataset pack: definitions, versioned in git.
+DATASETS_DIR = PROJECT_ROOT / "datasets"
+DATASET_DIR = DATASETS_DIR / DATASET
+SCHEMA_PATH = DATASET_DIR / "semantic_layer.yaml"
+BUILD_SQL = DATASET_DIR / "build.sql"
+EVAL_PATH = DATASET_DIR / "eval.yaml"
+
+# Dataset artifacts: the built DuckDB database and the raw input files.
+DATA_DIR = PROJECT_ROOT / "data"
+DUCKDB_PATH = Path(os.getenv("DUCKDB_PATH", DATA_DIR / f"{DATASET}.duckdb"))
+RAW_DIR = DATA_DIR / "raw" / DATASET  # build.sql paths are relative to this directory
+
 GRAPH_PNG = PROJECT_ROOT / "graph.png"
+
+# Query results are truncated to this many rows.
+MAX_ROWS = 500
 
 # LLM backend selection. "ollama" (default, local), "anthropic", or "openrouter".
 LLM_BACKEND = os.getenv("LLM_BACKEND", "ollama")
