@@ -9,6 +9,7 @@ It does not check the exact wording of `answer` (that's up to the LLM), only the
 
 from langchain_core.runnables import RunnableConfig
 
+from diplomka.config import DATASET
 from diplomka.eval import MULTI_TURN_CASES, TEST_CASES, check
 from diplomka.graph import get_graph
 
@@ -41,6 +42,7 @@ def run_multi_turn() -> bool:
 
 
 def main() -> None:
+    print(f"Dataset: {DATASET}\n")
     passed = 0
     for i, case in enumerate(TEST_CASES, 1):
         thread: RunnableConfig = {"configurable": {"thread_id": f"eval-{i}"}}

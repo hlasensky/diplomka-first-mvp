@@ -1,64 +1,50 @@
-"""Shared evaluation dataset and intent-checking helper.
+"""Evaluation dataset of the active dataset pack and the intent-checking helper.
+
+Cases live in ``datasets/<name>/eval.yaml``::
+
+    cases:
+      - question: "Average center temperature by month"
+        expected:
+          measures: [{measure: t_center, agg: avg}]
+          group_by: [month]
+          filters: {event_type: swarming}     # level -> value (or list of values)
+      - question: "What was the weather yesterday?"
+        expected: {unclear: true}
+    multi_turn:
+      - questions: ["...", "..."]
+        expected_last: {...}
+
+Only the fields present in ``expected`` are checked; lists are compared as sets.
 
 Consumed both by the pytest suite (tests/test_intent.py) and by the human-readable
 accuracy report (scripts/eval_queries.py).
 """
 
+from typing import Any
+
+import yaml
+
+from diplomka.config import EVAL_PATH
 from diplomka.models import Filters
 
-TEST_CASES = [
-    {"question": "What is the total revenue?", "expected": {"metric": "revenue", "dimension": None}},
-    {"question": "How many orders were there in 2017?", "expected": {"metric": "orders"}},
-    {"question": "What is the average order value?", "expected": {"metric": "avg_order_value"}},
-    {"question": "What is the cancellation rate?", "expected": {"metric": "cancellation_rate"}},
-    {"question": "How long does delivery take on average?", "expected": {"metric": "delivery_time"}},
-    {"question": "Show me revenue by category", "expected": {"metric": "revenue", "dimension": "category"}},
-    {"question": "Break down order count by state", "expected": {"metric": "orders", "dimension": "state"}},
-    {"question": "What is the revenue by week?", "expected": {"metric": "revenue", "dimension": "time"}},
-    {
-        "question": "What is the revenue by month?",
-        "expected": {"metric": "revenue", "dimension": "time", "granularity": "month"},
-    },
-    {
-        "question": "How much did we earn on beauty and health?",
-        "expected": {"metric": "revenue", "category_filter": "beleza_saude"},
-    },
-    {
-        "question": "What was the revenue in the cama_mesa_banho category in the third quarter of 2018?",
-        "expected": {"metric": "revenue", "category_filter": "cama_mesa_banho"},
-    },
-    {"question": "What was the revenue in SP?", "expected": {"metric": "revenue", "state_filter": "SP"}},
-    {"question": "What is the average freight cost?", "expected": {"fact": "freight_value", "agg": "avg"}},
-    {
-        "question": "What is the maximum product price by category?",
-        "expected": {"fact": "price", "agg": "max", "dimension": "category"},
-    },
-    {
-        "question": "What is the total sum of product prices by seller?",
-        "expected": {"fact": "price", "agg": "sum", "dimension": "seller"},
-    },
-    {
-        "question": "How much do we earn on sports equipment?",
-        "expected": {"metric": "revenue", "category_filter": "esporte_lazer"},
-    },
-    {"question": "What is the revenue by seller?", "expected": {"metric": "revenue", "dimension": "seller"}},
-    {
-        "question": "What is the average delivery time in RJ?",
-        "expected": {"metric": "delivery_time", "state_filter": "RJ"},
-    },
-    {"question": "What was the weather yesterday in Prague?", "expected": {"unclear": True}},
-    {"question": "asdkjaskdj nonsense text xyz", "expected": {"unclear": True}},
-]
+_EVAL = yaml.safe_load(EVAL_PATH.read_text()) if EVAL_PATH.exists() else {}
+TEST_CASES: list[dict[str, Any]] = _EVAL.get("cases") or []
+MULTI_TURN_CASES: list[dict[str, Any]] = _EVAL.get("multi_turn") or []
 
-MULTI_TURN_CASES = [
-    {
-        "questions": [
-            "What is the revenue and order count by category?",
-            "show me the trend of orders over time for the category cama_mesa_banho",
-        ],
-        "expected_last": {"dimension": "time", "category_filter": "cama_mesa_banho"},
-    },
-]
+
+def _normalize(field: str, value: Any) -> Any:
+    """Comparable form of an intent field or of its expected value."""
+    if field == "measures":
+        return {(m["measure"], m["agg"]) if isinstance(m, dict) else (m.measure, m.agg) for m in value or []}
+    if field == "filters":
+        pairs = value.items() if isinstance(value, dict) else ((f.level, f.value) for f in value or [])
+        normalized: dict[str, set[str]] = {}
+        for level, values in pairs:
+            normalized.setdefault(level, set()).update(map(str, values if isinstance(values, list) else [values]))
+        return normalized
+    if isinstance(value, list):
+        return set(value)
+    return value
 
 
 def check(intent: Filters | None, expected: dict) -> list[str]:
@@ -66,11 +52,11 @@ def check(intent: Filters | None, expected: dict) -> list[str]:
     mismatches = []
     if expected.get("unclear"):
         if intent is not None and intent.has_metric():
-            mismatches.append(f"expected 'unclear', but intent has metric/fact+agg: {intent}")
+            mismatches.append(f"expected 'unclear', but intent has a metric/measure: {intent}")
         return mismatches
 
     for field, value in expected.items():
         actual = getattr(intent, field, None) if intent is not None else None
-        if actual != value:
+        if _normalize(field, actual) != _normalize(field, value):
             mismatches.append(f"{field}: expected '{value}', got '{actual}'")
     return mismatches

@@ -1,17 +1,32 @@
 """LangGraph node functions and conditional routing for the analytics agent."""
 
+import sqlglot
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
+from sqlglot import exp
 
+from diplomka.config import MAX_ROWS
 from diplomka.db import connect
 from diplomka.llm import get_llm, get_structured_llm
-from diplomka.models import AgentState, ChartCritique, ChartSpec, Filters, PartialAgentState, SqlGeneration
-from diplomka.retrieval import lookup_categories
-from diplomka.schema import SCHEMA
-from diplomka.sql import MAX_ROWS, build_schema_context
+from diplomka.models import (
+    AgentState,
+    ChartCritique,
+    ChartSpec,
+    Filters,
+    LevelFilter,
+    PartialAgentState,
+    SqlGeneration,
+)
+from diplomka.prompts import DERIVATION_HEADING, intent_prompt, response_prompt, sql_prompt
+from diplomka.retrieval import lookup_values
+from diplomka.schema import LAYER, get_domains
+from diplomka.semantic_validator import format_feedback, validate_semantics
 
-MAX_SQL_ATTEMPTS = 2
+# one more than the chart retries: the semantic validator can also send a query back
+MAX_SQL_ATTEMPTS = 3
 MAX_CHART_ATTEMPTS = 2
+# Minimum embedding similarity for a fuzzy filter-value match to be accepted.
+MIN_MATCH_SCORE = 0.5
 
 
 def _selected_model(config: RunnableConfig) -> str | None:
@@ -24,37 +39,60 @@ def user_input(state: AgentState) -> PartialAgentState:
     return {"messages": [HumanMessage(content=state["question"])]}
 
 
+def _clarification_question(intent: Filters) -> str:
+    """Specific clarification: what was not recognized and what the dataset can answer."""
+    parts = ["I couldn't tell which value to compute for this question."]
+    if intent.adjustments:
+        parts.append(f"Not recognized: {'; '.join(intent.adjustments)}.")
+    labels = [m.get("label", name) for name, m in LAYER.metrics.items()]
+    labels += [m.label for m in LAYER.measures.values()]
+    parts.append(f"I can compute e.g. {', '.join(labels[:8])} - could you rephrase with one of these?")
+    return " ".join(parts)
+
+
 def clarify_intent(state: AgentState, config: RunnableConfig) -> PartialAgentState:
     """LLM parses the question into `Filters` (merged with `active_filters` from before).
     Sets `intent=None` + `needs_clarification`/`clarification_question` when the query is ambiguous."""
 
     structured_llm = get_structured_llm(Filters, _selected_model(config))
-    intent = structured_llm.invoke([SystemMessage(content=SCHEMA["system_prompt"]), *state["messages"]])
+    intent = structured_llm.invoke([SystemMessage(content=intent_prompt()), *state["messages"]])
     assert isinstance(intent, Filters)
 
+    # a follow-up that names no metric/measure ("and only for colonies that died") keeps the previous ones
     active_filters = state.get("active_filters", Filters())
-    intent.metrics = intent.metrics or active_filters.metrics
+    if not intent.has_metric():
+        intent = intent.model_copy(update={"metrics": active_filters.metrics, "measures": active_filters.measures})
 
     is_unclear = not intent.has_metric()
 
     return {
         "intent": intent,
         "needs_clarification": is_unclear,
-        "clarification_question": "Could you clarify what you mean?" if is_unclear else None,
+        "clarification_question": _clarification_question(intent) if is_unclear else None,
         "attempts": state.get("attempts", 0) if is_unclear else 0,
         "sql_attempts": 0,
         "sql_error": None,
+        "semantic_violations": [],
+        "unresolved_filters": [],
+        "filter_candidates": [],
         "chart_attempts": 0,
         "chart_validation_error": None,
     }
 
 
+def _unresolved_filters(intent: Filters) -> list[LevelFilter]:
+    """Filters whose value is not in the known domain of its level (e.g. free text like "beauty
+    products" instead of a real category value). Levels without a domain are taken as-is."""
+    domains = get_domains()
+    return [f for f in intent.filters if f.level in domains and f.value not in domains[f.level]]
+
+
 def complex_query(state: AgentState) -> PartialAgentState:
-    """Branch where an ambiguous reference (e.g. a category written as free text)
-    must be resolved before generating SQL."""
+    """Branch where filter values written as free text must be resolved to real
+    dimension-level values before generating SQL."""
     intent = state["intent"]
     assert intent is not None
-    return {"category_query_text": intent.category_filter}
+    return {"unresolved_filters": _unresolved_filters(intent)}
 
 
 def unclear_query(state: AgentState) -> PartialAgentState:
@@ -77,37 +115,38 @@ def unclear_query(state: AgentState) -> PartialAgentState:
 
 
 def embedding_lookup(state: AgentState) -> PartialAgentState:
-    """Fuzzy-matches the user's text (e.g. "beauty products") to `product_category_name`
-    (73 PT values) via embeddings, result into `category_candidates`."""
+    """Fuzzy-matches each unresolved filter value to the values of its level via embeddings
+    (domain values + glossary synonyms), result into `filter_candidates`."""
 
-    query_text = state["category_query_text"]
-    assert query_text is not None
-    candidates = lookup_categories(query_text, k=3)
-    return {"category_candidates": candidates}
+    candidates = [lookup_values(f.level, f.value, k=3) for f in state["unresolved_filters"]]
+    return {"filter_candidates": candidates}
 
 
 def improve_prompt(state: AgentState) -> PartialAgentState:
-    """Self-check: verifies the resolved category makes sense; on a problem increments
-    `attempts` and returns to clarify_intent (up to the limit), otherwise proceeds to generate_sql."""
+    """Self-check: verifies every unresolved filter value has a good fuzzy match; on a problem
+    increments `attempts` and returns to clarify_intent (up to the limit), otherwise replaces
+    the free-text values with the matched ones and proceeds to generate_sql."""
 
-    candidates = state["category_candidates"] or []
-    candidates_have_good_score = any(score > 0.5 for _, score in candidates)
-
-    if not candidates_have_good_score:
-        if state["attempts"] >= 3:
+    resolved: dict[tuple[str, str], str] = {}
+    for f, candidates in zip(state["unresolved_filters"], state["filter_candidates"], strict=True):
+        if not candidates or candidates[0][1] <= MIN_MATCH_SCORE:
+            if state["attempts"] >= 3:
+                return {
+                    "needs_clarification": False,
+                    "clarification_question": "Sorry, I still don't understand your question.",
+                }
+            label = LAYER.levels[f.level].label
             return {
-                "needs_clarification": False,
-                "clarification_question": "Sorry, I still don't understand your question.",
+                "attempts": state["attempts"] + 1,
+                "needs_clarification": True,
+                "clarification_question": f"Could you clarify what you mean by '{f.value}' ({label})?",
             }
-        return {
-            "attempts": state["attempts"] + 1,
-            "needs_clarification": True,
-            "clarification_question": "Could you clarify what you mean?",
-        }
+        resolved[(f.level, f.value)] = candidates[0][0]
 
     intent = state["intent"]
     assert intent is not None
-    intent = intent.model_copy(update={"category_filter": candidates[0][0]})
+    filters = [f.model_copy(update={"value": resolved.get((f.level, f.value), f.value)}) for f in intent.filters]
+    intent = intent.model_copy(update={"filters": filters})
 
     return {
         "intent": intent,
@@ -119,17 +158,27 @@ def improve_prompt(state: AgentState) -> PartialAgentState:
 def _intent_summary(intent: Filters) -> str:
     """Deterministic recap of the resolved Filters - used both as input for `generate_sql` and
     for the AIMessage that `clarify_intent` reads back in the next turn."""
-    metrics = ", ".join(intent.metrics) if intent.metrics else "-"
-    fact_agg = f"{intent.agg} {intent.fact}" if intent.fact and intent.agg else "-"
-    granularity = (intent.granularity or "week (default)") if intent.dimension == "time" else "-"
+    metrics = ", ".join(intent.metrics) or "-"
+    measures = ", ".join(f"{m.agg}({m.measure})" for m in intent.measures) or "-"
+    group_by = ", ".join(intent.group_by) or "-"
+    filters = ", ".join(f"{f.level}={f.value}" for f in intent.filters) or "-"
     return (
         "[PREVIOUS TURN CONTEXT - only for resolving references, DO NOT automatically copy into the new question]\n"
-        f"metrics: {metrics} | fact/agg: {fact_agg} | dimension: {intent.dimension or '-'} | "
-        f"granularity: {granularity}\n"
-        f"category_filter: {intent.category_filter or '-'} | state_filter: {intent.state_filter or '-'} | "
-        f"period: {intent.date_from or '-'} to {intent.date_to or '-'} | "
+        f"metrics: {metrics} | measures: {measures} | group_by: {group_by}\n"
+        f"filters: {filters} | period: {intent.date_from or '-'} to {intent.date_to or '-'} | "
         f"chart_type_request: {intent.chart_type_request or '-'}"
+        + (f"\nadjustments: {'; '.join(intent.adjustments)}" if intent.adjustments else "")
     )
+
+
+def _measure_columns(intent: Filters) -> str:
+    """Measure ids in the intent are not column names (t_center = t_i_3) - spell out the mapping."""
+    lines = [
+        f"- {m.measure} = column {', '.join(LAYER.measures[m.measure].columns)} "
+        f"in {', '.join(LAYER.measures[m.measure].tables)}"
+        for m in intent.measures
+    ]
+    return "Measure columns (use these column names in SQL):\n" + "\n".join(lines) + "\n\n" if lines else ""
 
 
 def generate_sql(state: AgentState, config: RunnableConfig) -> PartialAgentState:
@@ -144,12 +193,13 @@ def generate_sql(state: AgentState, config: RunnableConfig) -> PartialAgentState
     human = (
         f"User question: {state['question']}\n\n"
         f"Resolved intent:\n{_intent_summary(intent)}\n\n"
+        f"{_measure_columns(intent)}"
         "Write the SQL query. The resolved intent gives you the metric/dimension/filters, but "
         "re-read the user question literally for anything the intent doesn't capture - row limits "
-        "('top 10', 'bottom 5'), sort direction, thresholds ('at least 50 orders'), exclusions, etc."
+        "('top 10', 'bottom 5'), sort direction, thresholds ('at least 50'), exclusions, etc."
     )
     if state["sql_error"]:
-        human += f"\n\nThe previous attempt failed with this DuckDB error - fix it:\n{state['sql_error']}"
+        human += f"\n\nThe previous attempt was rejected - fix it:\n{state['sql_error']}"
     if state["chart_validation_error"]:
         human += (
             "\n\nThe previous chart choice had this problem - keep the same SQL logic but fix "
@@ -157,15 +207,17 @@ def generate_sql(state: AgentState, config: RunnableConfig) -> PartialAgentState
         )
 
     structured_llm = get_structured_llm(SqlGeneration, _selected_model(config))
-    generation = structured_llm.invoke([SystemMessage(content=build_schema_context()), HumanMessage(content=human)])
+    generation = structured_llm.invoke([SystemMessage(content=sql_prompt()), HumanMessage(content=human)])
     assert isinstance(generation, SqlGeneration)
 
     return {"sql_generation": generation, "sql_error": None, "chart_validation_error": None}
 
 
 def validate_sql(state: AgentState) -> PartialAgentState:
-    """Checks the LLM-generated SQL is valid DuckDB (via EXPLAIN, on a read-only connection)
-    before ever executing it for real. On failure, records the error for a retry in generate_sql."""
+    """Checks the LLM-generated SQL before ever executing it for real: syntactically valid DuckDB
+    (via EXPLAIN, on a read-only connection), then semantically valid against the semantic layer
+    (allowed aggregations, fan-trap joins, filter values). On failure, records the error for a
+    retry in generate_sql; semantic violations are also kept in `semantic_violations` for eval."""
 
     generation = state["sql_generation"]
     assert generation is not None
@@ -173,13 +225,22 @@ def validate_sql(state: AgentState) -> PartialAgentState:
     try:
         with connect(read_only=True) as conn:
             conn.execute(f"EXPLAIN {generation.sql}")
-        return {"sql_error": None}
     except Exception as e:
         return {"sql_error": str(e), "sql_attempts": state["sql_attempts"] + 1}
 
+    violations = validate_semantics(generation.sql, LAYER, get_domains())
+    if violations:
+        return {
+            "sql_error": format_feedback(violations),
+            "sql_attempts": state["sql_attempts"] + 1,
+            # accumulated over the turn's retries - kept for eval and for explaining the answer
+            "semantic_violations": state["semantic_violations"] + [f"[{v.rule}] {v.message}" for v in violations],
+        }
+    return {"sql_error": None}
+
 
 def execute_query(state: AgentState) -> PartialAgentState:
-    """Runs the LLM-generated SQL (read-only connection) against data/olist.duckdb -> columns/rows.
+    """Runs the LLM-generated SQL (read-only connection) against the dataset's DuckDB -> columns/rows.
     Also reached after exhausting sql retries - a still-broken query fails here the normal way,
     surfacing as `validation_error` in generate_response."""
 
@@ -231,9 +292,72 @@ def _valid_chart_generation(generation: SqlGeneration, columns: list[str]) -> bo
     return True
 
 
+def _source_tables(sql: str) -> list[str]:
+    """Semantic-layer tables the query reads from (CTE names and unknown tables left out)."""
+    try:
+        tree = sqlglot.parse_one(sql, read="duckdb")
+    except sqlglot.errors.ParseError:
+        return []
+    return sorted({t.name for t in tree.find_all(exp.Table) if t.name in LAYER.tables})
+
+
+def _derivation_facts(state: AgentState) -> str:
+    """Deterministic record of how the answer was obtained - the LLM turns it into the
+    'How this was derived' steps, so they rest on what actually happened, not on its guess."""
+    intent = state["intent"]
+    generation = state["sql_generation"]
+    assert intent is not None
+    assert generation is not None
+
+    def level_label(name: str) -> str:
+        return LAYER.levels[name].label
+
+    facts = []
+    for name in intent.metrics:
+        metric = LAYER.metrics[name]
+        facts.append(f"- Metric: {metric.get('label', name)} = {metric['sql']}")
+    for m in intent.measures:
+        measure = LAYER.measures[m.measure]
+        unit = f" [{measure.unit}]" if measure.unit else ""
+        facts.append(f"- Measure: {m.agg} of {measure.label}{unit}")
+    if intent.group_by:
+        facts.append(f"- Broken down by: {', '.join(level_label(level) for level in intent.group_by)}")
+    else:
+        facts.append("- No breakdown: a single total")
+    for f in intent.filters:
+        facts.append(f"- Filter: {level_label(f.level)} = {f.value}")
+    if intent.date_from or intent.date_to:
+        facts.append(f"- Period: {intent.date_from or 'start'} to {intent.date_to or 'end'}")
+
+    facts += [f"- Interpretation adjusted: {note}" for note in intent.adjustments]
+    for f, candidates in zip(state["unresolved_filters"], state["filter_candidates"], strict=False):
+        if candidates:
+            value, score = candidates[0]
+            facts.append(
+                f"- The user's wording '{f.value}' was matched to {level_label(f.level)} '{value}' "
+                f"(similarity {score:.2f})"
+            )
+
+    for table in _source_tables(generation.sql):
+        meta = LAYER.tables[table] or {}
+        facts.append(f"- Source table {table}: {meta.get('description', meta.get('kind', ''))}".rstrip(": "))
+    facts.append(f"- SQL that ran (explain it in plain words, do not quote it):\n{generation.sql.strip()}")
+
+    if state["sql_attempts"]:
+        facts.append(f"- The first draft of the query was rejected {state['sql_attempts']}x and rewritten")
+    for violation in state["semantic_violations"]:
+        facts.append(f"- Rejected because: {violation}")
+
+    rows = len(state["rows"])
+    truncated = f" (truncated to the first {MAX_ROWS})" if rows >= MAX_ROWS else ""
+    facts.append(f"- Result: {rows} row(s){truncated}; the summary sees at most the first 20")
+    return "\n".join(facts)
+
+
 def generate_response(state: AgentState, config: RunnableConfig) -> PartialAgentState:
-    """LLM summarizes columns/rows into a short NL answer (`answer`); `ChartSpec` is taken from
-    generate_sql's chart hint, validated against the query's real result columns."""
+    """LLM summarizes columns/rows into a short NL answer followed by the steps that led to the
+    data (`answer`), built from `_derivation_facts`; `ChartSpec` is taken from generate_sql's
+    chart hint, validated against the query's real result columns."""
 
     has_error = state["validation_error"] is not None
     if has_error:
@@ -263,21 +387,18 @@ def generate_response(state: AgentState, config: RunnableConfig) -> PartialAgent
         )
 
     preview = "\n".join(str(dict(zip(columns, row, strict=False))) for row in rows[:20])
-    content = get_llm(_selected_model(config)).invoke(
-        f"User question: {state['question']}\n\n"
-        f"Query result (columns {columns}):\n{preview}\n\n"
-        "Summarize the result briefly in English (1-3 sentences), stick to the numbers "
-        "from the data above, don't make anything up. "
-        "Monetary amounts are in Brazilian reais (BRL, R$), never in korunas or dollars. "
-        "Answer in plain text, no code, no SQL, no ``` blocks."
-    ).content
+    prompt = response_prompt(state["question"], columns, preview, _derivation_facts(state))
+    content = get_llm(_selected_model(config)).invoke(prompt).content
     answer = content if isinstance(content, str) else str(content)
+    # the derivation steps stay out of the history - clarify_intent only needs the answer itself
+    short_answer = answer.split(DERIVATION_HEADING)[0].strip()
 
     return {
         "answer": answer,
         "chart_spec": chart_spec,
-        "messages": [AIMessage(content=f"{_intent_summary(intent)}\n\nAnswer to the user: {answer}")],
+        "messages": [AIMessage(content=f"{_intent_summary(intent)}\n\nAnswer to the user: {short_answer}")],
     }
+
 
 def validate_chart_spec(state: AgentState, config: RunnableConfig) -> PartialAgentState:
     """LLM second-opinion on the chosen `ChartSpec` (chart_type fits the data shape, axes not
@@ -338,7 +459,7 @@ def route_intent(state: AgentState) -> str:
     assert intent is not None
     if not intent.has_metric():
         return "unclear"
-    return "complex" if intent.category_filter is not None else "basic"
+    return "complex" if _unresolved_filters(intent) else "basic"
 
 
 def route_clarification(state: AgentState) -> str:
@@ -351,6 +472,7 @@ def route_sql_validation(state: AgentState) -> str:
     if state["sql_error"] is None or state["sql_attempts"] >= MAX_SQL_ATTEMPTS:
         return "proceed"
     return "retry"
+
 
 def route_validate_chart_spec(state: AgentState) -> str:
     return "retry" if state["chart_validation_error"] is not None else "proceed"

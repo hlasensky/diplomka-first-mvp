@@ -1,0 +1,142 @@
+version: 1
+
+domain:
+  name: olist
+  description: >
+    Orders of the Brazilian e-shop Olist (2016-10 to 2018-08), flat/joined version:
+    one table, 1 row = 1 order item.
+  notes:
+    - "All monetary amounts are in Brazilian reais (BRL, R$), never in korunas or dollars."
+    - "Only 7 of ~95,000 orders are canceled, so the cancellation rate is almost always 0."
+  source: "Olist Brazilian E-Commerce, https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce"
+
+glossary:
+  - term: revenue
+    synonyms: [sales, earnings, turnover, how much did we earn]
+    maps_to: {metric: revenue}
+  - term: freight cost
+    synonyms: [shipping cost, delivery cost]
+    maps_to: {measure: freight_value}
+  - term: beauty and health
+    synonyms: [beauty products, cosmetics]
+    maps_to: {dimension: product, level: product_category_name, value: beleza_saude}
+  - term: sports and leisure
+    synonyms: [sports equipment, sporting goods]
+    maps_to: {dimension: product, level: product_category_name, value: esporte_lazer}
+  - term: bed, bath and table
+    synonyms: [home textiles, bedding]
+    maps_to: {dimension: product, level: product_category_name, value: cama_mesa_banho}
+
+tables:
+  orders:
+    kind: fact
+    grain: [order_id, order_item_id]
+    description: One row per order item, joined with order, payment, customer, product and seller data.
+
+joins: []
+
+dimensions:
+  time:
+    table: orders
+    key: order_purchase_timestamp
+    hierarchies:
+      calendar: [year, quarter, month, day]
+      weekly: [year, week, day]
+    levels:
+      year: {label: year, expr: "date_trunc('year', order_purchase_timestamp)"}
+      quarter: {label: quarter, expr: "date_trunc('quarter', order_purchase_timestamp)"}
+      month: {label: month, expr: "date_trunc('month', order_purchase_timestamp)"}
+      week: {label: week, expr: "date_trunc('week', order_purchase_timestamp)"}
+      day: {label: day, expr: "date_trunc('day', order_purchase_timestamp)"}
+  product:
+    table: orders
+    key: product_id
+    hierarchies:
+      category: [product_category_name, product_id]
+    levels:
+      product_category_name:
+        label: product category
+        note: "values are in Portuguese; translate a common English name to the Portuguese value"
+        domain: from_data
+      product_id:
+        label: product
+        note: "high cardinality, use only for drill-down within a category"
+  geography:
+    table: orders
+    key: customer_state
+    levels:
+      customer_state:
+        label: customer state
+        note: "two-letter Brazilian state code, e.g. SP, RJ, MG"
+        domain: from_data
+  seller:
+    table: orders
+    key: seller_id
+    levels:
+      seller_id:
+        label: seller
+        note: "about 3,000 sellers - high cardinality, use only when the user explicitly asks about sellers"
+
+measures:
+  payment_value:
+    column: payment_value
+    tables: [orders]
+    label: payment value
+    unit: BRL
+    additivity: {all: [sum, avg]}
+  freight_value:
+    column: freight_value
+    tables: [orders]
+    label: freight value
+    unit: BRL
+    additivity: {all: [sum, avg]}
+  price:
+    column: price
+    tables: [orders]
+    label: product price
+    unit: BRL
+    additivity: {all: [sum, avg, min, max]}
+
+metrics:
+  revenue:
+    label: Total revenue
+    sql: "SUM(payment_value)"
+    unit: BRL
+  orders:
+    label: Order count
+    sql: "COUNT(DISTINCT order_id)"
+    unit: count
+  avg_order_value:
+    label: Average order value
+    sql: "SUM(payment_value) / COUNT(DISTINCT order_id)"
+    unit: BRL
+  cancellation_rate:
+    label: Cancellation rate
+    sql: "COUNT(DISTINCT order_id) FILTER (WHERE order_status = 'canceled')::FLOAT / COUNT(DISTINCT order_id)"
+    unit: ratio
+  delivery_time:
+    label: Average delivery time
+    sql: "AVG(DATE_DIFF('day', order_purchase_timestamp, order_delivered_customer_date))"
+    unit: days
+
+rules:
+  - {id: R1, enforced: true, text: "Aggregate every measure only with the functions listed in its additivity."}
+  - {id: R3, enforced: true, text: "Filter dimension attributes only with values from their domain."}
+
+examples:
+  - id: EX1
+    question: "What is the monthly revenue by customer state in 2018?"
+    sql: |
+      SELECT date_trunc('month', order_purchase_timestamp) AS month,
+             customer_state                               AS customer_state,
+             SUM(payment_value)                           AS revenue
+      FROM orders
+      WHERE order_purchase_timestamp >= '2018-01-01' AND order_purchase_timestamp < '2019-01-01'
+      GROUP BY 1, 2
+      ORDER BY 1, 2
+
+starters:
+  - {label: "Revenue by category", message: "What is the total revenue by category?"}
+  - {label: "Fuzzy category search", message: "How much did we earn on beauty and health by month?"}
+  - {label: "Multiple metrics at once", message: "Show me revenue and order count by category"}
+  - {label: "Measure + aggregation", message: "What is the average freight cost by state?"}

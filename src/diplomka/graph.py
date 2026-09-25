@@ -96,6 +96,8 @@ def get_graph() -> CompiledStateGraph[AgentState, None, GraphInput, AgentState]:
         serde=JsonPlusSerializer(
             allowed_msgpack_modules=[
                 ("diplomka.models", "Filters"),
+                ("diplomka.models", "MeasureAgg"),
+                ("diplomka.models", "LevelFilter"),
                 ("diplomka.models", "ChartSpec"),
                 ("diplomka.models", "SqlGeneration"),
             ]
