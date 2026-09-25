@@ -5,3 +5,7 @@ __pycache__/
 
 .files/
 .chainlit/translations/
+
+# Dataset artifacts that are rebuilt by scripts/build_db.py
+data/raw/senger
+data/senger.duckdb
