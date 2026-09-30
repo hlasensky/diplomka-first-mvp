@@ -5,3 +5,11 @@ __pycache__/
 
 .files/
 .chainlit/translations/
+
+# Obsidian
+literature/.obsidian/workspace*.json
+literature/.obsidian/cache
+# fulltexty a PDF (autorská práva, velikost)
+literature/fulltext/*.txt
+literature/inbox/*.pdf
+thesis/
