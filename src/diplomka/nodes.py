@@ -241,8 +241,9 @@ def validate_sql(state: AgentState) -> PartialAgentState:
 
 def execute_query(state: AgentState) -> PartialAgentState:
     """Runs the LLM-generated SQL (read-only connection) against the dataset's DuckDB -> columns/rows.
-    Also reached after exhausting sql retries - a still-broken query fails here the normal way,
-    surfacing as `validation_error` in generate_response."""
+    Also reached after exhausting sql retries - a query that still fails validation is not run
+    (a semantic violation would execute and return wrong numbers); its last error surfaces as
+    `validation_error` in generate_response."""
 
     generation = state["sql_generation"]
     intent = state["intent"]
@@ -251,13 +252,16 @@ def execute_query(state: AgentState) -> PartialAgentState:
 
     columns, rows = [], []
     error = None
-    with connect(read_only=True) as conn:
-        try:
-            result = conn.execute(generation.sql).fetchall()
-            columns = [desc[0] for desc in conn.description]
-            rows = result[:MAX_ROWS]
-        except Exception as e:
-            error = str(e)
+    if state["sql_error"] is not None:
+        error = f"No valid query after {state['sql_attempts']} attempts. Last problem: {state['sql_error']}"
+    else:
+        with connect(read_only=True) as conn:
+            try:
+                result = conn.execute(generation.sql).fetchall()
+                columns = [desc[0] for desc in conn.description]
+                rows = result[:MAX_ROWS]
+            except Exception as e:
+                error = str(e)
 
     return {
         "columns": columns,
@@ -450,7 +454,12 @@ def validate_chart_spec(state: AgentState, config: RunnableConfig) -> PartialAge
     if state["chart_attempts"] >= MAX_CHART_ATTEMPTS:
         # give up - show the result without a chart rather than a bad one
         return {"chart_validation_error": None, "chart_spec": None}
-    return {"chart_validation_error": critique.issue, "chart_attempts": state["chart_attempts"] + 1}
+    # the redo goes back through generate_sql, so it gets a fresh budget of SQL validation retries
+    return {
+        "chart_validation_error": critique.issue,
+        "chart_attempts": state["chart_attempts"] + 1,
+        "sql_attempts": 0,
+    }
 
 
 # Conditional routing

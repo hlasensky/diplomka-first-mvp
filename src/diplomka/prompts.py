@@ -127,7 +127,9 @@ def _joins_section() -> str:
     lines = []
     for join in LAYER.raw.get("joins") or []:
         if join.get("type") == "asof":
-            line = f"- ASOF JOIN {join['left']} with {join['right']} ON {join['on']}"
+            # Rendered as literal SQL: a prose form ("ASOF JOIN a with b ON ...") made models emit
+            # "ASOF JOIN ON ..." without the right-hand table, a DuckDB parser error.
+            line = f"- FROM {join['left']} ASOF [LEFT] JOIN {join['right']} ON {join['on']}"
         else:
             line = f"- {join['left']} = {join['right']} ({join.get('cardinality', '')})"
         if join.get("note"):
