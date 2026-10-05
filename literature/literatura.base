@@ -1,0 +1,41 @@
+filters:
+  and:
+    - file.inFolder("sources")
+formulas:
+  hotovo: 'if(status == "confirmed" && verified == true, "✅", "")'
+properties:
+  file.name:
+    displayName: Zdroj
+  note.uroven:
+    displayName: Úroveň
+  note.status:
+    displayName: Status
+  note.verified:
+    displayName: Ověřeno mnou
+  note.year:
+    displayName: Rok
+  formula.hotovo:
+    displayName: Hotovo
+views:
+  - type: table
+    name: Podle úrovně
+    groupBy:
+      property: note.uroven
+      direction: ASC
+    order:
+      - file.name
+      - note.year
+      - note.status
+      - note.verified
+      - formula.hotovo
+  - type: table
+    name: Neověřené
+    filters:
+      or:
+        - 'status != "confirmed"'
+        - "verified != true"
+    order:
+      - file.name
+      - note.uroven
+      - note.status
+      - note.verified

@@ -12,6 +12,7 @@ concepts:
   - olap
   - anomaly-detection
   - guided-data-exploration
+uroven: 1
 ---
 
 PDF: [otevřít v Zoteru](zotero://open-pdf/library/items/W8XSP9PH)
@@ -25,9 +26,9 @@ PDF: [otevřít v Zoteru](zotero://open-pdf/library/items/W8XSP9PH)
 - C3: Za výjimku se považuje buňka se standardizovaným reziduem nad prahem τ = 2,5, což odpovídá pravděpodobnosti 99 % v normálním rozdělení. (s. 7, §3.1)
 - C4: Použitá je multiplikativní forma modelu, převedená logaritmem na aditivní; na OLAP datech podle autorů sedí lépe než aditivní. Koeficienty se odhadují robustně 75% trimmed mean (ořízne se 25 % extrémních hodnot). Rozptyl se modeluje jako mocnina p očekávané hodnoty, odhadnutá maximální věrohodností; klasický ANOVA odhad (stejný rozptyl pro všechny buňky) dával na OLAP datech špatné fity. (s. 8–9, §3.3–3.5)
 - C5: Výjimky se sumarizují do tří hodnot na buňku, které vedou [[guided-data-exploration]]. SelfExp je překvapení buňky samotné. InExp je maximum SelfExp přes všechny buňky pod ní, tedy „stojí za to drillovat sem“. PathExp je maximum SelfExp přes buňky dosažitelné drill-downem podél dané dimenze, tedy „kterým směrem drillovat“. (s. 3, §2; s. 9–10, §3.6)
-- C6: Na ukázkovém datasetu (Essbase sample, dimenze Product × Market × Time) má Diet-Soda v regionu „E“ výjimečný pokles o 40 % v srpnu a 33 % v říjnu. V rovině Product-Time agregované přes regiony se to téměř neprojeví a analytika k tomu dovede až InExp. Kontextový model navíc označí i buňky s malou absolutní změnou (např. Birch-B v prosinci −10 %), protože se liší od chování ostatních produktů v témž měsíci. (s. 4–6, §2–3)
+- C6: Na ukázkovém datasetu (Essbase sample, dimenze Product × Market × Time) má Diet-Soda v regionu „E“ výjimečný pokles o 40 % v srpnu a 33 % v říjnu. V rovině Product-Time agregované přes regiony se to téměř neprojeví a analytika k tomu dovede až InExp. Kontextový model navíc označí i buňky s malou absolutní změnou (např. Birch-B v prosinci −10 %), protože se liší od chování ostatních produktů v témž měsíci. (s. 3–6, §2–3)
 - C7: Výpočet má tři fáze: agregace kostky, fit modelu a sumarizace výjimek. Přepis modelové rovnice (Eq. 5) snižuje počet join/odečítacích operací z 2^n − 1 na nejvýše n a umožňuje počítat rezidua současně s agregacemi kostky. Podle autorů to přináší zrychlení zhruba 3–4×; samotné experimenty jsou ale jen v plné verzi [SAM98], ne v tomto článku. (s. 10, §4; s. 13, §4.1; s. 15, §5)
-- C8: Omezení: při chybějících datech se liší rezidua od přesného least-squares fitu. Implementace chybějící hodnoty při průměrování ignoruje, protože iterativní metody vyžadují 10 a více průchodů daty. Jako budoucí práci autoři uvádějí výběr modelu a uživatelské přizpůsobení definice výjimky. (s. 12, §4.1; s. 15, §5)
+- C8: Omezení: při chybějících datech se rezidua podle Eq. 3 a Eq. 5 mohou lišit (Lemma 1 platí jen pro data bez chybějících hodnot); přesný least-squares fit by vyžadoval iterativní výpočet koeficientů, který autoři zamítají, protože vyžaduje více průchodů daty (často 10 a více). Implementace proto chybějící hodnoty při průměrování ignoruje. Jako budoucí práci autoři uvádějí výběr modelu a uživatelské přizpůsobení definice výjimky. (s. 12, §4.1; s. 15, §5)
 
 ## Vztah k mé práci
 

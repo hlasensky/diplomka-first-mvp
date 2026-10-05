@@ -1,0 +1,174 @@
+{
+  "citekey": "sarawagiExplainingDifferencesMultidimensional",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "In this paper we present a second enhancement: a single operator that lets the analyst get summarized reasons for drops or increases observed at an aggregated level."
+        },
+        {
+          "page": 2,
+          "quote": "The above form of manual exploration can get tedious and error-prone for large datasets that commonly appear in real-life."
+        },
+        {
+          "page": 2,
+          "quote": "a typical OLAP dataset has five to seven dimensions, an average of three levels hierarchy on each dimension and aggregates more than a million rows"
+        },
+        {
+          "page": 2,
+          "quote": "In [SAM98] we presented one such operation that was motivated with the observation that a significant reason why analysts explore to detailed levels is to search for abnormalities or exceptions in detailed data."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3c0ad0f23982"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "The user simply highlights the two cells and invokes our “diff” module. The result as shown in Figure 3 is a list of at most 10 rows"
+        },
+        {
+          "page": 3,
+          "quote": "In the figure the first row shows that after discounting the rows explicitly mentioned below it as indicated by the “-” symbol after (All), the overall revenue actually increased by 10%."
+        },
+        {
+          "page": 4,
+          "quote": "A consists of rows from not only detailed but also aggregated levels of the cube. With each aggregated row in the answer, we associate a ratio r that indicates to the user that everything underneath that row had the same ratio"
+        },
+        {
+          "page": 5,
+          "quote": "unless explicitly mentioned otherwise. For instance, in Figure 5 all Geography and Platforms for product category Health-Care are assumed to have a ratio of 118"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4413793f1854"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "Imagine a sender wishing to transmit the subcube Cb to a user (receiver) who already knows about subcube"
+        },
+        {
+          "page": 5,
+          "quote": "The goal of the sender is then to pick an answer A that minimizes the total data transmission cost"
+        },
+        {
+          "page": 5,
+          "quote": "For other measures, the normal distribution is often a safe choice and is used extensively in business analysis when more specific information about the data is lacking"
+        },
+        {
+          "page": 6,
+          "quote": "We handle missing values in a special manner. Whenever we are summarizing rows all of which have missing values"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "1a8cd9e4de67"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "A simple approach is to show the large changes in detailed data sorted by the magnitude of the change (detail-N approach)."
+        },
+        {
+          "page": 3,
+          "quote": "This detail-N approach explains only 900 out of the total difference of about 5000."
+        },
+        {
+          "page": 3,
+          "quote": "We are comparing the revenues in year 1992 and 1993 for product category “Vertical Apps”."
+        },
+        {
+          "page": 4,
+          "quote": "explain more than 4500 of the total difference. The main idea behind this more compact representation is summarizing rows with similar changes."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "84e5f7a2b8df"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "First, it requires as many passes of the data as the answer size N . Second, there are some common cases where it fails to get the optimal answer."
+        },
+        {
+          "page": 7,
+          "quote": "The dynamic programming algorithm eliminates the above bad cases and is optimal under some assumptions elaborated next."
+        },
+        {
+          "page": 9,
+          "quote": "Lemma 3.1 The above dynamic programming algorithm generates the optimal answer if the ratios guessed at each level are correct."
+        },
+        {
+          "page": 12,
+          "quote": "We designed a dynamic programming algorithm that optimizes this function using a single pass of the data and consuming very little memory."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "513e902528cc"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "Our current prototype is based on IBM’s DB2/UDB database (version 5.2) that we view as a ROLAP engine."
+        },
+        {
+          "page": 10,
+          "quote": "It has 1.36 million total non-zero entries and four dimensions"
+        },
+        {
+          "page": 11,
+          "quote": "Only a small fraction < 20% of the total time is spent in the stored procedure that implements the diff operator."
+        },
+        {
+          "page": 12,
+          "quote": "Experiment using the industry OLAP benchmark indicate that even when the subcubes defined by the diff query includes a quarter million tuples we can process them in a minute."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "35872ba969e9"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "The user poses the question by pointing at two aggregated quantities va and vb in the data cube"
+        },
+        {
+          "page": 9,
+          "quote": "We extend to multiple dimensions by preordering the levels of dimension and applying the solution of Section 3.2.1. The goal is to pick an ordering that will minimize the total number of bits."
+        },
+        {
+          "page": 10,
+          "quote": "In this section we present an experimental evaluation on our prototype to demonstrate the (1) feasibility of getting interactive answers on typical OLAP systems and the (2) scalability of our algorithm"
+        },
+        {
+          "page": 11,
+          "quote": "In Figure 17 we show the processing time as a function of the number of levels of aggregation."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "fcb88ddd79d1"
+    }
+  },
+  "stamped": "2026-10-02"
+}

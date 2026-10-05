@@ -16,3 +16,6 @@ thesis/
 # Dataset artifacts that are rebuilt by scripts/build_db.py
 data/raw/senger
 data/senger.duckdb
+
+# litqc: cached Crossref / Semantic Scholar / OpenAlex responses
+literature/qc/.cache/

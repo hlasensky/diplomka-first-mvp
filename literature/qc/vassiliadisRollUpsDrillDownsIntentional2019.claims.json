@@ -1,0 +1,194 @@
+{
+  "citekey": "vassiliadisRollUpsDrillDownsIntentional2019",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "BI is now becoming more and more pervasive, which entails an increasing participation in the decision-making process of users with competence in the business domain but low ICT skills."
+        },
+        {
+          "page": 3,
+          "quote": "For example, instead of saying “drill down to store city” or “roll-up to product category”, the user might ask “explain the drop in the sales of this product family”"
+        },
+        {
+          "page": 8,
+          "quote": "We propose several intentional operators addressing fundamental informational needs, like describe, assess, explain, predict and suggest to replace the existing data-centric state of the art operators like roll-up and drill down."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2127d2a24e5e"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "We believe that the answer to an intentional query is a dashboard, including (a) one or more cubes with the appropriate visualization and data narrations"
+        },
+        {
+          "page": 5,
+          "quote": "models that are concise representations of knowledge about these data, either extracted via machine learning algorithms or infused by the analyst in the form of KPI’s, measure correlations or rules"
+        },
+        {
+          "page": 5,
+          "quote": "highlights, which are important subsets of the knowledge and data artifacts that particularly address the user’s intention."
+        },
+        {
+          "page": 20,
+          "quote": "The triple of a cube C, its (set of ) models M, and its highlights is called an enhanced cube."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "6c5943097f92"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 16,
+          "quote": "our solution to the problem is to provide a distinct identity to the components of a complex model type (here: as a distinct attribute) and annotate or characterize the data with respect to the model component that pertains to them."
+        },
+        {
+          "page": 16,
+          "quote": "we require model components to be directly mapped and linked to their generating data in a bidirectional mapping, so that the end-user can navigate back and forth between cube cells and their models."
+        },
+        {
+          "page": 17,
+          "quote": "The antagonists can be either (a) components produced directly as the output of the model extraction algorithm, or (b) components derived from the regular output to serve the purpose of highlight extraction."
+        },
+        {
+          "page": 18,
+          "quote": "Table 5: Two antagonistic components of model type Top-k over cube C N"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "135b8a6ee8bb"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 21,
+          "quote": "The core of our framework is the assessment of surprise, which is practically the difference of belief for the same subset of the multidimensional space, before and after an intentional query has been issued."
+        },
+        {
+          "page": 22,
+          "quote": "a relation proxies that relate the cells of C N with the ones of C O (e.g., an ancestor relationship if the logical operation triggered by the intention is a drill-down)"
+        },
+        {
+          "page": 24,
+          "quote": "In the typical case, the D function can be a simple subtraction (as we envision it and use it here)"
+        },
+        {
+          "page": 48,
+          "quote": "our approach for highlight selection based on a significance score is inspired by the framework for subjective interestingness in exploratory data mining proposed by De Bie [19]."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "99c9982a93d7"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "Consider the detailed cube for the well known Adult (a.k.a census income) dataset referring to data from 1994 USA census."
+        },
+        {
+          "page": 25,
+          "quote": "significance of each cell is the z-score, i.e., the number of standard deviations the value of this cell is from the mean of all the values of the aggregate cube."
+        },
+        {
+          "page": 25,
+          "quote": "Function D is the difference and function AC (respectively function AM ) is the average."
+        },
+        {
+          "page": 26,
+          "quote": "+ 0.447)/5 = 0.61 for the top-5 cells and (1.134 + 0.582)/2 = 0.85 for outliers, meaning that in this example, the two cells of C N with to extreme values will be highlighted."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "330289e07939"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 34,
+          "quote": "since determining causation requires a too sophisticated process that cannot be automated, the term ’explanation’ in this paper refers at the automated revelation of hidden correlations and information that are not directly observable as parts of the dashboard."
+        },
+        {
+          "page": 35,
+          "quote": "give me an explanation model for the discrepancy from my benchmark model (”why are the Sales for Rhodes down by 1000 units compared to last year?”)"
+        },
+        {
+          "page": 35,
+          "quote": "to establish an analogy between their statistical measures via, e.g., t-tests or F-tests"
+        },
+        {
+          "page": 36,
+          "quote": "A decision tree that classifies the measure with respect to an attribute-list of other measures and (attributes of) dimension levels"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "fd03329ff322"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 43,
+          "quote": "Our Delian Cube Engine operates on top of a relational DBMS to support query answering"
+        },
+        {
+          "page": 44,
+          "quote": "We have worked with the original PKDD99 data set on bank loans, which is of small size, and artificially generated larger versions of it at 1M and 10M rows."
+        },
+        {
+          "page": 44,
+          "quote": "in all cases, the model generation requires simply a few milliseconds (and frequently, fractions of them)! This is expected, as the models operate on the query result and not on the underlying cube."
+        },
+        {
+          "page": 44,
+          "quote": "Thus, the psychological limit of 500 msec for producing an answer is not affected at all by the application of our models, in our experiment."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "98ac92f4f5a6"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 25,
+          "quote": "The possibility of a top-down method, is of course, an open issue, but falls outside the scope of this paper."
+        },
+        {
+          "page": 44,
+          "quote": "We recognize that the visualizations employed are naı̈ve, and thus fail to plug-in any time costs due to the visualization part"
+        },
+        {
+          "page": 50,
+          "quote": "This paper is a vision paper describing, in broad terms, a potential future for OLAP, to strengthen its place as the corner stone of BI."
+        },
+        {
+          "page": 51,
+          "quote": "How exactly this optimizer will be structured internally, and what optimization algorithms and tunings will be employed is clearly a topic of future research."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "f7f2092b37f6"
+    }
+  },
+  "stamped": "2026-10-02"
+}

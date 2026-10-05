@@ -9,6 +9,7 @@ status: candidate   # confirmed | candidate | rejected
 verified: false     # true = tvrzení ověřená proti PDF mnou
 chapters: []
 concepts: []
+uroven:        # 1 | 2 | 3 | nastroje – doplní `litqc.py plan --sync` ze seznam.md
 ---
 
 PDF: [otevřít v Zoteru](zotero://open-pdf/library/items/)

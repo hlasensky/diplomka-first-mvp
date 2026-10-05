@@ -11,6 +11,8 @@ Citing rules:
 - Every \cite must map to a numbered claim (C1, C2…) in the note. If none fits, grep the fulltext.
   If it's not there either, say so. Never infer what a paper "probably" says.
 - Never invent citekeys, page numbers, venues or authors.
+- Before relying on a source, check `literature/qc/<citekey>.md` (run `python3 literature/tools/litqc.py check <citekey>`).
+  A claim that is not `supported` there must not back a \cite; flag it.
 
 Editing notes:
 - You may create new source notes (always `status: candidate`, `verified: false`) and concept notes.

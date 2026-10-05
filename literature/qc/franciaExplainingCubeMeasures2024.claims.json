@@ -1,0 +1,198 @@
+{
+  "citekey": "franciaExplainingCubeMeasures2024",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Five intention operators were proposed to this end; of these, describe and assess have been investigated in previous papers."
+        },
+        {
+          "page": 1,
+          "quote": "In this paper we enrich the IAM picture by focusing on the explain operator."
+        },
+        {
+          "page": 1,
+          "quote": "the goal of the explain operator will be to provide an answer to the user asking ‘‘why does measure 𝑚 show these values?’’."
+        },
+        {
+          "page": 1,
+          "quote": "In this work we focus on models that explain 𝑚 in terms of one or more other measures (candidate measures)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "8d189d4aec40"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "Specifically, we divide the query result into train and test, with 70% and 30% facts respectively."
+        },
+        {
+          "page": 6,
+          "quote": "a minimum of 10 observations per parameter is deemed necessary to avoid overfitting"
+        },
+        {
+          "page": 4,
+          "quote": "In this paper we consider three types of models, namely:"
+        },
+        {
+          "page": 7,
+          "quote": "We normalize the cross-correlation function to get a time-dependent Pearson correlation coefficient"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "92e9bb0e5972"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "To let our explain operator search for measure relationships across two or more related cubes, simulating the drill-across OLAP operator, we give a definition of cube joinability."
+        },
+        {
+          "page": 3,
+          "quote": "Intuitively, two cubes are joinable if they share, either completely or partially, at least one"
+        },
+        {
+          "page": 5,
+          "quote": "The as clause gives names to derived measures specified via expressions."
+        },
+        {
+          "page": 5,
+          "quote": "The range clause specifies the maximum displacement allowed for cross-correlation."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a6151c758f7a"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "measures the interest of each component on a continuous scale from 0 to 1"
+        },
+        {
+          "page": 8,
+          "quote": "is negative, function 𝑖𝑛𝑡𝑒𝑟𝑒𝑠𝑡() returns 0.10 The better the model, the closer the value of R2 to 1."
+        },
+        {
+          "page": 8,
+          "quote": "To avoid returning redundant information to users, but also to properly rank components, we introduce three domination rules."
+        },
+        {
+          "page": 8,
+          "quote": "For instance, given unitPrice and unitCost from Fig. 6, the cross-correlation value is 0.90 while R2 is negative even if computed after aligning the two measures by the displacement found"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3d4e8d06ee24"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "it turns out that less than one second is necessary to explain a cube of almost 87 000 facts."
+        },
+        {
+          "page": 9,
+          "quote": "It turns out that our approach saves 95% of complexity with respect to writing cube queries in SQL and writing the Python implementation necessary to compute the models"
+        },
+        {
+          "page": 10,
+          "quote": "Conversely, multivariable linear regression scales quadratically with respect to the number of measures"
+        },
+        {
+          "page": 10,
+          "quote": "computing an explanation takes around 10 s, thus fulfilling the requirement of near-real-time response typical of analytical workloads."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9b172d6c6e8a"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "which shows that explain detects the patterns we injected into the"
+        },
+        {
+          "page": 10,
+          "quote": "The reason why these explanations are not 100% precise (e.g., the displacement detected is 27 rather than 30) is that some noise is introduced when computing unitCost"
+        },
+        {
+          "page": 10,
+          "quote": "This cube describes the captures of the brown marmorated stink bug (Halyomorpha halys)"
+        },
+        {
+          "page": 11,
+          "quote": "the number of adults shows a 3-week delay from the number of large instars"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "56b2b3f8522f"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 11,
+          "quote": "we experimented our approach with 86 users, mainly master students with advanced or basic knowledge of business intelligence and data warehousing."
+        },
+        {
+          "page": 11,
+          "quote": "We asked them to rate on a 5-values Likert scale the interest of the explanations we provided and their overall perceived value"
+        },
+        {
+          "page": 11,
+          "quote": "Overall, the perceived value of both the explanations and the user experience (Fig. 13) are good."
+        },
+        {
+          "page": 11,
+          "quote": "is always higher than unitCost); although we agree that these models could be more intuitive that the quantitative ones we generate, we observe that they seem more aimed at providing descriptions rather than explanations."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "ac884a6f567a"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Since the term correlation in statistics is mainly used to denote linear relationships, to avoid misunderstandings we will use the general term relationship instead."
+        },
+        {
+          "page": 12,
+          "quote": "shift towards models that explain measure values in terms of dimension members, also considering aggregation"
+        },
+        {
+          "page": 12,
+          "quote": "should rather be seen as a modular framework where any approach to explanation of aggregate data could be plugged."
+        },
+        {
+          "page": 13,
+          "quote": "to evaluate explanations in terms of succinctness (large explanations will probably be not well understandable), interpretability"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "42af95672d6a"
+    }
+  },
+  "stamped": "2026-10-02"
+}

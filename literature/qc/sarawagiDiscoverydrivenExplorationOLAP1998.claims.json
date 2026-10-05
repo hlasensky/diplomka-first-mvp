@@ -1,0 +1,186 @@
+{
+  "citekey": "sarawagiDiscoverydrivenExplorationOLAP1998",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "This \"hypothesis-driven\" exploration for anomalies has several shortcomings."
+        },
+        {
+          "page": 2,
+          "quote": "typically, a cube has 5-8 dimensions, each dimension has a hierarchy that is 2-8 levels deep and each level of the hierarchy has ten to hundreds of members"
+        },
+        {
+          "page": 2,
+          "quote": "the higher level aggregations from where an analyst starts may not even be affected by an anomaly occuring underneath either because of cancellation of multiple exceptions or because of the large amount of data aggregated"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "62fee17d4065"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "we consider a value in a cell of a data cube to be an exception if it is significantly different from the value anticipated based on a statistical model"
+        },
+        {
+          "page": 2,
+          "quote": "This model computes the anticipated value of a cell in context of its position in the data cube and combines trends along different dimensions that the cell belongs to"
+        },
+        {
+          "page": 7,
+          "quote": "anticipated value calculated using a model that takes into account all aggregates (group-bys) in which the value participates. This model was inspired by the table analysis methods [HMJ88]"
+        },
+        {
+          "page": 7,
+          "quote": "Exceptions at higher level group-bys of the cube can be found by separately fitting the model Eq. 1 on aggregated values at each group-by of the data cube"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b0baa2616598"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "A statistically valid definition of \"relatively large\" requires us to scale the values based also on the anticipated standard deviation"
+        },
+        {
+          "page": 7,
+          "quote": "We use τ = 2.5 corresponding to a probability of 99% in the normal distribution."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "bf3d629df342"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "In our experience with OLAP datasets, the multiplicative form provided better fit than the additive form."
+        },
+        {
+          "page": 8,
+          "quote": "For ease of calculation, we transform the multiplicative form to a linear additive form by taking a log of original data values."
+        },
+        {
+          "page": 9,
+          "quote": "We used the 75% trimmed-mean where 25% of the extreme values are trimmed off and the mean is taken of the middle 75% numbers."
+        },
+        {
+          "page": 9,
+          "quote": "is estimated as the sum of squares of the residuals divided by the number of entries. We found that this method provides poor fits on OLAP data."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "43fbe496ad52"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "SelfExp: represents the surprise value of the cell relative to other cells at the same level of aggregation."
+        },
+        {
+          "page": 9,
+          "quote": "denotes the exception value of the cell. This quantity is defined as the scaled absolute value of the residual defined in Eq. 2"
+        },
+        {
+          "page": 10,
+          "quote": "We define it formally as the maximum SelfExp value over all cells underneath this cell."
+        },
+        {
+          "page": 10,
+          "quote": "We define PathExp as the maximum of the SelfExp over all cells reachable by drilling down along that path."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "d96649ec466b"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "with dimensions Product, Market, and Time. There is a hierarchy Market → Region → ALL on the Market dimension. The data for this cube is taken from a sample OLAP database distributed with Essbase [Arb]."
+        },
+        {
+          "page": 5,
+          "quote": "the sales of \"Diet-Soda\" has decreased by an exceptionally high value of 40% and 33% in the months of \"Aug\" and \"Oct\" respectively."
+        },
+        {
+          "page": 5,
+          "quote": "Notice that the sales of \"Diet-Soda\" in the Product-Time plane aggregated over different Regions (Figure 2) gives little indication of these high exceptions"
+        },
+        {
+          "page": 6,
+          "quote": "the entry <Birch-B, Dec> with value -10% is marked as an exception whereas entry <Birch-B, Nov> with a higher value -14% is not because for the \"Dec\" column almost all other product have a large positive value"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3fb35a3a3f35"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "There are three logical phases in the computation of exceptions in the entire cube"
+        },
+        {
+          "page": 13,
+          "quote": "First we can compute the residuals of a k-dimensional cube by joining it with at most k other group-bys instead of 2^k - 1 group-bys as in Eq. 3"
+        },
+        {
+          "page": 13,
+          "quote": "Second, we can compute the residuals the same time as we compute the aggregate values in phase 1 and thus save on the sorting and comparison costs."
+        },
+        {
+          "page": 15,
+          "quote": "Our experiments (detailed in [SAM98]) show that these techniques yield almost a factor of three to four performance improvement."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "f5b553c0fec6"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 12,
+          "quote": "Equations 3 and 5 yield the same set of residuals when the cube contains no missing data. [Proof appears in [SAM98].] When a cube does contain missing data, the residuals could differ"
+        },
+        {
+          "page": 12,
+          "quote": "for producing accurate least squares fit in such cases. However, these methods are not practical for our goal of pre-mining an entire large database since they require multiple passes (often 10 or more) of data."
+        },
+        {
+          "page": 12,
+          "quote": "Our implementation ignores the missing values in the calculation of the coefficients in both equations by calculating the average only over the values actually present."
+        },
+        {
+          "page": 15,
+          "quote": "Future work in the area should incorporate methods for model selection and user customization of the definition of exceptions."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "80b9cc7a52d4"
+    }
+  },
+  "stamped": "2026-10-02"
+}
