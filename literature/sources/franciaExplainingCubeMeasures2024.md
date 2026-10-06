@@ -7,6 +7,7 @@ venue: "Information Systems 121, 102338"
 kind: journal   # journal | conference | preprint | book | misc
 status: candidate   # confirmed | candidate | rejected
 verified: false     # true = tvrzení ověřená proti PDF mnou
+precteno: ne         # ne | abstrakt | uvod-zaver | prolet | cele – jak daleko jsem paper četl (mění jen já)
 chapters: []
 concepts: [intentional-analytics, query-explanation, interestingness, olap]
 uroven: 1

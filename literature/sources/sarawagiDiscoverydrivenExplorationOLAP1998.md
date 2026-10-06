@@ -5,8 +5,9 @@ authors: Sarawagi, Sunita; Agrawal, Rakesh; Megiddo, Nimrod
 year: 1998
 venue: Advances in Database Technology — EDBT'98 (vol. 1377, pp. 168–182)
 kind: conference
-status: candidate
+status: confirmed
 verified: true
+precteno: cele
 chapters: []
 concepts:
   - olap

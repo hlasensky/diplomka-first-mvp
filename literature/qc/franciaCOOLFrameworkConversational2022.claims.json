@@ -1,0 +1,198 @@
+{
+  "citekey": "franciaCOOLFrameworkConversational2022",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "a conversational OLAP system must also provide feedback to refine and correct wrong queries, and it must have memory to relate subsequent requests"
+        },
+        {
+          "page": 1,
+          "quote": "It must handle OLAP sessions rather than single queries: in an OLAP session the first query is fully described by the text"
+        },
+        {
+          "page": 1,
+          "quote": "It must be robust with respect to user inaccuracies in using syntax, OLAP terms, and attribute values"
+        },
+        {
+          "page": 1,
+          "quote": "It must be easy to configure on a data warehouse (DW) without a heavy manual definition of the lexicon."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "e8c1d3f20690"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "possibly extends them with synonyms, automatically extracted from open data ontologies (Wordnet [11] in our implementation)"
+        },
+        {
+          "page": 3,
+          "quote": "The MR domain-dependent content is automatically collected by querying the DW and its data dictionary"
+        },
+        {
+          "page": 3,
+          "quote": "DW element names: entities corresponding to measures, dimensional attributes and fact names."
+        },
+        {
+          "page": 4,
+          "quote": "information about the structure of the database implementing the DW, including table and attribute names, primary and foreign key relationships."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a7394dc21de7"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "More technically, our text-to-SQL approach is based on a grammar driving the parsing of natural language descriptions"
+        },
+        {
+          "page": 4,
+          "quote": "Since the number of candidate target sequences is exponential, we consider only the most significant ones through"
+        },
+        {
+          "page": 5,
+          "quote": "Only the measure clause is mandatory since a GPSJ could aggregate a single measure with no selections."
+        },
+        {
+          "page": 10,
+          "quote": "The SQL generation applies to both star and snowflake schemas [10] and is done as follows"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "56d3b887a8b2"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "The management of these steps is demanded to OLAP operator until a reset command is applied, making COOL return to the engage state."
+        },
+        {
+          "page": 2,
+          "quote": "it requires to have memory of previous queries (stored in the Log) and to understand which part of the previous query must be modified"
+        },
+        {
+          "page": 6,
+          "quote": "is used by the Checking & Annotation step to verify the consistency of the OLAP operator and by the Disambiguation & Enhancement step to implicitly solve ambiguities"
+        },
+        {
+          "page": 6,
+          "quote": "Also note that the Add and Drop operators respectively behave as Drill down and Roll up when applied to attributes"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "fea277620414"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "Ambiguity: an inconsistency solvable through disambiguation. Ambiguities are solvable either automatically by COOL or by interacting with the user"
+        },
+        {
+          "page": 9,
+          "quote": "the MR since only one solution is possible. In this case, the parse forest is automatically completed and no interaction with the user is required."
+        },
+        {
+          "page": 10,
+          "quote": "either a default solution has been defined in the MR or it can be inferred from the Log according to the previous user disambiguations"
+        },
+        {
+          "page": 11,
+          "quote": "User interaction templates and actions for user-based ambiguity solution. The line splits annotations related to full-query interpretation from those related to OLAP-operator interpretation."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "82b5302e086e"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 11,
+          "quote": "describes a real-word benchmark for generic analytics queries. 110 queries out of 147 (i.e., 75% of the benchmark) turned out to meet"
+        },
+        {
+          "page": 13,
+          "quote": "and it ranges respectively in [0.88, 0.92] and [0.86, 0.92]. Similarly, for the SSB dataset, effectiveness ranges in [0.88, 0.90] (when varying N) and in [0.88, 0.92]"
+        },
+        {
+          "page": 13,
+          "quote": "Only 58 queries out of 110 are not ambiguous and produce parse trees that can be fed as-is to SQL generation"
+        },
+        {
+          "page": 13,
+          "quote": "the effectiveness increases from 0.89 up to 0.93. As to SSB, given N = 6 and α = 0.7, the effectiveness increases from 0.89 up to 0.94"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "c4815faa906c"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "16 users showed no familiarity with the OLAP paradigm, while 39 users showed medium to very-high familiarity"
+        },
+        {
+          "page": 14,
+          "quote": "For this test, we only considered the Foodmart schema."
+        },
+        {
+          "page": 16,
+          "quote": "At the end of the OLAP session, the average similarity for inexperienced users is 0.87 while it is 0.94 for experienced users"
+        },
+        {
+          "page": 16,
+          "quote": "The time necessary to interpret a full query is higher for inexperienced users (141 s vs. 97 s)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4723b3b5a58a"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 11,
+          "quote": "it was impossible to run a comparison against them since (i) the implementations are private and the provided descriptions are far from making them reproducible"
+        },
+        {
+          "page": 13,
+          "quote": "are mainly due to missed entities in the target sequences (e.g., a word contains too many typos to be resolved or a synonym is missing in the MR)"
+        },
+        {
+          "page": 16,
+          "quote": "its effectiveness could decrease if users’ choices were less focused"
+        },
+        {
+          "page": 2,
+          "quote": "This task is out of scope in our research and we exploited the public Web Speech API in our implementation"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "f0bf98d345d4"
+    }
+  },
+  "stamped": "2026-10-05"
+}

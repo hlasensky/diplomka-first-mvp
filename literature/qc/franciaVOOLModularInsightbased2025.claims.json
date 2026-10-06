@@ -1,0 +1,202 @@
+{
+  "citekey": "franciaVOOLModularInsightbased2025",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "translating natural language sentences into OLAP sessions has been thoroughly investigated [3]; however, the issues related to the vocalization of the results of OLAP sessions have been addressed only partially"
+        },
+        {
+          "page": 1,
+          "quote": "The risk when vocalizing the results of OLAP sessions is to flood the user with long and tedious descriptions; thus, we choose to vocalize only selected insights"
+        },
+        {
+          "page": 2,
+          "quote": "#3 Intention-awareness: it should take the semantics of each OLAP operator into account."
+        },
+        {
+          "page": 2,
+          "quote": "#6 Conciseness: the text vocalized should not be needlessly verbose."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "03109591b37e"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "An insight 𝑠 ∈ 𝐹 (𝐶 ⊤ , 𝑞𝑖−1 , 𝑞𝑖 , 𝜔) is a set of components; each component 𝑣 ∈ 𝑠 describes a set of facts of 𝑞𝑖 (𝐶 ⊤ )"
+        },
+        {
+          "page": 4,
+          "quote": "is the cost related to the vocalization of 𝑠, measured as the number of words in 𝑁 𝐿(𝑠)."
+        },
+        {
+          "page": 4,
+          "quote": "Insights are self-contained: given an insight 𝑠, 𝑁 𝐿(𝑠) is a selfstanding sentence containing all the information necessary for vocalization."
+        },
+        {
+          "page": 5,
+          "quote": "if 𝐹 =‘‘Topk’’, the Top-3 insight is an extension of the Top-2 insight, hence, it has higher coverage"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "1325d825c47e"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "The MCKP is solved through the Dyemer-Zemel greedy algorithm [8], which considers the ‘‘slope’’ of pairs of insights"
+        },
+        {
+          "page": 4,
+          "quote": "replaced by the selection of no more than one item from each class [7]."
+        },
+        {
+          "page": 5,
+          "quote": "they are sorted by descending coverage 𝑐 𝑜𝑣 (from the broadest to the narrowest), and their natural language descriptions 𝑁 𝐿’s are then concatenated and vocalized."
+        },
+        {
+          "page": 14,
+          "quote": "H. Kellerer, U. Pferschy, D. Pisinger, Multidimensional knapsack problems, in: Knapsack Problems, Springer, 2004,"
+        }
+      ],
+      "note": "„slov/min“ na s. 4 výslovně není (jen „180 is the typical word rate“), ale Př. 5 na s. 5 (20 s = 60 slov) to potvrzuje; explicitně „words per minute“ je až na s. 10. Ref. [8] = Kellerer, Pferschy, Pisinger (s. 14).",
+      "fix": "",
+      "claim_sha": "df9ae05bc8b8"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "Operator-agnostic vs. Operator-specific: modules of the former type extract insights out of the result of a single query 𝑞𝑖"
+        },
+        {
+          "page": 6,
+          "quote": "Specifically, our Assess and Correlation modules are related to the 𝖺𝗌𝗌𝖾𝗌𝗌 and 𝖾𝗑𝗉𝗅𝖺𝗂𝗇 IAM operators, respectively; all the other modules are related to the 𝖽𝖾𝗌𝖼𝗋𝗂𝖻𝖾 IAM operator."
+        },
+        {
+          "page": 8,
+          "quote": "For this module each component 𝑣𝑗 represents an outlier fact, and its interest is defined as the anomaly score [20]."
+        },
+        {
+          "page": 14,
+          "quote": "F.T. Liu, K.M. Ting, Z. Zhou, Isolation forest, in: Proc. ICDM, Pisa, Italy, 2008,"
+        }
+      ],
+      "note": "Ref. [20] na s. 14 je Liu, Ting, Zhou: Isolation forest (ICDM 2008).",
+      "fix": "",
+      "claim_sha": "3d20a73f82b8"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "A group of 25 users (mainly data science master students) has been put together to assess the effectiveness of VOOL."
+        },
+        {
+          "page": 8,
+          "quote": "Non-expert and expert users amounted respectively to 42% and 58% of the users."
+        },
+        {
+          "page": 8,
+          "quote": "Table 4 reports the average results on a scale from 1 (very poor/bad) to 5 (very high/good)."
+        },
+        {
+          "page": 8,
+          "quote": "the former was sometimes too simplistic in describing the query result, while the latter was deemed to be repetitive over an OLAP session."
+        },
+        {
+          "page": 9,
+          "quote": "Table 5 User evaluation of the single modules."
+        }
+      ],
+      "note": "Tab. 4 (OCR s. 8): Expert Q5 4.07 ± 0.62, Non-expert Q5 4.30 ± 0.48; Tab. 5 (s. 9): Correlation 4.62 ± 0.65, Statistics 3.15 ± 1.20, Clustering 3.11 ± 1.21 – ověřeno, tabulky necitovatelné jako souvislý text.",
+      "fix": "",
+      "claim_sha": "4576a2b96aff"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "we gave five Ph.D. students in computer science 90 min to implement the outliers and clustering modules and extract insights from our cube"
+        },
+        {
+          "page": 9,
+          "quote": "We ran 10 OLAP sessions, each including 3 OLAP operations, with varying combinations of modules"
+        },
+        {
+          "page": 9,
+          "quote": "Roughly, for the scenario in Fig. 5, we can say that the details-on-demand interaction is fruitful when the budget is below 75 words."
+        },
+        {
+          "page": 9,
+          "quote": "The Elbow-method heuristic returns a cutoff budget where the increase in the total interest is no longer worth an additional budget, which in this case turns out to be 𝑡𝑣𝑜𝑐 = 100."
+        }
+      ],
+      "note": "Tab. 6 (s. 9): Both jen STUD-2 a STUD-4, časy 25–90 min, délky 940–3480 znaků – sedí.",
+      "fix": "",
+      "claim_sha": "42633bed4652"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "a prototype has been developed and implemented in Python and Java. We import from the scikit-learn library the required mining models, and we rely on Google APIs to vocalize insights"
+        },
+        {
+          "page": 9,
+          "quote": "The tests have been conducted on a PC with 8 GB of RAM and i7-6700 CPU @3.40 GHz. The reported results are obtained as the average of 10 executions."
+        },
+        {
+          "page": 10,
+          "quote": "Clustering is the lone exception, and it takes an average of 7 s for query results with a cardinality of 104 ."
+        },
+        {
+          "page": 10,
+          "quote": "Almost 90% of the modules are completed within a few seconds, and all the insights are found within 10 s. Since the average length of the preamble is 15 words"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "39f107f283df"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "we consider two OLAP sessions, each starting with an initial query and proceeding with two refined queries that involve different OLAP operators"
+        },
+        {
+          "page": 10,
+          "quote": "males actually purchase more products from the ‘‘Produce’’ department than females, but all three competitors state the opposite."
+        },
+        {
+          "page": 10,
+          "quote": "quantitatively correct when the competitors use the outcome of Python code, but still they incorporate hallucinations and errors when the competitors either generate semantically-wrong code"
+        },
+        {
+          "page": 11,
+          "quote": "The errors in this answer are mainly due Data Analyst generating Python code that extracts insights only on the first 5 tuples of the query results."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a078e0b370c5"
+    }
+  },
+  "stamped": "2026-10-05"
+}

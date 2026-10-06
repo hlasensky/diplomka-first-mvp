@@ -1,22 +1,37 @@
 {
-  "collapse-filter": true,
-  "search": "",
+  "collapse-filter": false,
+  "search": "(path:sources) OR (path:concepts) ",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": false,
   "showOrphans": true,
-  "collapse-color-groups": true,
-  "colorGroups": [],
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:concepts  ",
+      "color": {
+        "a": 1,
+        "rgb": 5431428
+      }
+    },
+    {
+      "query": "path:sources  ",
+      "color": {
+        "a": 1,
+        "rgb": 2985913
+      }
+    }
+  ],
   "collapse-display": false,
   "showArrow": false,
   "textFadeMultiplier": 0,
   "nodeSizeMultiplier": 1,
   "lineSizeMultiplier": 1,
   "collapse-forces": false,
-  "centerStrength": 0.24064913650959,
+  "centerStrength": 0.518713248970312,
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 0.1848315649053871,
+  "scale": 0.43636399788150015,
   "close": true
 }

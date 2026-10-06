@@ -7,6 +7,7 @@ venue: Proceedings of the 25th VLDB Conference, Edinburgh, pp. 42–53
 kind: conference
 status: candidate
 verified: true
+precteno: ne         # ne | abstrakt | uvod-zaver | prolet | cele – jak daleko jsem paper četl (mění jen já)
 chapters: []
 concepts:
   - olap

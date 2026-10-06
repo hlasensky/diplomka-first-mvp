@@ -64,7 +64,19 @@ Co se kontroluje mechanicky, bez LLM:
 - `rejected` – nepoužívat; v poznámce má být proč.
 - `verified: true` – claims jsi sám ověřil proti PDF.
 
-TL;DR, „Vztah k mé práci“, `status` a `verified` v existujících poznámkách mění jen ty, Claude na ně nesahá.
+Jak daleko jsi paper četl (`precteno`, nová poznámka začíná na `ne`):
+
+| hodnota | význam |
+|---|---|
+| `ne` | nečteno, znáš jen poznámku od Clauda |
+| `abstrakt` | abstrakt (a případně TL;DR) |
+| `uvod-zaver` | úvod a závěr, kostra článku |
+| `prolet` | proletěno celé – nadpisy, obrázky, tabulky, výsledky |
+| `cele` | přečteno celé |
+
+Přehled po úrovních ze seznamu literatury je v `qc/_plan.md` (sloupce „čteno víc než abstrakt“ a „čteno celé“). QC upozorní, když je zdroj `confirmed`, ale `precteno` je jen `ne` nebo `abstrakt`.
+
+TL;DR, „Vztah k mé práci“, `status`, `verified` a `precteno` v existujících poznámkách mění jen ty, Claude na ně nesahá.
 
 ## Claims a strany
 

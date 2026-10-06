@@ -41,7 +41,7 @@ Per paper (one writer subagent per paper when there are more than 3):
    Work from the fulltext, not the PDF. Page numbers = the "=== PAGE N ===" markers (PDF pages; if the
    printed page numbers differ, note it under "Pozor").
 2. **Note.** Create literature/sources/<citekey>.md from literature/_templates/source.md:
-   - frontmatter from projekt-20-literatura-bibliography.bib; `status: candidate`, `verified: false`
+   - frontmatter from projekt-20-literatura-bibliography.bib; `status: candidate`, `verified: false`, `precteno: ne`
    - PDF line: append the attachment key to `zotero://open-pdf/library/items/`. The key is the
      8-character folder name in the `file` path (…/Zotero/storage/<KEY>/…). No Zotero file
      (PDF only in inbox/): delete the line.
@@ -69,7 +69,7 @@ Per paper (one writer subagent per paper when there are more than 3):
    Fix every vault ERROR you caused (broken links, concept backlinks).
 7. If the PDF came from inbox/, leave it there and report it (the user will add it to Zotero).
 
-Never set `verified: true` or `status: confirmed`; that stays with the user, who now only has to check
+Never set `verified: true`, `status: confirmed` or change `precteno`; that stays with the user, who now only has to check
 claims the QC flagged plus a spot check.
 
 Finish with a table: citekey | uroven | pages | OCR-repaired pages | warn pages |

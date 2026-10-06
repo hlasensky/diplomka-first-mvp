@@ -1,3 +1,5 @@
+> **Historický MVP plán (Olist).** Aktuální směr: [decisions.md](decisions.md), data: [data.md](data.md).
+
 Perfect — this is the smartest approach for a master's thesis. One dataset, one use case, a working demo. Here is the concrete plan.
 
 ---

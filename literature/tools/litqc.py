@@ -400,13 +400,16 @@ def claim_numbers(text: str) -> list[str]:
 
 
 def number_in(n: str, text: str) -> bool:
-    text = re.sub(r"(?<=\d)[, ](?=\d{3}\b)", "", normalize(text))
+    plain = normalize(text)
+    # Thousands separators are joined so "2 404" matches 2404, but that also glues adjacent
+    # table cells ("25 940" -> 25940), so the unjoined text is searched as well.
+    texts = (re.sub(r"(?<=\d)[, ](?=\d{3}\b)", "", plain), plain)
     variants = {n}
     if n.startswith("0."):
         variants.add(n[1:])                           # .90
     if "." in n:
         variants.add(n.rstrip("0").rstrip("."))
-    return any(re.search(rf"(?<![\d.]){re.escape(v)}(?!\d)", text) for v in variants)
+    return any(re.search(rf"(?<![\d.]){re.escape(v)}(?!\d)", t) for t in texts for v in variants)
 
 
 def quote_on_ocr(quote: str, page_text: str) -> float:
@@ -495,6 +498,10 @@ def cmd_claims(key: str, res: Result) -> None:
 
 # ---------------------------------------------------------------- vault lint
 
+# How far the user has read a paper (frontmatter `precteno`, set only by the user), shallow -> deep.
+READ_STATES = ("ne", "abstrakt", "uvod-zaver", "prolet", "cele")
+
+
 def cmd_lint(bib: dict, res: Result) -> None:
     notes = {p.stem: p.read_text(encoding="utf-8") for p in sorted(SOURCES.glob("*.md"))}
     concepts = {p.stem: p.read_text(encoding="utf-8") for p in sorted(CONCEPTS.glob("*.md"))}
@@ -514,6 +521,13 @@ def cmd_lint(bib: dict, res: Result) -> None:
             res.add("ERROR", "BAD_VERIFIED", f"{key}: verified `{fm.get('verified')}`")
         if fm.get("status") == "confirmed" and fm.get("verified") != "true":
             res.add("WARN", "CONFIRMED_UNVERIFIED", f"{key}: confirmed, ale verified: false")
+        read = fm.get("precteno")
+        if read is None:
+            res.add("WARN", "NO_PRECTENO", f"{key}: chybí `precteno` ({' | '.join(READ_STATES)})")
+        elif read not in READ_STATES:
+            res.add("ERROR", "BAD_PRECTENO", f"{key}: precteno `{read}` (povoleno: {' | '.join(READ_STATES)})")
+        elif fm.get("status") == "confirmed" and read in ("ne", "abstrakt"):
+            res.add("WARN", "CONFIRMED_UNREAD", f"{key}: confirmed, ale precteno: {read}")
         if fm.get("status") == "confirmed" and not section(text, "Citovat pro"):
             res.add("INFO", "NO_CITE_FOR", f"{key}: confirmed, ale „Citovat pro“ je prázdné")
         if key in bib:
@@ -688,17 +702,26 @@ def cmd_plan(bib: dict, res: Result, sync: bool = False) -> None:
             return "k ingestu"
         fm = frontmatter(notes[it.key].read_text(encoding="utf-8"))
         done = fm.get("status") == "confirmed" and fm.get("verified") == "true"
-        return f"{'✅ ověřeno' if done else fm.get('status', '?')} · QC {qc_verdict(it.key)}"
+        return (f"{'✅ ověřeno' if done else fm.get('status', '?')} · čteno: {fm.get('precteno', '–')} "
+                f"· QC {qc_verdict(it.key)}")
+
+    def read_state(it: PlanItem) -> str:
+        return frontmatter(notes[it.key].read_text(encoding="utf-8")).get("precteno", "ne") \
+            if it.key in notes else "ne"
 
     states = {it.no: state(it) for it in plan}
+    reads = {it.no: read_state(it) for it in plan}
     rows = []
     for lvl, name in LEVEL_NAMES.items():
         its = [it for it in plan if it.level == lvl]
         rows.append(f"| {name} | {len(its)} | {sum(bool(it.key) for it in its)} | "
                     f"{sum(it.key in notes for it in its if it.key)} | "
+                    f"{sum(reads[it.no] not in ('ne', 'abstrakt') for it in its)} | "
+                    f"{sum(reads[it.no] == 'cele' for it in its)} | "
                     f"{sum(states[it.no].startswith('✅') for it in its)} |")
-    res.tables.append("### Stav podle úrovní\n\n| úroveň | položek | v Zoteru | poznámka | ověřeno |\n"
-                      "|---|---|---|---|---|\n" + "\n".join(rows) + "\n")
+    res.tables.append("### Stav podle úrovní\n\n"
+                      "| úroveň | položek | v Zoteru | poznámka | čteno víc než abstrakt | čteno celé | ověřeno |\n"
+                      "|---|---|---|---|---|---|---|\n" + "\n".join(rows) + "\n")
     for lvl, name in LEVEL_NAMES.items():
         its = [it for it in plan if it.level == lvl]
         if not its:

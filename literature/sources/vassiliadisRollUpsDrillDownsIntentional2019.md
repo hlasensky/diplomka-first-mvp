@@ -7,6 +7,7 @@ venue: "Information Systems 85, pp. 68–91 (PDF: arXiv 1812.07854v2, long versi
 kind: journal   # journal | conference | preprint | book | misc
 status: candidate   # confirmed | candidate | rejected
 verified: false     # true = tvrzení ověřená proti PDF mnou
+precteno: ne         # ne | abstrakt | uvod-zaver | prolet | cele – jak daleko jsem paper četl (mění jen já)
 chapters: []
 concepts: [intentional-analytics, olap, interestingness, guided-data-exploration, anomaly-detection]
 uroven: 1

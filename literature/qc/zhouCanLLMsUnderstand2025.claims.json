@@ -1,0 +1,190 @@
+{
+  "citekey": "zhouCanLLMsUnderstand2025",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Our study investigates whether LLMs can understand and detect anomalies in time series data, focusing on zero-shot and few-shot scenarios."
+        },
+        {
+          "page": 1,
+          "quote": "Inspired by conjectures about LLMs’ behavior from time series forecasting research, we formulate key hypotheses about LLMs’ capabilities in time series anomaly detection."
+        },
+        {
+          "page": 1,
+          "quote": "We design and conduct principled experiments to test each of these hypotheses."
+        },
+        {
+          "page": 1,
+          "quote": "The results are quantitatively assessed using the affinity F1 score."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "03b7f92ac117"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "and two of which are proprietary: GPT-4o-mini (OpenAI, 2024) and Gemini-1.5-Flash (Google, 2024)."
+        },
+        {
+          "page": 8,
+          "quote": "We have 21 prompting variants for each model, with 13 for text and 8 for vision."
+        },
+        {
+          "page": 8,
+          "quote": "range, frequency, and trend. We add noisy versions of point, frequency, and trend to test Hypothesis 2."
+        },
+        {
+          "page": 8,
+          "quote": "(1) known label quality issues in public benchmarks (Wu & Keogh, 2021), (2) need for precise anomaly type isolation, (3) requirement for textual anomaly descriptions to enable CoT prompting. Still, our experiments on real-world Yahoo S5 dataset"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2cb571ba6639"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "LLMs do not benefit from chain-of-thought reasoning when analyzing time series data. Their performance often decreases when prompted to explain their reasoning."
+        },
+        {
+          "page": 9,
+          "quote": "when we explicitly use CoT to simulate human-like reasoning about time series, the anomaly detection performance steadily drops across all models and anomaly types"
+        },
+        {
+          "page": 24,
+          "quote": "GPT-4o-mini shows little difference in performance with or without Chain of Thought (CoT) prompting"
+        },
+        {
+          "page": 24,
+          "quote": "and even slightly improves with CoT for frequency anomalies, unlike other models."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3a0b847eddef"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "LLMs perform significantly better in anomaly detection when processing time series data as images rather than text tokens."
+        },
+        {
+          "page": 9,
+          "quote": "Time series anomalies are better detected by M-LLMs as images than by LLMs as text."
+        },
+        {
+          "page": 10,
+          "quote": "M-LLMs are much more capable of finding anomalies from visualized time series than textual time series, see Figure 6. The only exception is when detecting frequency anomalies with proprietary models."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "6779696fb222"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "LLMs’ repetition bias does not explain their ability to identify periodic structures."
+        },
+        {
+          "page": 9,
+          "quote": "However, the performance drop is similar across both modalities, as shown in Figure 4, and the text performance drop is often not significant."
+        },
+        {
+          "page": 9,
+          "quote": "We designed an in-context learning scenario where the LLMs’ accuracy for five-digit integer addition drops to 12%."
+        },
+        {
+          "page": 9,
+          "quote": "Despite this, the LLMs’ anomaly detection performance remains mostly consistent, as shown in Figure 5."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "e4f8f1eb7a5a"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "LLMs perform worse when the input time series have more tokens."
+        },
+        {
+          "page": 10,
+          "quote": "We observe a consistent improvement in performance when interpolating the time series from 1000 steps to 300 steps, as shown in Figure 7."
+        },
+        {
+          "page": 10,
+          "quote": "Individual models exhibit distinctly different behaviors in zero-shot and few-shot anomaly detection."
+        },
+        {
+          "page": 10,
+          "quote": "GPT’s performance with longer sequences do not degrade as much as other models, and models like Qwen handle visual inputs far more successfully."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "af428c4502c7"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 24,
+          "quote": "LLMs are reasonable choices for zero-shot time series anomaly detection"
+        },
+        {
+          "page": 25,
+          "quote": "cannot outperform the simplest traditional methods, then LLMs are not ready for the task, and our findings are not valid."
+        },
+        {
+          "page": 25,
+          "quote": "LLMs with proper prompts and visual input outperform traditional methods on point, range, and trend datasets"
+        },
+        {
+          "page": 10,
+          "quote": "vision-LLM-based anomaly detection systems shall leverage Fourier analysis before feeding the data to the LLM to improve performance."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "676de10c4967"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Our results suggest that while LLMs can understand trivial time series anomalies, we have no evidence that they can understand more subtle real-world anomalies."
+        },
+        {
+          "page": 2,
+          "quote": "while LLMs can detect simple anomalies, their abilities to understand and reason about numerical time series are considerably limited."
+        },
+        {
+          "page": 2,
+          "quote": "Our research calls for more caution in applying LLMs to time series"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "1ea970c2b6fa"
+    }
+  },
+  "stamped": "2026-10-05"
+}

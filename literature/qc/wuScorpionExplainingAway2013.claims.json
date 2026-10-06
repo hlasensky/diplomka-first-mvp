@@ -1,0 +1,186 @@
+{
+  "citekey": "wuScorpionExplainingAway2013",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Unfortunately, databases and visualization systems do not provide a way to work backwards from an outlier point to the common properties of the (possibly many) unaggregated input tuples that correspond to that outlier."
+        },
+        {
+          "page": 1,
+          "quote": "to find a boolean predicate that when applied to the input data set (before the aggregation is computed), will cause these outliers to look normal, while having minimal effect on the points that the user indicates are normal."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "00a87437bc82"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "The influence is defined as the ratio between the change in the output and the number of tuples that satisfy the predicate:"
+        },
+        {
+          "page": 3,
+          "quote": "This is computed as the dot product between the basic definition and the error vector:"
+        },
+        {
+          "page": 3,
+          "quote": "We extend the notion by averaging the influence over the outlier results and penalizing the maximum influence over the hold-out set:"
+        },
+        {
+          "page": 3,
+          "quote": "A predicate, p, is a conjunction of range clauses over the continuous attributes and set containment clauses over the discrete attributes"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "492408800462"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "For an arbitrary aggregate function without nice properties, it is difficult to improve beyond an exhaustive algorithm that enumerates and evaluates all possible predicates."
+        },
+        {
+          "page": 4,
+          "quote": "This algorithm is inefficient because the number of single-attribute clauses increases exponentially (quadratically) for a discrete (continuous) attribute as its cardinality increases."
+        },
+        {
+          "page": 4,
+          "quote": "Additionally, the space of possible conjunctions is exponential with the number of attributes. The combination of the two issues makes the problem untenable for even small datasets."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "401d582cec5f"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "This subsection describes several properties that Scorpion exploits to develop more efficient algorithms."
+        },
+        {
+          "page": 5,
+          "quote": "This definition is related to the concept of distributive and algebraic functions in OLAP cubes [6]"
+        },
+        {
+          "page": 5,
+          "quote": "Although similar, not all distributive or algebraic are incrementally removable."
+        },
+        {
+          "page": 2,
+          "quote": "We present common properties (similar to distributive and algebraic properties of OLAP aggregates) that enable more efficient algorithms"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "af2ce4ee96df"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "The DT partitioning algorithm described in Section 6.1 exploits this property for aggregates such as AVG and STDDEV."
+        },
+        {
+          "page": 6,
+          "quote": "DT is a top-down partitioning algorithm for independent aggregates."
+        },
+        {
+          "page": 7,
+          "quote": "The MC algorithm is a bottom-up approach for independent, anti-monotonic aggregates"
+        },
+        {
+          "page": 7,
+          "quote": "Our technique is similar to algorithms used for subspace clustering [1], so we will first sketch a classic subspace clustering algorithm, and then describe our modifications. The output is then sent to the Merger."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "add0c83b049e"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "The exponent, c ≥ 0, is a user-controlled parameter that trades off the importance of keeping the size of s small and maximizing the change in the aggregate result."
+        },
+        {
+          "page": 8,
+          "quote": "For example, when c = 0, Scorpion will reduce the aggregate result without regard to the number of tuples that are used, producing predicates that select many tuples."
+        },
+        {
+          "page": 8,
+          "quote": "Increasing c places more emphasis on finding a smaller set of tuples, producing much more selective predicates."
+        },
+        {
+          "page": 8,
+          "quote": "Scorpion currently relies on users to specify attributes that can be ignored, and defers incorporating automatic attribute selection to future work."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "859a48db8c93"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "We generate 10 distinct Ad values (to create 10 groups), and each group contains 2,000 tuples randomly distributed in the n dimensions."
+        },
+        {
+          "page": 9,
+          "quote": "We also vary the dimensionality from 2 to 4, and the difficulty between Easy"
+        },
+        {
+          "page": 11,
+          "quote": "DT and MC generate results competitive with the exhaustive NAIVE algorithm and reduces runtime costs by up to 150×. Algorithm performance relies on data properties, and scales exponentially with the dimensionality in the worst case."
+        },
+        {
+          "page": 11,
+          "quote": "Takeaway: Caching DT and Merger results for low c values reduces execution cost by up to 25×."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "f1241c7a3d33"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "The Intel dataset contains 2.3 million rows, and 6 attributes."
+        },
+        {
+          "page": 11,
+          "quote": "For the first INTEL workload, the outliers are generated by Sensor 15, so Scorpion consistently returns the predicate sensorid = 15."
+        },
+        {
+          "page": 11,
+          "quote": "The algorithms all completed within a few seconds, so we focus on result quality rather than runtime."
+        },
+        {
+          "page": 12,
+          "quote": "Although the F-score is 0.6 due to low recall, this predicate best describes Obama’s highest expenses."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "1fdc5a46f3c0"
+    }
+  },
+  "stamped": "2026-10-05"
+}

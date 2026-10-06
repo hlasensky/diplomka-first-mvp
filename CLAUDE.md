@@ -16,4 +16,5 @@ Citing rules:
 
 Editing notes:
 - You may create new source notes (always `status: candidate`, `verified: false`) and concept notes.
-- Never change TL;DR, "Vztah k mé práci", `status` or `verified` in existing source notes. Those are mine.
+- Never change TL;DR, "Vztah k mé práci", `status`, `verified` or `precteno` in existing source notes. Those are mine.
+- `precteno` (ne | abstrakt | uvod-zaver | prolet | cele) is how far I have read the paper. When proposing a source, mention it if it is `ne` or `abstrakt`.

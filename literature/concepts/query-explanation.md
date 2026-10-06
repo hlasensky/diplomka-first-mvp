@@ -8,6 +8,7 @@ Automatické vysvětlení, proč má agregovaná hodnota (nebo změna mezi dvěm
 ## Sources
 - [[sarawagiExplainingDifferencesMultidimensional]] — C1–C3: operátor diff vrátí nejvýše N řádků (detailních i agregovaných s poměrem změny), které nejlépe vysvětlí rozdíl dvou buněk; výběr minimalizuje délku popisu v bitech.
 - [[franciaExplainingCubeMeasures2024]] — C1, C2: operátor explain v IAM vysvětluje cílovou míru jinými měrami (polynomiální a lineární regrese, křížová korelace) a nejzajímavější model ukáže jako highlight.
+- [[wuScorpionExplainingAway2013]] — C1: Scorpion hledá pro uživatelem označené odlehlé výsledky group-by agregace predikát nad vstupními řádky, jehož odstranění outliers „vysvětlí“ (zmizí) a hold-out výsledky téměř nezmění.
 
 ## Související
 - [[olap]]

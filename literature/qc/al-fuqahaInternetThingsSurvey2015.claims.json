@@ -1,0 +1,198 @@
+{
+  "citekey": "al-fuqahaInternetThingsSurvey2015",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "GROWING number of physical objects are being connected to the Internet at an unprecedented rate realizing the idea of the Internet of Things (IoT)"
+        },
+        {
+          "page": 1,
+          "quote": "The IoT enables physical objects to see, hear, think and perform jobs by having them “talk” together, to share information and to coordinate decisions."
+        },
+        {
+          "page": 1,
+          "quote": "Smart objects along with their supposed tasks constitute domain specific applications (vertical markets) while ubiquitous computing and analytical services form application domain independent services (horizontal markets)."
+        },
+        {
+          "page": 2,
+          "quote": "In 2010, the number of Internet connected objects had surpassed the earth’s human population [1]."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a90e50372460"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "The IoT smart objects are expected to reach 212 billion entities deployed globally by the end of 2020 [9]."
+        },
+        {
+          "page": 2,
+          "quote": "By 2022, M2M traffic flows are expected to constitute up to 45% of the whole Internet traffic [1], [9], [10]."
+        },
+        {
+          "page": 2,
+          "quote": "are expected to create about $1.1–$2.5 trillion in growth annually by the global economy by 2025."
+        },
+        {
+          "page": 2,
+          "quote": "The whole annual economic impact caused by the IoT is estimated to be in range of $2.7 trillion to $6.2 trillion by 2025 [11]."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "ba7bad6bcde8"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "The ever increasing number of proposed architectures has not yet converged to a reference model [15]."
+        },
+        {
+          "page": 3,
+          "quote": "From the pool of proposed models, the basic model is a 3-layer architecture [3], [17], [18] consisting of the Application, Network, and Perception Layers."
+        },
+        {
+          "page": 3,
+          "quote": "The perception layer digitizes and transfers data to the Object Abstraction layer through secure channels. The big data created by the IoT are initiated at this layer."
+        },
+        {
+          "page": 4,
+          "quote": "sticking to the simplicity of the architecture on the other hand, the five-layer architecture is the most applicable model for IoT applications."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "5d4ff9421c4d"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "we classify the IoT protocols into four broad categories, namely: application protocols, service discovery protocols, infrastructure protocols and other influential protocols."
+        },
+        {
+          "page": 8,
+          "quote": "CoAP is a secure protocol since it is built on top of datagram transport layer security (DTLS) to guarantee integrity and confidentiality of exchanged messages."
+        },
+        {
+          "page": 9,
+          "quote": "Advanced Message Queuing Protocol (AMQP): AMQP [75] is an open standard application layer protocol for the IoT focusing on message-oriented environments."
+        },
+        {
+          "page": 10,
+          "quote": "Data Distribution Service (DDS): Data Distribution Service (DDS) is a publish-subscribe protocol for real-time M2M communications"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a4a659cc9a4a"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "1999 and was standardized in 2013 at OASIS [70]. MQTT aims at connecting embedded devices and networks with applications and middleware."
+        },
+        {
+          "page": 8,
+          "quote": "Also, MQTT is suitable for resource constrained devices that use unreliable or low bandwidth links. MQTT is built on top of the TCP protocol. It delivers messages through three levels of QoS."
+        },
+        {
+          "page": 8,
+          "quote": "The latter was defined specifically for sensor networks and defines a UDP mapping of MQTT and adds broker support for indexing topic names."
+        },
+        {
+          "page": 8,
+          "quote": "MQTT simply consists of three components, subscriber, publisher, and broker."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "e879bf1e16af"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "results, MQTT delivers messages with lower delay than CoAP when the packet loss rate is low. In contrast, when the packet loss rate is high, CoAP outperforms MQTT."
+        },
+        {
+          "page": 10,
+          "quote": "compared these two protocols in a smartphone application environment and showed that CoAP’s bandwidth usage and round trip time are smaller than those of MQTT."
+        },
+        {
+          "page": 10,
+          "quote": "To the best of our knowledge, there is no comprehensive evaluation of all these protocols together."
+        },
+        {
+          "page": 10,
+          "quote": "So it is not feasible to provide a single prescription for all IoT applications."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "da05d31d7770"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "The application layer covers numerous vertical markets such as smart home, smart building, transportation, industrial automation and smart healthcare [3], [17]–[19]."
+        },
+        {
+          "page": 5,
+          "quote": "Smart healthcare and smart grids fall into the information aggregation category and smart home, smart buildings, intelligent transportation systems (ITS), and industrial automation are closer to the collaborative-aware category."
+        },
+        {
+          "page": 6,
+          "quote": "Smart buildings connect building automation systems (BAS) to the Internet [45]."
+        },
+        {
+          "page": 6,
+          "quote": "A smart city which could be seen as an application of ubiquitous services, aims to improve the quality of life in the city"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "41ab4fb5a81d"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 16,
+          "quote": "Examples of key challenges include availability, reliability, mobility, performance, scalability, interoperability, security, management, and trust."
+        },
+        {
+          "page": 18,
+          "quote": "However, these tools are hardly strong enough for big data needs of IoT [166]. The amount of IoT data generally is too huge to be fed and processed by the available tools."
+        },
+        {
+          "page": 26,
+          "quote": "Security and privacy are the top priority for IoT applications followed by performance, reliability and management."
+        },
+        {
+          "page": 26,
+          "quote": "We found out that real-time data analytics techniques that are able to shrink the input size would be promising."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2a158a61abfa"
+    }
+  },
+  "stamped": "2026-10-05"
+}

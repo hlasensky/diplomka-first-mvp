@@ -2,7 +2,7 @@ filters:
   and:
     - file.inFolder("sources")
 formulas:
-  hotovo: 'if(status == "confirmed" && verified == true, "✅", "")'
+  hotovo: if(status == "confirmed" && verified == true, "✅", "")
 properties:
   file.name:
     displayName: Zdroj
@@ -20,22 +20,22 @@ views:
   - type: table
     name: Podle úrovně
     groupBy:
-      property: note.uroven
+      property: uroven
       direction: ASC
     order:
       - file.name
-      - note.year
-      - note.status
-      - note.verified
+      - year
+      - status
+      - verified
       - formula.hotovo
   - type: table
     name: Neověřené
     filters:
       or:
-        - 'status != "confirmed"'
-        - "verified != true"
+        - status != "confirmed"
+        - verified != true
     order:
       - file.name
-      - note.uroven
-      - note.status
-      - note.verified
+      - uroven
+      - status
+      - verified
