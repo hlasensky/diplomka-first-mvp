@@ -1,0 +1,34 @@
+{
+  "citekey": "Infobrief2022_28Jahresruckblick",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Die bis Mitte November durch das Mayener Fachzentrum erfassten"
+        },
+        {
+          "page": 2,
+          "quote": "Herbstverluste lagen mit 4,4 % bis 5,2 % im durchschnittlichen Bereich der letzten Jahre und lassen Winterverluste zwischen 16 und 19 % erwarten."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "6b25622161be"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "erwarten, die letztendlich nach den Erhebungen des Fachzentrums für Bienen und Imkerei Mayen (FBI) im März bei ca. 21 % lagen."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "6044e4cff92f"
+    }
+  },
+  "stamped": "2026-10-06"
+}

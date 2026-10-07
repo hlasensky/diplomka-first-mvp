@@ -1,0 +1,54 @@
+{
+  "citekey": "Infobrief2022_10Honigernte",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "Winterverluste 2021/2022 Online-Erhebung des Fachzentrum Bienen und imkerei, Mayen"
+        },
+        {
+          "page": 3,
+          "quote": "Schwankungsbreite. Fast 69,5% der antwortenden Imker"
+        },
+        {
+          "page": 3,
+          "quote": "ein Wert der deutlich über den Zahlen der vergangenen Jahre liegt"
+        },
+        {
+          "page": 3,
+          "quote": "Mittel höchsten Verluste meldeten"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "e307d915aa71"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "Region Volker [n] Deutschland 10.492 137.145 28.643 22,4 20,9 69,5 Baden-Wiirttemberg 1.836"
+        },
+        {
+          "page": 4,
+          "quote": "Gesamtergebnis Deutschland 20/21 13.835 168.595 21699 14,5 12,9 504 Gesamtergebnis Deutschland 19/20 14 969 181.652 26.691 16,5 14,7 521"
+        },
+        {
+          "page": 4,
+          "quote": "1) gemitelt aus den prozentualen Enzelverlusten 2) berechnet aus den auf summeerten V 6kerzahlen je Region"
+        },
+        {
+          "page": 4,
+          "quote": "3) von Verlusten betroff ene Betriebe (mndestens ein Volk tot)"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "6feb03546da7"
+    }
+  },
+  "stamped": "2026-10-06"
+}

@@ -401,15 +401,22 @@ def claim_numbers(text: str) -> list[str]:
 
 def number_in(n: str, text: str) -> bool:
     plain = normalize(text)
-    # Thousands separators are joined so "2 404" matches 2404, but that also glues adjacent
-    # table cells ("25 940" -> 25940), so the unjoined text is searched as well.
-    texts = (re.sub(r"(?<=\d)[, ](?=\d{3}\b)", "", plain), plain)
+    # Thousands separators are joined so "2 404" / "10,586" match 2404 / 10586. Joining both kinds at
+    # once glues adjacent table cells ("25 940" -> 25940, "10,586 123,368" -> 10586123368), so each
+    # separator (comma, space, German dot) is also joined on its own, and the unjoined text is searched too.
+    texts = (re.sub(r"(?<=\d)[, ](?=\d{3}\b)", "", plain),
+             re.sub(r"(?<=\d),(?=\d{3}\b)", "", plain),
+             re.sub(r"(?<=\d) (?=\d{3}\b)", "", plain),
+             re.sub(r"(?<=\d)\.(?=\d{3}\b)", "", plain),     # German "7.597"
+             plain)
     variants = {n}
     if n.startswith("0."):
         variants.add(n[1:])                           # .90
     if "." in n:
         variants.add(n.rstrip("0").rstrip("."))
-    return any(re.search(rf"(?<![\d.]){re.escape(v)}(?!\d)", t) for t in texts for v in variants)
+    # German / Czech sources write decimals with a comma ("4,4 %"); claim numbers are normalized to "4.4"
+    variants |= {v.replace(".", ",") for v in variants if "." in v}
+    return any(re.search(rf"(?<![\d.,]){re.escape(v)}(?![\d]|,\d)", t) for t in texts for v in variants)
 
 
 def quote_on_ocr(quote: str, page_text: str) -> float:
@@ -616,11 +623,15 @@ def read_plan() -> list[PlanItem]:
 
 
 def bib_title(entry: dict[str, str]) -> str:
-    return re.sub(r"[{}\\]", "", entry.get("title", ""))
+    # LaTeX accents (\"u, {\'e}) -> plain letter first, otherwise "Jahresr\"uckblick" splits into two words
+    title = re.sub(r"\\[\"'`^~=.]\{?([A-Za-z])\}?", r"\1", entry.get("title", ""))
+    return re.sub(r"[{}\\]", "", title)
 
 
 def title_words(text: str) -> set[str]:
-    return set(re.findall(r"[a-z0-9]{3,}", normalize(text).lower()))
+    # strip diacritics so "Rückblick" in the list matches a LaTeX-accented bib title
+    plain = "".join(c for c in unicodedata.normalize("NFKD", normalize(text)) if not unicodedata.combining(c))
+    return set(re.findall(r"[a-z0-9]{3,}", plain.lower()))
 
 
 def match_plan(plan: list[PlanItem], bib: dict) -> dict[str, PlanItem]:
@@ -831,7 +842,8 @@ def cmd_meta(bib: dict, res: Result, keys: list[str]) -> None:
         e = bib[key]
         title, year, pages = bib_title(e), e.get("year", ""), norm_pages(e.get("pages"))
         doi = e.get("doi", "").strip()
-        venue = e.get("journal") or e.get("booktitle") or ""
+        # a report is published by an institution, a thesis by a school - those are its venue
+        venue = e.get("journal") or e.get("booktitle") or e.get("institution") or e.get("school") or ""
         preprint = bool(re.search(r"arxiv|corr", venue, re.I)) or (not venue and bool(e.get("eprint")))
         found = []
         if doi:
@@ -879,7 +891,7 @@ def cmd_meta(bib: dict, res: Result, keys: list[str]) -> None:
                 if dy and year and dy != year:
                     res.add("WARN", "META_YEAR", f"{key}: rok v Zoteru {year}, {src} {dy}")
         if not venue and e.get("_type") not in ("book", "misc", "online", "dataset", "software"):
-            res.add("WARN", "META_NO_VENUE", f"{key}: chybí journal/booktitle")
+            res.add("WARN", "META_NO_VENUE", f"{key}: chybí journal/booktitle/institution")
         if not found:
             res.add("WARN", "META_NOT_FOUND", f"{key}: nenalezeno v Crossref, Semantic Scholar ani OpenAlex – ověř ručně")
         rows.append(f"| {key} | {year or '–'} | {venue[:40] or '–'} | {pages or '–'} | {doi or '–'} | "

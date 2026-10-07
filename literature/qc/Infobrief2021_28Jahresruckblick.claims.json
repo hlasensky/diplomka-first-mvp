@@ -1,0 +1,42 @@
+{
+  "citekey": "Infobrief2021_28Jahresruckblick",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Das Jahr 2021 begann vielversprechend mit guten Auswinterungsquoten, die im Frühjahr 2021 deutschlandweit bei etwa 87% lagen"
+        },
+        {
+          "page": 1,
+          "quote": "am besten in Niedersachsen mit 92%, am schlechtesten in Sachsen-Anhalt mit nur knapp 80% (> Infobrief 2021/10)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a5ee8c7ff132"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Umfrage wieder. 5,3% der in diesem Jahr eingewinterten Völker starben bisher im deutschlandweiten Mittel, etwas mehr als in den Jahren zuvor."
+        },
+        {
+          "page": 1,
+          "quote": "wurden aus Hamburg (15,9%), Niederbayern (9,5%) oder dem Saarland (8%) gemeldet. Die Erfahrungen aus den letzten Jahren lassen darauf"
+        },
+        {
+          "page": 1,
+          "quote": "dass in diesen Regionen mit einer deutlich erhöhten Wintersterblichkeit gerechnet werden muss."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "e2a02b50818c"
+    }
+  },
+  "stamped": "2026-10-06"
+}

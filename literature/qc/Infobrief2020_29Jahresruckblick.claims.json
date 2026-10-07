@@ -1,0 +1,42 @@
+{
+  "citekey": "Infobrief2020_29Jahresruckblick",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Die bundesweite durchschnittliche Auswinterungsquote lag im Frühjahr des Jahres 2020 bei ca. 85 %, d. h. dass etwa 15 % der"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "08a28f51cf4c"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "An dieser Umfrage hatten sich im Jahre 2020 7.597 Imkereien beteiligt. Die Verluste lagen je nach Berechnungsweg zwischen 3,9 % und 5,0 % (Tabelle 2)."
+        },
+        {
+          "page": 2,
+          "quote": "Aufgrund der Verlustdaten aus vielen Vorjahren ist es möglich, erste Prognosen für den kommenden Winter abzugeben und regionale Besonderheiten aufzuzeigen."
+        },
+        {
+          "page": 2,
+          "quote": "Aus den Erfahrungen früherer Jahre sind danach deutschlandweit Winterverluste von ca. 15 % zu erwarten."
+        },
+        {
+          "page": 3,
+          "quote": "Gesamtergebnis 1) gemittelt aus den Einzelverlustraten"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "c5e761ce463a"
+    }
+  },
+  "stamped": "2026-10-06"
+}

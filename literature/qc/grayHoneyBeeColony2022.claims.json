@@ -1,0 +1,46 @@
+{
+  "citekey": "grayHoneyBeeColony2022",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "The 30,491 beekeepers outside New Zealand reported 4.5% of colonies with unsolvable queen problems, 11.1% of colonies dead after winter and 2.6% lost through natural disaster."
+        },
+        {
+          "page": 3,
+          "quote": "This gave an overall colony winter loss rate of 18.1%, higher than in the previous year. The winter loss rates varied greatly between countries, from 7.4% to 36.5%."
+        },
+        {
+          "page": 4,
+          "quote": "Observational data are collected at the beekeeping operation level, not colony or apiary level, in an annual spring survey covering the immediately preceding winter."
+        },
+        {
+          "page": 4,
+          "quote": "The overall proportion of colonies lost is found as the sum given by (a þ b þ c), divided by the number of colonies going into winter."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "8863458e7890"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "Winter 2019/20 survey results, showing number of respondents with valid loss data, corresponding number of colonies going into winter, honey bee colony mortality rate and rates of loss due to queen problems and natural disasters"
+        },
+        {
+          "page": 5,
+          "quote": "The mortality rate and loss rates respectively were calculated as a percentage of colonies wintered which died or were lost due to unresolvable queen problems or to natural disaster."
+        }
+      ],
+      "note": "Řádek Germany ověřen přes pdftotext -layout z PDF s. 5 (10,586 / 123,368 / 14.9 (14.5-15.2) / 3.0 (2.9-3.1) / 0.6 (0.5-0.6) / 18.4 (18.0-18.8)); fulltext má tabulku rozházenou po sloupcích a litqc nepočítá čísla jako slova, proto citace jen titulek a poznámka pod tabulkou.",
+      "fix": "",
+      "claim_sha": "36bc8a456527"
+    }
+  },
+  "stamped": "2026-10-06"
+}

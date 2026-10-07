@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-10-05
+generated: 2026-10-06
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -13,16 +13,16 @@ generated: 2026-10-05
 
 | úroveň | položek | v Zoteru | poznámka | čteno víc než abstrakt | čteno celé | ověřeno |
 |---|---|---|---|---|---|---|
-| 1 povinné | 25 | 10 | 10 | 0 | 0 | 0 |
+| 1 povinné | 25 | 10 | 10 | 1 | 1 | 1 |
 | 2 důležité | 41 | 1 | 1 | 0 | 0 | 0 |
-| 3 doplňkové | 16 | 0 | 0 | 0 | 0 | 0 |
+| 3 doplňkové | 21 | 5 | 5 | 0 | 0 | 0 |
 | nástroje a data | 9 | 0 | 0 | 0 | 0 | 0 |
 
 ### Úroveň 1 povinné (25)
 
 | č. | položka | citekey | stav |
 |---|---|---|---|
-| 1 | Sarawagi, S., Agrawal, R., Megiddo, N. — Discovery-Driven Exploration of OLAP Data Cubes E… | [[sarawagiDiscoverydrivenExplorationOLAP1998]] | candidate · čteno: ne · QC PASS s varováními |
+| 1 | Sarawagi, S., Agrawal, R., Megiddo, N. — Discovery-Driven Exploration of OLAP Data Cubes E… | [[sarawagiDiscoverydrivenExplorationOLAP1998]] | ✅ ověřeno · čteno: cele · QC PASS s varováními |
 | 2 | Vassiliadis, P., Marcel, P., Rizzi, S. — Beyond Roll-Up's and Drill-Down's: An Intentional… | [[vassiliadisRollUpsDrillDownsIntentional2019]] | candidate · čteno: ne · QC PASS s varováními |
 | 3 | Sarawagi, S. — Explaining Differences in Multidimensional Aggregates VLDB 1999, s. 42–53 Z… | [[sarawagiExplainingDifferencesMultidimensional]] | candidate · čteno: ne · QC PASS |
 | 4 | Francia, M., Rizzi, S., Marcel, P. — Explaining Cube Measures Through Intentional Analytic… | [[franciaExplainingCubeMeasures2024]] | candidate · čteno: ne · QC PASS |
@@ -94,7 +94,7 @@ generated: 2026-10-05
 | 65 | Brooke, J. — SUS: A „Quick and Dirty" Usability Scale In: Jordan, P. W. et al. (eds.), Usa… | – | chybí v Zoteru |
 | 66 | Likert, R. — A Technique for the Measurement of Attitudes Archives of Psychology 22(140):1… | – | chybí v Zoteru |
 
-### Úroveň 3 doplňkové (16)
+### Úroveň 3 doplňkové (21)
 
 | č. | položka | citekey | stav |
 |---|---|---|---|
@@ -114,6 +114,11 @@ generated: 2026-10-05
 | 80 | Sun, Y. et al. — HotSpot: Anomaly Localization for Additive KPIs with Multi-Dimensional At… | – | chybí v Zoteru |
 | 81 | Text-to-MDX — generování MDX dotazů z přirozeného jazyka pomocí GPT-4o ER 2025 https://lin… | – | chybí v Zoteru |
 | 82 | Kwon, W. et al. — Efficient Memory Management for Large Language Model Serving with PagedA… | – | chybí v Zoteru |
+| 92 | Gray, A. et al. — Honey Bee Colony Loss Rates in 37 Countries Using the COLOSS Survey for … | [[grayHoneyBeeColony2022]] | candidate · čteno: ne · QC PASS |
+| 93 | DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2… | [[Infobrief2020_29Jahresruckblick]] | candidate · čteno: ne · QC PASS s varováními |
+| 94 | DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2… | [[Infobrief2021_28Jahresruckblick]] | candidate · čteno: ne · QC PASS |
+| 95 | DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2… | [[Infobrief2022_10Honigernte]] | candidate · čteno: ne · QC PASS |
+| 96 | DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2… | [[Infobrief2022_28Jahresruckblick]] | candidate · čteno: ne · QC PASS s varováními |
 
 ### Úroveň nástroje a data (9)
 

@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-10-05
+generated: 2026-10-06
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.

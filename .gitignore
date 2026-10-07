@@ -19,3 +19,5 @@ data/senger.duckdb
 
 # litqc: cached Crossref / Semantic Scholar / OpenAlex responses
 literature/qc/.cache/
+data/raw/multi-senger
+data/multi-senger.duckdb

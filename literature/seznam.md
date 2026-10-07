@@ -116,6 +116,11 @@ Uživatelské testování
 80. Sun, Y. et al. — HotSpot: Anomaly Localization for Additive KPIs with Multi-Dimensional Attributes IEEE Access 6:10909–10923, 2018 (open access) DOI: https://doi.org/10.1109/ACCESS.2018.2804764 [rev. 4: sníženo, viz výše]
 81. Text-to-MDX — generování MDX dotazů z přirozeného jazyka pomocí GPT-4o ER 2025 https://link.springer.com/chapter/10.1007/978-3-032-08623-5_9 [rev. 4: sníženo — systém generuje SQL, ne MDX]
 82. Kwon, W. et al. — Efficient Memory Management for Large Language Model Serving with PagedAttention (vLLM) ACM SOSP 2023 arXiv: https://arxiv.org/abs/2309.06180 Technický základ lokálního provozu modelů (bod 4 zadání). Podklad pro diskusi propustnosti a latence lokálního nasazení vs. cloudového API. [rev. 4: sníženo — lokální modely běží přes Ollamu/llama.cpp, ne vLLM]
+92. Gray, A. et al. — Honey Bee Colony Loss Rates in 37 Countries Using the COLOSS Survey for Winter 2019–2020: The Combined Effects of Operation Size, Migration and Queen Replacement [NOVÉ, rev. 4] Journal of Apicultural Research 62(2):204–210, online 2022 DOI: https://doi.org/10.1080/00218839.2022.2113329 Zdroj zimních ztrát včelstev v Německu za zimu 2019/20 (COLOSS) pro fact_country_apiculture; citovat jednou větou s metodikou výpočtu.
+93. DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2020_29: Jahresrückblick: So war 2020 [NOVÉ, rev. 4] Mayen, 11. 12. 2020 Míra přezimování včelstev v Německu na jaře 2020 (zima 2019/20) pro fact_country_apiculture.
+94. DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2021_28: Jahresrückblick: 2021 – Ein Rückblick [NOVÉ, rev. 4] Mayen, 3. 12. 2021 Míra přezimování na jaře 2021 (zima 2020/21) pro fact_country_apiculture.
+95. DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2022_10: Honigernte und Winterverluste [NOVÉ, rev. 4] Mayen, 6. 5. 2022 Zimní ztráty v Německu za zimu 2021/22 (jarní průzkum) pro fact_country_apiculture.
+96. DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2022_28: Jahresrückblick: Das Bienenjahr 2022 [NOVÉ, rev. 4] Mayen, 16. 12. 2022 Podzimní ztráty 2022; jen kontext.
 
 NÁSTROJE A DATA
 Datasety a datové zdroje citovat s verzí a datem přístupu. Dokumentace nástrojů patří do implementační kapitoly.
