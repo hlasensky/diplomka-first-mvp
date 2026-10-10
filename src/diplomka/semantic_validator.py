@@ -20,8 +20,8 @@ from diplomka.schema import SemanticLayer
 
 # Window navigation functions do not aggregate a measure.
 NAVIGATION_FUNCS = frozenset({"lag", "lead", "first_value", "last_value", "nth_value"})
-# Counting non-null values is valid for every measure.
-ALWAYS_ALLOWED = frozenset({"count"})
+# Counting non-null values and correlating two series are valid for every measure.
+ALWAYS_ALLOWED = frozenset({"count", "corr"})
 AGG_ALIASES = {"stddev_samp": "stddev", "stddev_pop": "stddev", "arg_max": "last"}
 ASOF_PATTERN = re.compile(r"\bASOF\b", re.IGNORECASE)
 

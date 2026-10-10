@@ -130,6 +130,9 @@ def _joins_section() -> str:
             # Rendered as literal SQL: a prose form ("ASOF JOIN a with b ON ...") made models emit
             # "ASOF JOIN ON ..." without the right-hand table, a DuckDB parser error.
             line = f"- FROM {join['left']} ASOF [LEFT] JOIN {join['right']} ON {join['on']}"
+        elif join.get("on"):
+            # Fact-to-fact join through a shared dimension: the condition names the bridge columns.
+            line = f"- {join['left']} JOIN {join['right']} ON {join['on']} ({join.get('cardinality', '')})"
         else:
             line = f"- {join['left']} = {join['right']} ({join.get('cardinality', '')})"
         if join.get("note"):

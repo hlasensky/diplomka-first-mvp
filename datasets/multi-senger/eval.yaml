@@ -1,0 +1,39 @@
+cases:
+  - question: "What is the average center temperature by month?"
+    expected: {measures: [{measure: t_center, agg: avg}], group_by: [month]}
+  - question: "What is the total weight gain of each colony?"
+    expected: {measures: [{measure: weight_gain_kg, agg: sum}], group_by: [colony_key]}
+  - question: "What is the average daily weight gain by federal state?"
+    expected: {measures: [{measure: weight_gain_kg, agg: avg}], group_by: [state]}
+  - question: "Compare the average temperature at each sensor position"
+    expected: {measures: [{measure: temp_c, agg: avg}], group_by: [sensor_pos]}
+  - question: "How many swarming events were recorded per year?"
+    expected: {metrics: [event_count], group_by: [year], filters: {event_type: swarming}}
+  - question: "How much did it rain per month?"
+    expected: {measures: [{measure: precip_mm, agg: sum}], group_by: [month]}
+  - question: "What was the average air temperature by season?"
+    expected: {measures: [{measure: air_temp_c, agg: avg}], group_by: [season]}
+  - question: "What is the average NDVI per month?"
+    expected: {measures: [{measure: ndvi, agg: avg}], group_by: [month]}
+  - question: "When did each forage plant start flowering on average per year?"
+    expected: {measures: [{measure: bloom_doy, agg: avg}], group_by: [plant, year]}
+  - question: "What share of arable land is oilseed rape around each location?"
+    expected: {measures: [{measure: crop_share_pct, agg: avg}], group_by: [cell_id], filters: {crop: winter_rape}}
+  - question: "What is the average rapeseed yield by district?"
+    expected: {measures: [{measure: yield_dt_ha, agg: avg}], group_by: [district], filters: {crop: winter_rape}}
+  - question: "What was the winter colony loss rate in each winter?"
+    expected: {measures: [{measure: loss_pct_pooled, agg: avg}], group_by: [bee_winter]}
+  - question: "How many hives were there in Germany per year?"
+    expected: {measures: [{measure: hives, agg: sum}], group_by: [year]}
+  - question: "How many colonies are there in each district?"
+    expected: {metrics: [colony_count], group_by: [district]}
+  - question: "What will the honey price be next year?"
+    expected: {unclear: true}
+  - question: "asdkjaskdj nonsense text xyz"
+    expected: {unclear: true}
+
+multi_turn:
+  - questions:
+      - "How much did it rain per month?"
+      - "and the average air temperature by season"
+    expected_last: {measures: [{measure: air_temp_c, agg: avg}], group_by: [season]}

@@ -1,6 +1,6 @@
 # Data pro DP
 
-Stav k 2026-10-06. Rozhodnutí a jejich důvody jsou v [decisions.md](decisions.md).
+Stav k 2026-10-07: pack `multi-senger` je postavený (`data/multi-senger.duckdb`, 0,94 GB). Rozhodnutí a jejich důvody jsou v [decisions.md](decisions.md).
 
 ## Jádro: IoT senzory z úlů (BeeObserver)
 
@@ -12,7 +12,7 @@ Senger et al., *Data in Brief* 52 (2024) 110015, [doi:10.1016/j.dib.2023.110015]
 | Období | 6/2019 – 12/2022 |
 | Senzory | váha, 5 teplot v úlu (střed → okraj), venkovní teplota, vlhkost, tlak |
 | Hodinová data | 151 souborů, 0,24 GB; už v `data/senger.duckdb` (`fact_hive_hourly`, 638 tis. řádků) |
-| Minutová data | 151 souborů, 1,83 GB zip / 13 GB CSV, 36,0 mil. řádků; staženo v `data/raw/multi-senger/bob/`, cíl Parquet |
+| Minutová data | 151 souborů, 1,83 GB zip / 13 GB CSV, 36,0 mil. řádků; staženo v `data/raw/multi-senger/bob/`, v DuckDB jako `fact_hive_minute` |
 | Události | inspekce včelařů (`inspections.csv`): rojení, matečníky, krmení, med, léčba, úhyn; neúplné |
 
 ## Kontextová data
@@ -41,46 +41,61 @@ Pokrytí stanicemi DWD u 34 lokalit úlů, začátek kvetení v letech 2019–20
 | Pampeliška (Löwenzahn) | ~990 | 9 / 20 km | 33/34 |
 | Jabloň | – | – | ovoce má jiné kódy fází, dořešit |
 
-## Cílové schéma (fact constellation)
+## Schéma packu `multi-senger` (fact constellation)
 
-Dataset pack `multi-senger`. Hodinová data, události a dimenze úlu existují v `senger`, ostatní je návrh, který se upřesní při stavbě ETL.
+Build: `DATASET=multi-senger uv run python scripts/build_db.py` (asi 20 s). Kód je v `datasets/multi-senger/build.sql`. Sekce 99 build zastaví, když nesedí grain, cizí klíč nebo počty řádků. Časy jsou všude v UTC.
 
-### Fakty
+### Fakty a agregáty
 
-| Tabulka | Grain (1 řádek =) | Klíče | Míry / sloupce | Stav |
-|---|---|---|---|---|
-| `fact_hive_minute` | úl × minuta | `colony_key`, `ts` | `weight_kg`, `t_i_1`…`t_i_5`, `t_o`, `h`, `t_bme`, `p` | návrh, Parquet podle roku |
-| `fact_hive_hourly` | úl × hodina | `colony_key`, `time_key` | `weight_kg`, `weight_gain_kg`, `weight_change_raw_kg`, `t_i_1`…`t_i_5`, `t_o`, `t_diff_in_out`, `h`, `t_bme`, `p` | existuje |
-| `fact_temperature` (view) | úl × hodina × senzor | `colony_key`, `time_key`, `sensor_pos` | `temp_c` | existuje |
-| `agg_colony_daily` | úl × den | `colony_key`, `date` | `weight_gain_kg`, `max_hourly_drop_raw_kg`, `t_center_avg`, `t_center_std`, `t_diff_avg`, `h_avg`, `n_hours` | existuje |
-| `fact_event` | 1 událost | `colony_key`, `event_ts`, `event_type` | – | existuje |
-| `fact_weather` | buňka × hodina | `cell_id`, `time_key` | `temp_2m`, `precip_mm`, `rain_mm`, `wind_kmh`, `radiation_wm2`, `rh_pct` | návrh |
-| `fact_bloom_phenology` | stanice × rok × druh | `station_id`, `year`, `plant_key` | `bloom_start_date`, `bloom_start_doy` | návrh |
-| `fact_vegetation` | buňka × 16 dní | `cell_id`, `date` | `ndvi` | návrh |
-| `fact_crop_acres` | okres × rok × plodina | `kreis_id`, `year`, `crop` | `area_ha` | návrh |
-| `fact_country_apiculture` | země × rok | `country`, `year` | `hives`, `honey_t`, `winter_loss_n`, `winter_colonies_n` | návrh |
+| Tabulka | Grain (1 řádek =) | Řádků | Míry / sloupce |
+|---|---|---|---|
+| `fact_hive_minute` | úl × minuta | 36 029 522 | `weight_kg`, `weight_delta_no_outlier`, `t_i_1`…`t_i_5`, `t_o`, `t_bme`, `h`, `p`, `is_outlier`, `ts_shifted_dst` |
+| `fact_hive_hourly` | úl × hodina | 638 471 | průměry minut, `n_minutes`, `weight_gain_kg`, `weight_change_raw_kg`, `t_diff_in_out` |
+| `fact_temperature` (view) | úl × hodina × senzor | 2,8 mil. | `temp_c` |
+| `agg_colony_daily` | úl × den | 29 172 | `weight_gain_kg`, `max_hourly_drop_raw_kg`, `t_center_avg/std`, `t_diff_avg`, `h_avg`, `n_hours`, `n_minutes` |
+| `fact_event` | 1 událost | 443 | `event_type`, `event_ts` |
+| `fact_weather` | buňka × hodina | 1 068 960 | `air_temp_c`, `precip_mm`, `rain_mm`, `wind_kmh`, `radiation_wm2`, `air_rh_pct` |
+| `agg_weather_daily` | buňka × den | 44 540 | `air_temp_avg/min/max_c`, `precip_mm`, `rain_hours`, `radiation_kwh_m2`, `wind_avg_kmh`, `air_rh_avg_pct`, `n_hours` |
+| `fact_vegetation` | buňka × 16denní kompozit | 3 128 | `ndvi` |
+| `fact_bloom_phenology` | stanice × rok × druh | 22 678 | `bloom_date`, `bloom_doy`, `quality_byte` (roky 2016–2022, QB 1/2/3) |
+| `agg_cell_bloom` | buňka × rok × druh | 930 | medián `bloom_doy` přes stanice do 25 km, `n_stations`, `nearest_station_km` |
+| `fact_crop_area` | okres × rok × plodina | 13 600 | `area_ha`, `value_status` (2016, 2020) |
+| `fact_crop_yield` | okres × rok × plodina | 40 000 | `yield_dt_ha`, `value_status` (2016–2025) |
+| `agg_cell_crop` | buňka × rok × plodina | 2 800 | `crop_share_pct`, `share_coverage`, `yield_w_dt_ha`, `yield_coverage` (vážené přes okresy buňky) |
+| `fact_country_bees` | země × rok | 8 | `hives`, `honey_t` (FAOSTAT, 2016–2023) |
+| `fact_winter_loss` | země × zima × průzkum | 4 | `n_reports`, `colonies_wintered`, `colonies_lost`, `loss_pct_mean`, `loss_pct_pooled`, CI, `citekey`, `evidence` |
 
-### Dimenze
+### Dimenze a bridge
 
-| Tabulka | Hierarchie / sloupce | Stav |
+| Tabulka | Řádků | Hierarchie / sloupce |
 |---|---|---|
-| `dim_geo` (dnes `dim_colony` + `dim_cell`) | úl → buňka (`lat`, `lon`) → okres (`kreis_id`) → spolková země → stát | úl a buňka existují, okres a země z VG250 |
-| `dim_time` | minuta → hodina → den → týden → měsíc → sezóna → rok | od hodiny výš existuje |
-| `dim_station` | fenologická stanice (`lat`, `lon`) → nejbližší buňka (`cell_id`, `dist_km`) | návrh |
-| `dim_plant` | druh → skupina (plodina / dřevina / bylina) → medonosnost | návrh |
-| `dim_event_type` | `event_type` → `cause_class` | existuje |
-| `dim_sensor_position` | `sensor_pos` → `zone` → `slot` | existuje |
+| `dim_colony` | 78 | úl → buňka → okres (hlavní) → spolková země → stát; `colonies_in_cell`, `ever_swarmed`, `died` |
+| `dim_cell` | 34 | `lat`, `lon`, hlavní okres a jeho váha, `n_districts`, `share_in_germany` |
+| `bridge_cell_district` | 70 | buňka × okres, `box_share`, `weight` (součet 1 na buňku) |
+| `dim_district`, `dim_state`, `dim_country` | 400, 16, 1 | VG250; `district` je jednoznačný název (u dvojic doplněn typ); stát jen `DE` |
+| `dim_year` | 10 | roky 2016–2025, `has_hive_data`, `is_farm_survey_year`; zmenšená dimenze pro fakty na grainu rok |
+| `dim_bee_winter` | 5 | zimy 2018/19–2022/23, `winter_start`/`winter_end`, `has_full_hive_data` (2018/19 a 2022/23 bez úplných dat z úlů) |
+| `dim_time` | 31 440 | hodina → `date` (FK na `dim_date`), atributy dne denormalizované; jen pro hodinové fakty |
+| `dim_date` | 1 461 | den (2019–2022) → týden → měsíc → rok; `season`, `is_beekeeping_season`, `bee_winter` (říjen–březen); pro denní fakty a data událostí |
+| `dim_station` | 6 627 | fenologická stanice DWD (`lat`, `lon`, výška, země) |
+| `dim_plant` | 4 | řepka, pampeliška, akát, lípa; skupina, období snůšky |
+| `dim_crop` | 19 | plodina → `parent_crop`, `is_bee_forage` (plodiny jsou vnořené) |
+| `dim_event_type`, `dim_sensor_position` | 6, 6 | jako v `senger` |
 
 ### Propojení faktů (jen přes sdílené dimenze)
 
 | Dvojice | Společný grain | Poznámka |
 |---|---|---|
-| úl × počasí | buňka × hodina | úl → `cell_id` |
-| úl × kvetení | buňka × rok (+ den v roce) | buňka → nejbližší stanice v `dim_station`, limit vzdálenosti |
-| úl × NDVI | buňka × 16 dní | denní data úlu agregovat na 16denní okna |
-| úl × plodiny | okres (roky 2016, 2020) | potřebuje okres v `dim_geo`; plocha je atribut okresu, ne časová řada; plochy jsou podle sídla podniku |
-| úl × makro data | stát × rok | jen kontext, 78 úlů nereprezentuje zemi |
-| úl × události | úl × čas | jen ASOF JOIN nebo EXISTS (pravidlo R2) |
+| úl × počasí | buňka × den, nebo buňka × hodina | přes `dim_colony.cell_id`; denní úl jen s denním počasím (R8) |
+| úl × kvetení | buňka × rok | `agg_cell_bloom`, filtrovat jeden druh |
+| úl × NDVI | buňka × den → poslední kompozit | jen ASOF JOIN (R2) |
+| úl × plodiny | buňka × rok | `agg_cell_crop`, vážené přes `bridge_cell_district`; vždy jedna plodina (R9) |
+| úl × národní data | rok nebo zima | úly nejdřív agregovat na rok / zimu, pak spojit přes `dim_year` / `dim_bee_winter` (R10) |
+| úl × události | úl × čas | jen ASOF JOIN nebo EXISTS (R2) |
+
+Kontrola souvislostí po buildu:
+- Venkovní senzor úlu proti ERA5: korelace 0,90 (po hodinách).
+- Řepka: v 14 dnech před začátkem kvetení v okolí je průměrný denní přírůstek −0,02 kg, ve 14 dnech po něm +0,36 kg (příklad EX6).
 
 ## Pravidla slučování
 
@@ -105,7 +120,10 @@ Původní návrh počítal s US Bee OLAP (USDA, NASS, NOAA). Jsou to ale statist
 
 ## Známé problémy
 
-- **`dim_cell.state` je NULL u všech 34 buněk.** Sekce 4b v `datasets/senger/build.sql` je vypnutá, protože chybí `states.geojson`. Opraví se přiřazením buňka → okres → spolková země.
+- **`senger`:** `dim_cell.state` je NULL a hodinová data mají chybu ve dnech jarní změny času. V `multi-senger` je obojí opravené (viz [decisions.md](decisions.md), 2026-10-07).
+- **Okresy:** souřadnice úlů jsou zaokrouhlené. Hlavní okres buňky je jen ten s největším podílem plochy, kontext plodin se proto váží přes `bridge_cell_district`. Buňka 49.2_6.9 leží jen z 35 % v Německu.
+- **Plodiny:** plocha řepky v okolí je úplná u 17 z 34 buněk (`share_coverage`). Plochy se počítají podle sídla podniku. Výnosy pro Berlín, Brémy a Hamburk nejsou.
+- **Zimní ztráty** pocházejí ze zdrojů ve stavu `candidate` (neověřené). Počty u zim 2019/20 a 2020/21 jsou z OCR tabulky (s. 4) a nejsou v žádném claimu. Build ověřuje, že sedí s procenty v claimu C2.
 - **Počasí:** ERA5 má rozlišení ~28 km, na místní srážky je hrubé. Alternativou jsou stanice DWD.
 - **Fenologie:** pozorují dobrovolníci a stanice je od úlu v mediánu 9–12 km. Přiřazení stanice k úlu je aproximace.
 - **Inspekce:** jsou neúplné. Když událost chybí, neznamená to, že nenastala.

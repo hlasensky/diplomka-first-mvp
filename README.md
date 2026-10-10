@@ -2,11 +2,12 @@
 
 An LLM analytics agent over OLAP-style data in DuckDB. Ask questions in natural language ("average brood nest temperature by month", "revenue by category") and get a short answer plus a chart. Built with **LangGraph** (agent orchestration), **DuckDB** (query engine), a **YAML semantic layer** (measures, metrics, dimensions, rules) and **Chainlit** (chat UI).
 
-The code is dataset-agnostic: everything specific to one dataset lives in a *dataset pack* under [`datasets/`](datasets/), selected with the `DATASET` environment variable. Two packs are included:
+The code is dataset-agnostic: everything specific to one dataset lives in a *dataset pack* under [`datasets/`](datasets/), selected with the `DATASET` environment variable. Three packs are included:
 
 | Pack     | Data                                                                 | Model                        |
 |----------|----------------------------------------------------------------------|------------------------------|
 | `senger` (default) | BeeObserver hive sensors, 78 colonies, 2019-2022 ([Senger et al. 2024](https://doi.org/10.5281/zenodo.10407693)) | star schema, 9 tables/views |
+| `multi-senger` | BeeObserver at 1-minute and hourly resolution + context: ERA5 weather, MODIS NDVI, DWD flowering onset, crops by district, national hives and winter losses | fact constellation, 26 tables/views, district bridge table |
 | `olist`  | [Olist Brazilian E-Commerce](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) orders | one flat table               |
 
 ## Architecture
@@ -72,6 +73,9 @@ Build the database of a pack from its raw files in `data/raw/<DATASET>/`:
 ```bash
 # senger: unzip bob_publication_data.zip from Zenodo and put (or symlink) it at data/raw/senger
 DATASET=senger uv run python scripts/build_db.py
+# multi-senger: uv run --with remotezip python scripts/fetch_multi_senger.py downloads data/raw/multi-senger/ (crop CSVs are a manual
+#   export, see docs/data.md); the database is ~0.9 GB because of the 36 M minute rows
+DATASET=multi-senger uv run python scripts/build_db.py
 # olist: data/raw/olist/olist.csv is committed, and so is data/olist.duckdb
 DATASET=olist uv run python scripts/build_db.py
 ```

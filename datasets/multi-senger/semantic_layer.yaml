@@ -1,0 +1,817 @@
+version: 1
+
+domain:
+  name: beeobserver-context
+  description: >
+    Sensor data from 78 honey bee colonies at 34 locations in Germany (2019-2022): hive weight,
+    in-hive temperature at five positions, outside temperature, humidity and pressure, at 1-minute
+    and hourly resolution. Context facts share the location and time dimensions: hourly weather
+    (ERA5), 16-day vegetation greenness (MODIS NDVI), flowering onset of bee forage plants
+    (DWD phenology), crop areas and yields by district, and national hive numbers, honey
+    production and winter colony losses. Beekeeper inspection events are incomplete: the absence
+    of an event is not evidence that it did not happen.
+  notes:
+    - "All timestamps are UTC (hive sensors and weather). Local time is UTC+1 in winter, UTC+2 in summer."
+    - "Temperatures in °C, weights in kg, humidity in %, pressure in hPa, precipitation in mm, radiation in W/m² (hourly) or kWh/m² (daily), crop areas in ha, yields in dt/ha (1 dt = 100 kg)."
+    - "Hive locations are rounded to 0.1 degree (5-7 km); a cell may overlap several districts."
+    - "Context data describe the surroundings of a hive, not the hive itself: report them as associations, never as causes."
+  source: "Senger et al., Data in Brief 52 (2024) 110015; Open-Meteo/ERA5; DWD CDC phenology; MODIS MOD13Q1; Regionaldatenbank Deutschland; FAOSTAT; DLR Mayen and COLOSS loss surveys"
+
+glossary:
+  - term: swarming
+    synonyms: [swarm, swarm event, colony swarmed]
+    maps_to: {dimension: event, level: event_type, value: swarming}
+  - term: honey harvest
+    synonyms: [harvest, honey extraction, honey removal]
+    maps_to: {dimension: event, level: event_type, value: honey}
+  - term: colony death
+    synonyms: [dead colony, colony died]
+    maps_to: {dimension: event, level: event_type, value: died}
+  - term: queen cell
+    synonyms: [swarm cell, supersedure cell]
+    maps_to: {dimension: event, level: event_type, value: queencell}
+  - term: feeding
+    synonyms: [supplementary feeding, sugar syrup]
+    maps_to: {dimension: event, level: event_type, value: feeding}
+  - term: nectar flow
+    synonyms: [honey flow, forage flow]
+    maps_to: {measure: weight_gain_kg, note: "positive daily weight gain"}
+  - term: brood nest temperature
+    synonyms: [center temperature, core temperature]
+    maps_to: {measure: t_center}
+  - term: rainfall
+    synonyms: [rain, precipitation]
+    maps_to: {measure: precip_mm}
+  - term: air temperature
+    synonyms: [weather temperature, ambient temperature]
+    maps_to: {measure: air_temp_c, note: "ERA5 2 m temperature; the hive's own outside sensor is t_outside"}
+  - term: sunshine
+    synonyms: [solar radiation, irradiance]
+    maps_to: {measure: radiation_kwh_m2}
+  - term: vegetation greenness
+    synonyms: [NDVI, greenness, vegetation index]
+    maps_to: {measure: ndvi}
+  - term: flowering onset
+    synonyms: [bloom start, start of flowering, bloom date]
+    maps_to: {measure: bloom_doy}
+  - term: oilseed rape
+    synonyms: [rapeseed, canola, rape]
+    maps_to: {dimension: crop, level: crop, value: winter_rape}
+  - term: district
+    synonyms: [Kreis, Landkreis, county]
+    maps_to: {dimension: geography, level: district}
+  - term: winter colony loss
+    synonyms: [winter loss, overwintering loss, colony loss rate]
+    maps_to: {measure: loss_pct_pooled}
+
+tables:
+  fact_hive_minute:
+    kind: fact
+    grain: [colony_key, ts]
+    description: >
+      1-minute sensor readings (36 million rows). Use only for questions that need minute
+      resolution (e.g. the course of a swarm or a harvest within one hour); filter one colony
+      and a short time range.
+  fact_hive_hourly:
+    kind: fact
+    grain: [colony_key, time_key]
+    description: Hourly means of the minute readings; n_minutes is the completeness of the hour.
+  fact_temperature:
+    kind: fact
+    grain: [colony_key, time_key, sensor_pos]
+    description: Long-format hourly temperatures for drill-down to sensor position.
+  agg_colony_daily:
+    kind: aggregate
+    grain: [colony_key, date]
+    derived_from: fact_hive_hourly
+    description: Daily aggregates per colony; input for anomaly detection.
+  fact_event:
+    kind: factless_fact
+    grain: [colony_key, event_ts, event_type]
+    description: Events recorded by beekeepers during inspections; incomplete.
+  fact_weather:
+    kind: fact
+    grain: [cell_id, time_key]
+    description: Hourly ERA5 weather at the cell centre (about 28 km resolution).
+  agg_weather_daily:
+    kind: aggregate
+    grain: [cell_id, date]
+    derived_from: fact_weather
+    description: Daily weather per cell (UTC days); the partner of agg_colony_daily.
+  fact_vegetation:
+    kind: fact
+    grain: [cell_id, date]
+    description: MODIS NDVI, 250 m pixel at the cell centre; date = first day of the 16-day composite.
+  fact_bloom_phenology:
+    kind: fact
+    grain: [station_id, year, plant_id]
+    description: Flowering onset reported by DWD volunteer observers per station (2016-2022).
+  agg_cell_bloom:
+    kind: aggregate
+    grain: [cell_id, year, plant_id]
+    derived_from: fact_bloom_phenology
+    description: Median flowering onset over the DWD stations within 25 km of the cell.
+  fact_crop_area:
+    kind: fact
+    grain: [district_id, year, crop]
+    description: >
+      Arable land by crop per district (farm structure survey, 2016 and 2020 only), counted at
+      the farm's seat. Crops are nested (winter_rape is part of oilseeds, oilseeds of arable_total).
+  fact_crop_yield:
+    kind: fact
+    grain: [district_id, year, crop]
+    description: Yield per hectare by crop and district, 2016-2025; no data for Berlin, Bremen, Hamburg.
+  agg_cell_crop:
+    kind: aggregate
+    grain: [cell_id, year, crop]
+    derived_from: fact_crop_area
+    description: >
+      Crop context per cell, weighted over the districts the cell overlaps: crop share of arable
+      land (2016, 2020) and weighted yield (2016-2025); *_coverage is the weight share with data.
+  fact_country_bees:
+    kind: fact
+    grain: [country, year]
+    description: National number of hives and honey production in Germany (FAOSTAT).
+  fact_winter_loss:
+    kind: fact
+    grain: [country, bee_winter, survey]
+    description: >
+      National winter colony losses from beekeeper surveys (DLR Mayen 2019/20-2021/22,
+      COLOSS 2019/20); citekey and evidence give the literature source of every number.
+  bridge_cell_district:
+    kind: bridge
+    grain: [cell_id, district_id]
+    description: Share of every cell box per district; weight sums to 1 per cell.
+  dim_time: {kind: dimension}
+  dim_colony: {kind: dimension}
+  dim_cell: {kind: dimension}
+  dim_district: {kind: dimension}
+  dim_state: {kind: dimension}
+  dim_sensor_position: {kind: dimension}
+  dim_event_type: {kind: dimension}
+  dim_plant: {kind: dimension}
+  dim_station: {kind: dimension}
+  dim_crop: {kind: dimension}
+  dim_date:
+    kind: dimension
+    description: >
+      One row per day (2019-2022) with the same calendar attributes as dim_time. Daily facts
+      (agg_colony_daily, agg_weather_daily, fact_vegetation) and event dates join here.
+  dim_country:
+    kind: dimension
+    description: Country (only DE); top of the geography chain colony -> cell -> district -> state -> country.
+  dim_year:
+    kind: dimension
+    description: >
+      Shrunken rollup of dim_time to years (2016-2025). Facts at year grain (crops, phenology,
+      national statistics) join here, never to dim_time, which has one row per hour.
+  dim_bee_winter:
+    kind: dimension
+    description: >
+      Overwintering periods (October-March) with start and end date; facts at winter grain join
+      here. has_full_hive_data is false for 2022/23 (hive data end on 2022-12-31).
+
+joins:
+  - {left: fact_hive_minute.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
+  - left: "date_trunc('hour', fact_hive_minute.ts)"
+    right: dim_time.time_key
+    cardinality: many_to_one
+  - {left: fact_hive_hourly.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
+  - {left: fact_hive_hourly.time_key, right: dim_time.time_key, cardinality: many_to_one}
+  - {left: fact_temperature.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
+  - {left: fact_temperature.time_key, right: dim_time.time_key, cardinality: many_to_one}
+  - {left: fact_temperature.sensor_pos, right: dim_sensor_position.sensor_pos, cardinality: many_to_one}
+  - {left: agg_colony_daily.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
+  - {left: agg_colony_daily.date, right: dim_date.date, cardinality: many_to_one}
+  - {left: fact_event.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
+  - {left: fact_event.event_type, right: dim_event_type.event_type, cardinality: many_to_one}
+  - left: "fact_event.event_ts::DATE"
+    right: dim_date.date
+    cardinality: many_to_one
+    note: "events are recorded per inspection; use dim_date, not the hourly dim_time"
+  - {left: dim_colony.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
+  - {left: dim_cell.district_id, right: dim_district.district_id, cardinality: many_to_one, note: "main district of the cell (largest share)"}
+  - {left: dim_district.state_id, right: dim_state.state_id, cardinality: many_to_one}
+  - {left: dim_state.country, right: dim_country.country, cardinality: many_to_one}
+  - {left: dim_colony.country, right: dim_country.country, cardinality: many_to_one}
+  - {left: dim_time.date, right: dim_date.date, cardinality: many_to_one, note: "roll-up: hour -> day"}
+  - {left: dim_date.year, right: dim_year.year, cardinality: many_to_one, note: "roll-up: day -> year"}
+  - {left: dim_date.bee_winter, right: dim_bee_winter.bee_winter, cardinality: many_to_one, note: "roll-up: day -> winter; NULL in April-September"}
+  - left: agg_colony_daily.date
+    right: dim_bee_winter
+    on: "agg_colony_daily.date BETWEEN dim_bee_winter.winter_start AND dim_bee_winter.winter_end"
+    cardinality: many_to_one
+    note: "range join; the same works for fact_event.event_ts::DATE"
+  - {left: fact_bloom_phenology.year, right: dim_year.year, cardinality: many_to_one}
+  - {left: agg_cell_bloom.year, right: dim_year.year, cardinality: many_to_one}
+  - {left: fact_crop_area.year, right: dim_year.year, cardinality: many_to_one}
+  - {left: fact_crop_yield.year, right: dim_year.year, cardinality: many_to_one}
+  - {left: agg_cell_crop.year, right: dim_year.year, cardinality: many_to_one}
+  - {left: fact_country_bees.country, right: dim_country.country, cardinality: many_to_one}
+  - {left: fact_country_bees.year, right: dim_year.year, cardinality: many_to_one}
+  - {left: fact_winter_loss.country, right: dim_country.country, cardinality: many_to_one}
+  - {left: fact_winter_loss.bee_winter, right: dim_bee_winter.bee_winter, cardinality: many_to_one}
+  - {left: bridge_cell_district.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
+  - {left: bridge_cell_district.district_id, right: dim_district.district_id, cardinality: many_to_one}
+  - {left: fact_weather.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
+  - {left: fact_weather.time_key, right: dim_time.time_key, cardinality: many_to_one}
+  - {left: agg_weather_daily.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
+  - {left: agg_weather_daily.date, right: dim_date.date, cardinality: many_to_one}
+  - left: agg_colony_daily
+    right: agg_weather_daily
+    on: "agg_weather_daily.cell_id = dim_colony.cell_id AND agg_weather_daily.date = agg_colony_daily.date"
+    cardinality: many_to_one
+    note: "via dim_colony; daily hive data join only daily weather"
+  - left: fact_hive_hourly
+    right: fact_weather
+    on: "fact_weather.cell_id = dim_colony.cell_id AND fact_weather.time_key = fact_hive_hourly.time_key"
+    cardinality: many_to_one
+    note: "via dim_colony; hourly hive data join hourly weather"
+  - {left: fact_vegetation.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
+  - {left: fact_vegetation.date, right: dim_date.date, cardinality: many_to_one}
+  - {left: fact_bloom_phenology.station_id, right: dim_station.station_id, cardinality: many_to_one}
+  - {left: fact_bloom_phenology.plant_id, right: dim_plant.plant_id, cardinality: many_to_one}
+  - {left: agg_cell_bloom.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
+  - {left: agg_cell_bloom.plant_id, right: dim_plant.plant_id, cardinality: many_to_one}
+  - left: agg_colony_daily
+    right: agg_cell_bloom
+    on: "agg_cell_bloom.cell_id = dim_colony.cell_id AND agg_cell_bloom.year = year(agg_colony_daily.date)"
+    cardinality: many_to_one
+    note: "via dim_colony; filter one plant"
+  - {left: fact_crop_area.district_id, right: dim_district.district_id, cardinality: many_to_one}
+  - {left: fact_crop_area.crop, right: dim_crop.crop, cardinality: many_to_one}
+  - {left: fact_crop_yield.district_id, right: dim_district.district_id, cardinality: many_to_one}
+  - {left: fact_crop_yield.crop, right: dim_crop.crop, cardinality: many_to_one}
+  - {left: agg_cell_crop.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
+  - {left: agg_cell_crop.crop, right: dim_crop.crop, cardinality: many_to_one}
+  - left: fact_hive_hourly
+    right: fact_event
+    type: asof
+    on: "fact_hive_hourly.colony_key = fact_event.colony_key AND fact_hive_hourly.time_key >= fact_event.event_ts"
+    note: "The only allowed row-level join between these two facts; alternatively use EXISTS."
+  - left: agg_colony_daily
+    right: fact_event
+    type: asof
+    on: "agg_colony_daily.colony_key = fact_event.colony_key AND agg_colony_daily.date >= fact_event.event_ts::DATE"
+  - left: agg_colony_daily
+    right: fact_vegetation
+    type: asof
+    on: "fact_vegetation.cell_id = dim_colony.cell_id AND agg_colony_daily.date >= fact_vegetation.date"
+    note: "NDVI is a 16-day composite: take the latest composite that started on or before the day."
+
+dimensions:
+  time:
+    table: dim_time
+    key: time_key
+    hierarchies:
+      calendar: [year, month, date, hour]
+      weekly: [year, week, date]
+    levels:
+      year: {label: year}
+      month: {label: month, format: "YYYY-MM"}
+      week: {label: week, note: "Monday of the ISO week"}
+      date: {label: date, note: "UTC day; daily facts join dim_date, which has the same calendar columns"}
+      hour: {label: hour of day, note: "UTC; add 1 h (winter) or 2 h (summer) for German local time"}
+      day_of_year: {label: day of year}
+      season: {label: season, domain: from_data}
+      is_beekeeping_season: {label: main beekeeping season, note: "April to August"}
+      bee_winter: {label: overwintering period, domain: from_data, note: "October to March, e.g. '2019/20'; NULL in April-September"}
+  geography:
+    table: dim_colony
+    key: colony_key
+    hierarchies:
+      geo: [country, state, district, cell_id, colony_key]
+    levels:
+      country: {label: country, domain: from_data, note: "only 'DE'; national facts join on it"}
+      state: {label: federal state, domain: from_data, note: "states with colonies only; state of the cell's main district"}
+      district: {label: district (Kreis), domain: from_data, note: "main district of the cell (largest share of the cell box); districts with colonies only"}
+      cell_id: {label: location, note: "0.1 degree cell, precision 5-7 km"}
+      colony_key: {label: colony}
+      colonies_in_cell: {label: number of colonies in the cell, note: "peer comparison needs >= 3"}
+      ever_swarmed: {label: colony swarmed at least once, note: "filter value true/false; use this (not event_type) to select colonies that swarmed"}
+      died: {label: colony died, note: "filter value true/false; use this (not event_type) to select colonies that died"}
+  sensor:
+    table: dim_sensor_position
+    key: sensor_pos
+    hierarchies:
+      position: [zone, sensor_pos]
+    levels:
+      zone: {label: sensor zone, domain: from_data, note: "breakdowns by zone or sensor use measure temp_c from fact_temperature"}
+      sensor_pos: {label: sensor, domain: from_data, note: "breakdowns by zone or sensor use measure temp_c from fact_temperature"}
+  event:
+    table: dim_event_type
+    key: event_type
+    hierarchies:
+      cause: [cause_class, event_type]
+    levels:
+      cause_class: {label: cause class, domain: from_data}
+      event_type: {label: event type, domain: from_data}
+  plant:
+    table: dim_plant
+    key: plant_id
+    hierarchies:
+      botany: [plant_group, plant]
+    levels:
+      plant_group: {label: plant group, domain: from_data}
+      plant: {label: forage plant, domain: from_data, note: "English name, e.g. 'winter oilseed rape'"}
+      flow_period: {label: typical flow period, domain: from_data}
+  crop:
+    table: dim_crop
+    key: crop
+    hierarchies:
+      crop_tree: [parent_crop, crop]
+    levels:
+      parent_crop: {label: parent crop group, domain: from_data}
+      crop: {label: crop, domain: from_data, note: "code, e.g. 'winter_rape'; crops are nested, never sum over several crops"}
+      is_bee_forage: {label: crop is bee forage}
+  survey:
+    table: fact_winter_loss
+    key: survey
+    levels:
+      survey: {label: loss survey, domain: from_data}
+
+measures:
+  weight_gain_kg:
+    column: weight_gain_kg
+    tables: [fact_hive_hourly, agg_colony_daily]
+    label: weight gain
+    unit: kg
+    additivity: {time: [sum, avg, min, max], geography: [sum, avg, min, max]}
+    description: Net weight gain excluding beekeeper interventions (outliers removed).
+  weight_change_raw_kg:
+    column: weight_change_raw_kg
+    tables: [fact_hive_hourly]
+    label: raw weight change
+    unit: kg
+    additivity: {time: [sum, min, max], geography: [avg, min, max]}
+    description: Includes interventions (honey harvest, adding supers, stones).
+  weight_delta_no_outlier:
+    column: weight_delta_no_outlier
+    tables: [fact_hive_minute]
+    label: minute weight change without outliers
+    unit: kg
+    additivity: {time: [sum, min, max], geography: [avg, min, max]}
+  max_hourly_drop_raw_kg:
+    column: max_hourly_drop_raw_kg
+    tables: [agg_colony_daily]
+    label: largest hourly raw weight drop
+    unit: kg
+    additivity: {time: [min, avg], geography: [min, avg]}
+  weight_kg:
+    column: weight_kg
+    tables: [fact_hive_hourly, fact_hive_minute]
+    label: hive weight
+    unit: kg
+    additivity: {time: [avg, min, max, last], geography: [avg]}
+    caveat: Includes the hive structure; do not compare levels between colonies.
+  t_center:
+    column: t_i_3
+    tables: [fact_hive_hourly, fact_hive_minute]
+    label: center temperature
+    unit: "°C"
+    additivity: {time: [avg, median, min, max, stddev], geography: [avg, median, min, max]}
+  t_off_center:
+    columns: [t_i_1, t_i_2, t_i_4, t_i_5]
+    tables: [fact_hive_hourly, fact_hive_minute]
+    label: off-center temperature
+    unit: "°C"
+    additivity: {time: [avg, median, min, max, stddev], geography: [avg, median, min, max]}
+  t_outside:
+    column: t_o
+    tables: [fact_hive_hourly, fact_hive_minute]
+    label: outside temperature at the hive
+    unit: "°C"
+    additivity: {time: [avg, median, min, max, stddev], geography: [avg, median, min, max]}
+  t_bme:
+    column: t_bme
+    tables: [fact_hive_hourly, fact_hive_minute]
+    label: in-hive temperature (BME280)
+    unit: "°C"
+    additivity: {time: [avg, median, min, max, stddev], geography: [avg, median, min, max]}
+  t_diff_in_out:
+    column: t_diff_in_out
+    tables: [fact_hive_hourly]
+    label: center minus outside temperature
+    unit: "°C"
+    additivity: {time: [avg, median, min, max], geography: [avg, median, min, max]}
+  temp_c:
+    column: temp_c
+    tables: [fact_temperature]
+    label: temperature at sensor position
+    unit: "°C"
+    additivity: {time: [avg, median, min, max, stddev], geography: [avg, median, min, max], sensor: [avg, min, max]}
+  humidity:
+    column: h
+    tables: [fact_hive_hourly, fact_hive_minute]
+    label: in-hive relative humidity
+    unit: "%"
+    additivity: {time: [avg, median, min, max], geography: [avg, median, min, max]}
+  pressure:
+    column: p
+    tables: [fact_hive_hourly, fact_hive_minute]
+    label: air pressure
+    unit: hPa
+    additivity: {time: [avg, min, max], geography: [avg, min, max]}
+  n_minutes:
+    column: n_minutes
+    tables: [fact_hive_hourly, agg_colony_daily]
+    label: minutes with data
+    unit: min
+    additivity: {time: [sum, min, max, avg], geography: [sum, min, max, avg]}
+  t_center_avg:
+    column: t_center_avg
+    tables: [agg_colony_daily]
+    label: daily mean center temperature
+    unit: "°C"
+    additivity: {time: [avg, min, max], geography: [avg, min, max]}
+  t_center_std:
+    column: t_center_std
+    tables: [agg_colony_daily]
+    label: daily center temperature variability
+    unit: "°C"
+    additivity: {time: [avg, max], geography: [avg, max]}
+  t_diff_avg:
+    column: t_diff_avg
+    tables: [agg_colony_daily]
+    label: daily mean center minus outside temperature
+    unit: "°C"
+    additivity: {time: [avg, min, max], geography: [avg, min, max]}
+  h_avg:
+    column: h_avg
+    tables: [agg_colony_daily]
+    label: daily mean humidity
+    unit: "%"
+    additivity: {time: [avg, min, max], geography: [avg, min, max]}
+  n_hours:
+    column: n_hours
+    tables: [agg_colony_daily, agg_weather_daily]
+    label: hours with data
+    unit: h
+    additivity: {time: [sum, min, max, avg], geography: [sum, min, max, avg]}
+    description: Data completeness of the day.
+  air_temp_c:
+    column: air_temp_c
+    tables: [fact_weather]
+    label: air temperature (ERA5, 2 m)
+    unit: "°C"
+    additivity: {time: [avg, median, min, max, stddev], geography: [avg, median, min, max]}
+  precip_mm:
+    column: precip_mm
+    tables: [fact_weather, agg_weather_daily]
+    label: precipitation
+    unit: mm
+    additivity: {time: [sum, avg, max], geography: [avg, min, max]}
+    description: Sum over time; never sum over locations (average them).
+  rain_mm:
+    column: rain_mm
+    tables: [fact_weather]
+    label: rain (liquid precipitation)
+    unit: mm
+    additivity: {time: [sum, avg, max], geography: [avg, min, max]}
+  wind_kmh:
+    column: wind_kmh
+    tables: [fact_weather]
+    label: wind speed (10 m)
+    unit: km/h
+    additivity: {time: [avg, max], geography: [avg, max]}
+  radiation_wm2:
+    column: radiation_wm2
+    tables: [fact_weather]
+    label: shortwave radiation
+    unit: "W/m²"
+    additivity: {time: [avg, max], geography: [avg, max]}
+  air_rh_pct:
+    column: air_rh_pct
+    tables: [fact_weather]
+    label: air relative humidity
+    unit: "%"
+    additivity: {time: [avg, min, max], geography: [avg, min, max]}
+  air_temp_avg_c:
+    column: air_temp_avg_c
+    tables: [agg_weather_daily]
+    label: daily mean air temperature
+    unit: "°C"
+    additivity: {time: [avg, min, max], geography: [avg, min, max]}
+  air_temp_min_c:
+    column: air_temp_min_c
+    tables: [agg_weather_daily]
+    label: daily minimum air temperature
+    unit: "°C"
+    additivity: {time: [avg, min], geography: [avg, min]}
+  air_temp_max_c:
+    column: air_temp_max_c
+    tables: [agg_weather_daily]
+    label: daily maximum air temperature
+    unit: "°C"
+    additivity: {time: [avg, max], geography: [avg, max]}
+  rain_hours:
+    column: rain_hours
+    tables: [agg_weather_daily]
+    label: hours with precipitation (>= 0.1 mm)
+    unit: h
+    additivity: {time: [sum, avg, max], geography: [avg, min, max]}
+  radiation_kwh_m2:
+    column: radiation_kwh_m2
+    tables: [agg_weather_daily]
+    label: daily solar radiation
+    unit: "kWh/m²"
+    additivity: {time: [sum, avg, min, max], geography: [avg, min, max]}
+  wind_avg_kmh:
+    column: wind_avg_kmh
+    tables: [agg_weather_daily]
+    label: daily mean wind speed
+    unit: km/h
+    additivity: {time: [avg, max], geography: [avg, max]}
+  air_rh_avg_pct:
+    column: air_rh_avg_pct
+    tables: [agg_weather_daily]
+    label: daily mean air humidity
+    unit: "%"
+    additivity: {time: [avg, min, max], geography: [avg, min, max]}
+  ndvi:
+    column: ndvi
+    tables: [fact_vegetation]
+    label: vegetation greenness (NDVI)
+    unit: index (-1..1)
+    additivity: {time: [avg, median, min, max], geography: [avg, median, min, max]}
+  bloom_doy:
+    column: bloom_doy
+    tables: [fact_bloom_phenology, agg_cell_bloom]
+    label: flowering onset (day of year)
+    unit: day of year
+    additivity: {time: [avg, median, min, max], geography: [avg, median, min, max]}
+    description: Earlier = smaller; compare years or locations for one plant at a time.
+  n_stations:
+    column: n_stations
+    tables: [agg_cell_bloom]
+    label: phenology stations within 25 km
+    unit: count
+    additivity: {time: [avg, min, max], geography: [avg, min, max]}
+  area_ha:
+    column: area_ha
+    tables: [fact_crop_area]
+    label: crop area
+    unit: ha
+    additivity: {geography: [sum, avg, min, max], time: [avg, min, max]}
+    description: Sum over districts of one crop only; NULL = suppressed or unreliable, not zero.
+  yield_dt_ha:
+    column: yield_dt_ha
+    tables: [fact_crop_yield]
+    label: crop yield
+    unit: dt/ha
+    additivity: {time: [avg, median, min, max], geography: [avg, median, min, max]}
+    description: Not additive; an unweighted average over districts ignores their area.
+  crop_share_pct:
+    column: crop_share_pct
+    tables: [agg_cell_crop]
+    label: crop share of arable land around the location
+    unit: "%"
+    additivity: {time: [avg, min, max], geography: [avg, median, min, max]}
+  share_coverage:
+    column: share_coverage
+    tables: [agg_cell_crop]
+    label: share of the cell with crop area data
+    unit: fraction
+    additivity: {time: [avg, min], geography: [avg, min]}
+  yield_w_dt_ha:
+    column: yield_w_dt_ha
+    tables: [agg_cell_crop]
+    label: crop yield around the location
+    unit: dt/ha
+    additivity: {time: [avg, median, min, max], geography: [avg, median, min, max]}
+  yield_coverage:
+    column: yield_coverage
+    tables: [agg_cell_crop]
+    label: share of the cell with yield data
+    unit: fraction
+    additivity: {time: [avg, min], geography: [avg, min]}
+  hives:
+    column: hives
+    tables: [fact_country_bees]
+    label: number of hives in Germany
+    unit: count
+    additivity: {geography: [sum], time: [avg, min, max, last]}
+  honey_t:
+    column: honey_t
+    tables: [fact_country_bees]
+    label: honey production in Germany
+    unit: t
+    additivity: {geography: [sum], time: [sum, avg, min, max]}
+  colonies_wintered:
+    column: colonies_wintered
+    tables: [fact_winter_loss]
+    label: colonies wintered (survey sample)
+    unit: count
+    additivity: {geography: [sum], time: [avg, min, max]}
+  colonies_lost:
+    column: colonies_lost
+    tables: [fact_winter_loss]
+    label: colonies lost over winter (survey sample)
+    unit: count
+    additivity: {geography: [sum], time: [avg, min, max]}
+  loss_pct_pooled:
+    column: loss_pct_pooled
+    tables: [fact_winter_loss]
+    label: winter loss rate (lost / wintered, pooled)
+    unit: "%"
+    additivity: {time: [avg, min, max], survey: [min, max]}
+    description: COLOSS-style rate; the primary loss measure. Never average rates of different surveys as one value.
+  loss_pct_mean:
+    column: loss_pct_mean
+    tables: [fact_winter_loss]
+    label: winter loss rate (mean of beekeepers' rates)
+    unit: "%"
+    additivity: {time: [avg, min, max]}
+
+metrics:
+  event_count:
+    label: number of recorded events
+    sql: "COUNT(*)"
+    table: fact_event
+    unit: count
+    note: "filter by event_type for a specific event; recorded events only (incomplete)"
+  colony_count:
+    label: number of colonies
+    sql: "COUNT(DISTINCT colony_key)"
+    unit: count
+  winter_loss_rate:
+    label: pooled winter loss rate over several survey rows
+    sql: "100.0 * SUM(colonies_lost) / SUM(colonies_wintered)"
+    table: fact_winter_loss
+    unit: "%"
+    note: "ratio of sums, never the average of rates; filter one survey"
+
+rules:
+  - {id: R1, enforced: true, text: "Aggregate every measure only with the functions listed in its additivity; temperatures, humidity, NDVI, yields and rates are never summed."}
+  - {id: R2, enforced: true, text: "Join hive facts with fact_event, and agg_colony_daily with fact_vegetation, only via ASOF JOIN or EXISTS; a plain JOIN multiplies or loses rows."}
+  - {id: R3, enforced: true, text: "Filter dimension attributes only with values from their domain."}
+  - {id: R4, enforced: false, text: "Do not compare weight_kg levels between colonies; compare weight gains."}
+  - {id: R5, enforced: false, text: "Exclude days with n_hours < 20 from daily hive analyses."}
+  - {id: R6, enforced: false, text: "Peer comparison within a cell requires colonies_in_cell >= 3; otherwise use weather to separate colony and environment causes."}
+  - {id: R7, enforced: false, text: "Join every fact to the time dimension of its own grain: hourly facts to dim_time on time_key, daily facts and event dates to dim_date on date, year facts to dim_year, winter facts to dim_bee_winter. Never join a daily fact to dim_time (one row per hour multiplies rows by 24)."}
+  - {id: R8, enforced: false, text: "Join context at the same grain: agg_colony_daily with agg_weather_daily, fact_hive_hourly with fact_weather, always through dim_colony.cell_id; never join daily hive data to hourly weather."}
+  - {id: R9, enforced: false, text: "Crop context for a location comes from agg_cell_crop (weighted over the districts of the cell); use fact_crop_area/fact_crop_yield only for district-level questions. Always filter exactly one crop: crops are nested and must not be summed."}
+  - {id: R10, enforced: false, text: "fact_country_bees and fact_winter_loss are national (grain country x year or x bee_winter): first aggregate colony data to the same grain (year(date), or date BETWEEN dim_bee_winter.winter_start AND winter_end), then join on dim_year.year or dim_bee_winter.bee_winter. Never join them to hourly or daily rows."}
+  - {id: R11, enforced: false, text: "Context data show associations, not causes: say 'coincided with' or 'was associated with', and report how many days, colonies or locations support the statement."}
+  - {id: R12, enforced: false, text: "Query fact_hive_minute only for one colony and a short time range (hours to days); use fact_hive_hourly otherwise."}
+
+examples:
+  - id: EX1
+    question: "Was the drop in weight gain on a given day shared by the whole location, or limited to some colonies?"
+    pattern: peer_residual
+    sql: |
+      SELECT d.colony_key, d.date, c.cell_id,
+             d.weight_gain_kg,
+             avg(d.weight_gain_kg) OVER p                    AS cell_avg_kg,
+             d.weight_gain_kg - avg(d.weight_gain_kg) OVER p AS residual_kg
+      FROM agg_colony_daily AS d
+      JOIN dim_colony AS c ON d.colony_key = c.colony_key
+      WHERE c.colonies_in_cell >= 3 AND d.n_hours >= 20
+      WINDOW p AS (PARTITION BY c.cell_id, d.date)
+      ORDER BY abs(residual_kg) DESC
+  - id: EX2
+    question: "Show the daily weight gain at every level of the geography hierarchy."
+    pattern: rollup_cube
+    sql: |
+      SELECT d.date, c.state, c.district, c.cell_id, d.colony_key,
+             avg(d.weight_gain_kg) AS avg_gain_kg,
+             count(*)              AS n_colonies,
+             GROUPING(c.state, c.district, c.cell_id, d.colony_key) AS level_mask  -- 0 colony, 1 cell, 3 district, 7 state, 15 total
+      FROM agg_colony_daily AS d
+      JOIN dim_colony AS c ON d.colony_key = c.colony_key
+      WHERE d.n_hours >= 20
+      GROUP BY d.date, ROLLUP (c.state, c.district, c.cell_id, d.colony_key)
+  - id: EX3
+    question: "Which recorded event preceded the largest daily weight drops?"
+    pattern: asof_event_context
+    sql: |
+      SELECT d.colony_key, d.date, d.max_hourly_drop_raw_kg,
+             e.event_type, e.event_ts, et.cause_class
+      FROM agg_colony_daily AS d
+      ASOF LEFT JOIN fact_event AS e
+        ON d.colony_key = e.colony_key AND d.date >= e.event_ts::DATE
+      LEFT JOIN dim_event_type AS et ON e.event_type = et.event_type
+      WHERE d.n_hours >= 20
+      ORDER BY d.max_hourly_drop_raw_kg
+      LIMIT 20
+  - id: EX4
+    question: "How variable was the center temperature in the three weeks before recorded swarming events?"
+    pattern: exists_event_window
+    sql: |
+      SELECT d.colony_key,
+             avg(d.t_center_std) AS avg_daily_t_center_std,
+             count(*)            AS n_days
+      FROM agg_colony_daily AS d
+      WHERE d.n_hours >= 20
+        AND EXISTS (
+          SELECT 1
+          FROM fact_event AS e
+          WHERE e.colony_key = d.colony_key
+            AND e.event_type = 'swarming'
+            AND d.date BETWEEN e.event_ts::DATE - INTERVAL 21 DAY
+                           AND e.event_ts::DATE - INTERVAL 1 DAY
+        )
+      GROUP BY d.colony_key
+  - id: EX5
+    question: "Is the daily weight gain associated with rain and sunshine at each location in the season?"
+    pattern: context_correlation_same_grain
+    sql: |
+      SELECT c.cell_id,
+             corr(d.weight_gain_kg, w.precip_mm)        AS r_gain_precip,
+             corr(d.weight_gain_kg, w.radiation_kwh_m2) AS r_gain_radiation,
+             count(*)                                   AS n_colony_days
+      FROM agg_colony_daily AS d
+      JOIN dim_colony AS c ON d.colony_key = c.colony_key
+      JOIN agg_weather_daily AS w ON w.cell_id = c.cell_id AND w.date = d.date
+      WHERE d.n_hours >= 20 AND month(d.date) BETWEEN 4 AND 8
+      GROUP BY c.cell_id
+      HAVING count(*) >= 30
+      ORDER BY r_gain_radiation DESC
+  - id: EX6
+    question: "Did the weight gain change when winter oilseed rape started flowering nearby?"
+    pattern: event_window_from_context
+    sql: |
+      SELECT CASE WHEN d.date < b.bloom_date THEN 'before bloom' ELSE 'after bloom' END AS period,
+             avg(d.weight_gain_kg)          AS avg_daily_gain_kg,
+             count(DISTINCT d.colony_key)   AS n_colonies,
+             count(*)                       AS n_colony_days
+      FROM agg_colony_daily AS d
+      JOIN dim_colony AS c ON d.colony_key = c.colony_key
+      JOIN agg_cell_bloom AS b ON b.cell_id = c.cell_id AND b.year = year(d.date)
+      JOIN dim_plant AS p ON p.plant_id = b.plant_id
+      WHERE p.plant = 'winter oilseed rape'
+        AND d.n_hours >= 20
+        AND d.date BETWEEN b.bloom_date - INTERVAL 14 DAY AND b.bloom_date + INTERVAL 13 DAY
+      GROUP BY period
+  - id: EX7
+    question: "How did vegetation greenness and weight gain develop per month at each location?"
+    pattern: asof_context
+    sql: |
+      SELECT c.cell_id,
+             strftime(d.date, '%Y-%m')  AS month,
+             avg(d.weight_gain_kg)      AS avg_daily_gain_kg,
+             avg(v.ndvi)                AS avg_ndvi
+      FROM agg_colony_daily AS d
+      JOIN dim_colony AS c ON d.colony_key = c.colony_key
+      ASOF LEFT JOIN fact_vegetation AS v
+        ON v.cell_id = c.cell_id AND d.date >= v.date
+      WHERE d.n_hours >= 20
+      GROUP BY c.cell_id, month
+      ORDER BY c.cell_id, month
+  - id: EX8
+    question: "How do the colony deaths recorded in the dataset compare with national winter losses?"
+    pattern: side_by_side_national
+    sql: |
+      WITH colony AS (
+          SELECT w.bee_winter, count(DISTINCT e.colony_key) AS colonies_died
+          FROM fact_event AS e
+          JOIN dim_bee_winter AS w ON e.event_ts::DATE BETWEEN w.winter_start AND w.winter_end
+          WHERE e.event_type = 'died'
+          GROUP BY w.bee_winter
+      )
+      SELECT w.bee_winter, w.has_full_hive_data,
+             l.survey, l.loss_pct_pooled, l.citekey,
+             coalesce(c.colonies_died, 0) AS colonies_died_in_dataset
+      FROM dim_bee_winter AS w
+      LEFT JOIN fact_winter_loss AS l ON l.bee_winter = w.bee_winter
+      LEFT JOIN colony AS c ON c.bee_winter = w.bee_winter
+      ORDER BY w.bee_winter, l.survey
+  - id: EX9
+    question: "Do locations with more oilseed rape around them gain more weight in April and May?"
+    pattern: crop_context
+    sql: |
+      SELECT c.cell_id, k.crop_share_pct, k.share_coverage,
+             sum(d.weight_gain_kg) / count(DISTINCT d.colony_key) AS gain_per_colony_kg,
+             count(DISTINCT d.colony_key)                         AS n_colonies
+      FROM agg_colony_daily AS d
+      JOIN dim_colony AS c ON d.colony_key = c.colony_key
+      JOIN agg_cell_crop AS k ON k.cell_id = c.cell_id AND k.year = 2020 AND k.crop = 'winter_rape'
+      WHERE year(d.date) = 2020 AND month(d.date) IN (4, 5) AND d.n_hours >= 20
+      GROUP BY c.cell_id, k.crop_share_pct, k.share_coverage
+      ORDER BY k.crop_share_pct DESC
+  - id: EX10
+    question: "Was the yearly weight gain of the colonies in line with the national honey harvest?"
+    pattern: rollup_to_national_grain
+    sql: |
+      WITH colony AS (
+          SELECT year(d.date)                                        AS year,
+                 sum(d.weight_gain_kg) / count(DISTINCT d.colony_key) AS gain_per_colony_kg,
+                 count(DISTINCT d.colony_key)                         AS n_colonies,
+                 count(*)                                             AS n_colony_days
+          FROM agg_colony_daily AS d
+          WHERE d.n_hours >= 20 AND month(d.date) BETWEEN 4 AND 8   -- season only; 2019 starts in late June
+          GROUP BY year(d.date)
+      )
+      SELECT y.year, c.gain_per_colony_kg, c.n_colonies, c.n_colony_days, b.honey_t, b.hives
+      FROM dim_year AS y
+      JOIN colony AS c ON c.year = y.year
+      LEFT JOIN fact_country_bees AS b ON b.year = y.year AND b.country = 'DE'
+      WHERE y.has_hive_data
+      ORDER BY y.year
+
+starters:
+  - {label: "Brood nest temperature by month", message: "What is the average center temperature by month?"}
+  - {label: "Rain vs. weight gain", message: "Is the daily weight gain associated with rain at each location?"}
+  - {label: "Oilseed rape bloom", message: "Did the weight gain change when oilseed rape started flowering?"}
+  - {label: "Winter losses", message: "How did winter colony losses in Germany develop?"}
+  - {label: "Sensor position drill-down", message: "Compare the average temperature at each sensor position"}

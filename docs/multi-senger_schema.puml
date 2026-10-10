@@ -1,0 +1,335 @@
+@startuml multi-senger_schema
+' Dataset pack multi-senger: fact constellation in data/multi-senger.duckdb
+' Source of truth: datasets/multi-senger/build.sql and semantic_layer.yaml
+' Render: java -jar plantuml.jar -tsvg docs/multi-senger_schema.puml
+
+!theme plain
+hide circle
+hide empty methods
+skinparam linetype polyline
+skinparam nodesep 40
+skinparam ranksep 60
+skinparam defaultFontName Helvetica
+skinparam ClassFontStyle bold
+skinparam ClassAttributeFontSize 11
+skinparam PackageStyle rectangle
+skinparam PackageBorderColor #999999
+skinparam ArrowColor #555555
+
+!define FACT #FFE8C2
+!define AGG #FFF6DB
+!define DIM #DCEBFF
+!define BRIDGE #E6E0F8
+!define NAT #E3F4E1
+
+legend bottom left
+  |= barva |= význam |
+  |<FACT> | fakt (grain = PK) |
+  |<AGG> | agregát odvozený z faktu |
+  |<DIM> | dimenze |
+  |<BRIDGE> | bridge s vahou |
+  |<NAT> | národní kontext (Německo) |
+  plná čára = FK (N:1); čárkovaná šipka = odvozeno z;
+  spojení faktů navzájem viz multi-senger_joins.puml. Časy v UTC.
+endlegend
+
+' ------------------------------------------------------------------ hive core
+package "Úly (BeeObserver, 2019–2022)" {
+  entity fact_hive_minute <<fact>> FACT {
+    * colony_key : INTEGER <<FK>>
+    * ts : TIMESTAMP
+    --
+    weight_kg, weight_delta_no_outlier
+    t_i_1 … t_i_5, t_o, t_bme, h, p
+    is_outlier, ts_shifted_dst
+    __36 029 522 řádků__
+  }
+  entity fact_hive_hourly <<fact>> FACT {
+    * colony_key : INTEGER <<FK>>
+    * time_key : TIMESTAMP <<FK>>
+    --
+    n_minutes, weight_kg
+    weight_gain_kg, weight_change_raw_kg
+    t_i_1 … t_i_5, t_o, t_diff_in_out
+    h, t_bme, p
+    __638 471 řádků__
+  }
+  entity fact_temperature <<view>> FACT {
+    * colony_key <<FK>>
+    * time_key <<FK>>
+    * sensor_pos <<FK>>
+    --
+    temp_c
+  }
+  entity agg_colony_daily <<aggregate>> AGG {
+    * colony_key : INTEGER <<FK>>
+    * date : DATE
+    --
+    weight_gain_kg, max_hourly_drop_raw_kg
+    t_center_avg, t_center_std, t_diff_avg
+    h_avg, n_hours, n_minutes
+  }
+  entity fact_event <<factless>> FACT {
+    * colony_key : INTEGER <<FK>>
+    * event_ts : TIMESTAMP
+    * event_type : VARCHAR <<FK>>
+  }
+  entity dim_sensor_position <<dim>> DIM {
+    * sensor_pos
+    --
+    zone, slot
+  }
+  entity dim_event_type <<dim>> DIM {
+    * event_type
+    --
+    cause_class, label
+  }
+}
+
+' ------------------------------------------------------------------ conformed dimensions
+package "Sdílené dimenze" {
+  entity dim_time <<dim>> DIM {
+    * time_key : TIMESTAMP (hodina)
+    --
+    date <<FK>>, hour
+    + atributy dne z dim_date
+  }
+  entity dim_colony <<dim>> DIM {
+    * colony_key : INTEGER
+    --
+    cell_id <<FK>>
+    district, state, country
+    colonies_in_cell, ever_swarmed, died
+  }
+  entity dim_cell <<dim>> DIM {
+    * cell_id : VARCHAR (0,1°)
+    --
+    lat, lon
+    district_id <<FK>> (hlavní okres)
+    district, state_id, state
+    district_weight, n_districts
+    share_in_germany
+  }
+  entity bridge_cell_district <<bridge>> BRIDGE {
+    * cell_id <<FK>>
+    * district_id <<FK>>
+    --
+    box_share
+    weight (Σ = 1 na buňku)
+  }
+  entity dim_district <<dim>> DIM {
+    * district_id : VARCHAR (AGS)
+    --
+    district, district_type
+    state_id <<FK>>, state, area_km2
+  }
+  entity dim_state <<dim>> DIM {
+    * state_id
+    --
+    state, country <<FK>>
+  }
+  entity dim_date <<dim>> DIM {
+    * date : DATE (den)
+    --
+    day_of_week, week, month
+    year <<FK>>, day_of_year
+    season, is_beekeeping_season
+    bee_winter <<FK>>
+  }
+  entity dim_country <<dim>> DIM {
+    * country (DE)
+    --
+    country_name
+  }
+  entity dim_year <<dim>> DIM {
+    * year (2016–2025)
+    --
+    has_hive_data
+    is_farm_survey_year
+  }
+  entity dim_bee_winter <<dim>> DIM {
+    * bee_winter ('2019/20')
+    --
+    start_year, winter_start, winter_end
+    has_full_hive_data
+  }
+}
+
+' ------------------------------------------------------------------ context per cell
+package "Kontext lokality" {
+  entity fact_weather <<fact>> FACT {
+    * cell_id <<FK>>
+    * time_key <<FK>>
+    --
+    air_temp_c, precip_mm, rain_mm
+    wind_kmh, radiation_wm2, air_rh_pct
+    __ERA5 / Open-Meteo__
+  }
+  entity agg_weather_daily <<aggregate>> AGG {
+    * cell_id <<FK>>
+    * date
+    --
+    air_temp_avg/min/max_c, precip_mm
+    rain_hours, radiation_kwh_m2
+    wind_avg_kmh, air_rh_avg_pct, n_hours
+  }
+  entity fact_vegetation <<fact>> FACT {
+    * cell_id <<FK>>
+    * date (začátek 16denního kompozitu)
+    --
+    ndvi
+    __MODIS MOD13Q1__
+  }
+  entity agg_cell_bloom <<aggregate>> AGG {
+    * cell_id <<FK>>
+    * year <<FK dim_year>>
+    * plant_id <<FK>>
+    --
+    bloom_doy, bloom_date (medián do 25 km)
+    bloom_doy_min/max, n_stations
+    nearest_station_km
+    __z fact_bloom_phenology, stanice ≤ 25 km__
+  }
+  entity agg_cell_crop <<aggregate>> AGG {
+    * cell_id <<FK>>
+    * year <<FK dim_year>>
+    * crop <<FK>>
+    --
+    crop_share_pct, share_coverage
+    yield_w_dt_ha, yield_coverage
+    __z fact_crop_area/yield × bridge weight__
+  }
+}
+
+' ------------------------------------------------------------------ phenology and crops
+package "Fenologie (DWD)" {
+  entity fact_bloom_phenology <<fact>> FACT {
+    * station_id <<FK>>
+    * year <<FK dim_year>>
+    * plant_id <<FK>>
+    --
+    bloom_date, bloom_doy, quality_byte
+  }
+  entity dim_station <<dim>> DIM {
+    * station_id
+    --
+    station_name, lat, lon
+    elevation_m, closed_on, state
+  }
+  entity dim_plant <<dim>> DIM {
+    * plant_id
+    --
+    plant, plant_de, plant_group
+    flow_period, is_bee_forage
+  }
+}
+
+package "Plodiny po okresech (Regionalstatistik)" {
+  entity fact_crop_area <<fact>> FACT {
+    * district_id <<FK>>
+    * year (2016, 2020) <<FK dim_year>>
+    * crop <<FK>>
+    --
+    area_ha, value_status
+  }
+  entity fact_crop_yield <<fact>> FACT {
+    * district_id <<FK>>
+    * year (2016–2025) <<FK dim_year>>
+    * crop <<FK>>
+    --
+    yield_dt_ha, value_status
+  }
+  entity dim_crop <<dim>> DIM {
+    * crop
+    --
+    crop_de, crop_label
+    parent_crop <<FK>>, is_bee_forage
+  }
+}
+
+' ------------------------------------------------------------------ national context
+package "Národní kontext (DE)" {
+  entity fact_country_bees <<fact>> NAT {
+    * country
+    * year
+    --
+    hives, honey_t
+    __FAOSTAT__
+  }
+  entity fact_winter_loss <<fact>> NAT {
+    * country
+    * bee_winter
+    * survey
+    --
+    n_reports, colonies_wintered, colonies_lost
+    loss_pct_mean, loss_pct_pooled, ci_low/high_pct
+    citekey, evidence
+  }
+}
+
+' ------------------------------------------------------------------ layout
+' Edge direction sets the vertical order: "A ||--o{ B" puts A above B.
+' Rows: hive facts -> shared dimensions -> context per cell -> sources (phenology, crops, national).
+
+' hive facts above the shared dimensions
+fact_hive_minute     }o--|| dim_colony
+fact_hive_hourly     }o--|| dim_colony
+fact_hive_hourly     }o--|| dim_time
+fact_temperature     }o--|| dim_colony
+fact_temperature     }o--|| dim_time
+fact_temperature     }o--|| dim_sensor_position
+agg_colony_daily     }o--|| dim_colony
+agg_colony_daily     }o--|| dim_date
+fact_event           }o--|| dim_date : event_ts::DATE
+fact_event           }o--|| dim_colony
+fact_event           }o--|| dim_event_type
+
+' geography chain
+dim_colony           }o--|| dim_cell
+dim_cell             }o--|| dim_district : hlavní okres
+dim_cell             ||--|{ bridge_cell_district
+dim_district         ||--o{ bridge_cell_district
+dim_district         }o--|| dim_state
+dim_state            }o--|| dim_country
+
+' time rolls up to the coarser (shrunken) dimensions
+dim_time             }o--|| dim_date : roll-up
+dim_date             }o--|| dim_year : roll-up
+dim_date             }o--o| dim_bee_winter : roll-up (říjen–březen)
+
+' context per cell below dim_cell
+dim_time             ||--o{ fact_weather
+dim_cell             ||--o{ fact_weather
+dim_cell             ||--o{ agg_weather_daily
+dim_date             ||--o{ agg_weather_daily
+dim_cell             ||--o{ fact_vegetation
+dim_date             ||--o{ fact_vegetation
+dim_cell             ||--o{ agg_cell_bloom
+dim_cell             ||--o{ agg_cell_crop
+
+' sources below the context aggregates
+agg_cell_bloom       }o--|| dim_plant
+dim_plant            ||--o{ fact_bloom_phenology
+fact_bloom_phenology }o--|| dim_station
+agg_cell_crop        }o--|| dim_crop
+dim_district         ||--o{ fact_crop_area
+dim_district         ||--o{ fact_crop_yield
+fact_crop_area       }o--|| dim_crop
+fact_crop_yield      }o--|| dim_crop
+dim_crop             }o--o| dim_crop : parent_crop
+
+' year / winter grain facts reference the shrunken dimensions, never dim_time (1 row = 1 hour);
+' crops and phenology mark year <<FK dim_year>> in the entity (lines would cross the canvas)
+dim_country          ||--o{ fact_country_bees
+dim_year             ||--o{ fact_country_bees
+dim_country          ||--o{ fact_winter_loss
+dim_bee_winter       ||--o{ fact_winter_loss
+
+' ------------------------------------------------------------------ derivations inside a package
+' (agg_cell_bloom and agg_cell_crop name their sources in the entity: arrows would cross the canvas)
+fact_hive_minute     ..> fact_hive_hourly : avg po hodinách
+fact_hive_hourly     ..> agg_colony_daily : po dnech
+fact_hive_hourly     ..> fact_temperature : UNPIVOT
+fact_weather         ..> agg_weather_daily : po dnech
+
+@enduml

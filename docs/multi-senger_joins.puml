@@ -1,0 +1,83 @@
+@startuml multi-senger_joins
+' Dataset pack multi-senger: how facts may be combined (fact-to-fact joins only).
+' Columns and FKs: docs/multi-senger_schema.puml. Rules: datasets/multi-senger/semantic_layer.yaml.
+' Render: java -jar plantuml.jar -tsvg docs/multi-senger_joins.puml
+
+!theme plain
+hide circle
+hide empty members
+skinparam linetype polyline
+skinparam nodesep 70
+skinparam ranksep 90
+skinparam defaultFontName Helvetica
+skinparam ClassFontStyle bold
+skinparam ArrowFontSize 11
+skinparam ArrowColor #555555
+
+!define FACT #FFE8C2
+!define AGG #FFF6DB
+!define NAT #E3F4E1
+
+class "fact_hive_minute" as minute FACT {
+  úl × minuta
+}
+class "fact_hive_hourly" as hourly FACT {
+  úl × hodina
+}
+class "agg_colony_daily" as daily AGG {
+  úl × den
+}
+class "fact_event" as event FACT {
+  úl × událost
+}
+class "fact_weather" as weather FACT {
+  buňka × hodina
+}
+class "agg_weather_daily" as weather_daily AGG {
+  buňka × den
+}
+class "fact_vegetation" as ndvi FACT {
+  buňka × 16 dní
+}
+class "agg_cell_bloom" as bloom AGG {
+  buňka × rok × rostlina
+}
+class "agg_cell_crop" as crop AGG {
+  buňka × rok × plodina
+}
+class "fact_country_bees" as bees NAT {
+  DE × rok
+}
+class "fact_winter_loss" as loss NAT {
+  DE × zima × průzkum
+}
+
+' derivation of the hive facts (orientation only)
+minute ..> hourly : avg po hodinách
+hourly ..> daily : po dnech
+
+' same grain through dim_colony.cell_id
+hourly -right- weather : cell_id + time_key\n(R8)
+daily -right- weather_daily : cell_id + date\n(R8)
+daily -- bloom : cell_id + year\n1 rostlina
+daily -- crop : cell_id + year\n1 plodina (R9)
+
+' only ASOF JOIN or EXISTS (R2)
+hourly -left[#C0392B,bold]- event : <color:#C0392B>ASOF</color>\n<color:#C0392B>time_key >= event_ts</color>
+daily -left[#C0392B,bold]- event : <color:#C0392B>ASOF</color>\n<color:#C0392B>date >= event_ts::DATE</color>
+daily -[#C0392B,bold]- ndvi : <color:#C0392B>ASOF cell_id +</color>\n<color:#C0392B>date >= date</color>
+
+' national: aggregate the colonies first (R10)
+daily -- bees : po agregaci na rok\n→ dim_year
+daily -- loss : po agregaci na zimu\n→ dim_bee_winter
+
+legend bottom right
+  |= barva |= význam |
+  |<FACT> | fakt |
+  |<AGG> | agregát |
+  |<NAT> | národní fakt |
+  plná čára = smí se spojit (přes sdílenou dimenzi)
+  <color:#C0392B>červená</color> = jen ASOF JOIN / EXISTS (R2)
+  čárkovaná šipka = odvozeno z
+endlegend
+@enduml
