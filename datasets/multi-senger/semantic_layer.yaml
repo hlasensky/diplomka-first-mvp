@@ -172,92 +172,128 @@ tables:
       here. has_full_hive_data is false for 2022/23 (hive data end on 2022-12-31).
 
 joins:
-  - {left: fact_hive_minute.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
-  - left: "date_trunc('hour', fact_hive_minute.ts)"
-    right: dim_time.time_key
-    cardinality: many_to_one
-  - {left: fact_hive_hourly.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
-  - {left: fact_hive_hourly.time_key, right: dim_time.time_key, cardinality: many_to_one}
-  - {left: fact_temperature.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
-  - {left: fact_temperature.time_key, right: dim_time.time_key, cardinality: many_to_one}
-  - {left: fact_temperature.sensor_pos, right: dim_sensor_position.sensor_pos, cardinality: many_to_one}
-  - {left: agg_colony_daily.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
-  - {left: agg_colony_daily.date, right: dim_date.date, cardinality: many_to_one}
-  - {left: fact_event.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
-  - {left: fact_event.event_type, right: dim_event_type.event_type, cardinality: many_to_one}
-  - left: "fact_event.event_ts::DATE"
-    right: dim_date.date
+  # Hive facts -> dimensions
+  - {id: minute_colony, kind: fk, from: {table: fact_hive_minute, columns: [colony_key]}, to: {table: dim_colony, columns: [colony_key]}, cardinality: many_to_one}
+  - {id: minute_time, kind: fk, from: {table: fact_hive_minute, expr: "date_trunc('hour', fact_hive_minute.ts)"}, to: {table: dim_time, columns: [time_key]}, cardinality: many_to_one}
+  - {id: hourly_colony, kind: fk, from: {table: fact_hive_hourly, columns: [colony_key]}, to: {table: dim_colony, columns: [colony_key]}, cardinality: many_to_one}
+  - {id: hourly_time, kind: fk, from: {table: fact_hive_hourly, columns: [time_key]}, to: {table: dim_time, columns: [time_key]}, cardinality: many_to_one}
+  - {id: temperature_colony, kind: fk, from: {table: fact_temperature, columns: [colony_key]}, to: {table: dim_colony, columns: [colony_key]}, cardinality: many_to_one}
+  - {id: temperature_time, kind: fk, from: {table: fact_temperature, columns: [time_key]}, to: {table: dim_time, columns: [time_key]}, cardinality: many_to_one}
+  - {id: temperature_sensor, kind: fk, from: {table: fact_temperature, columns: [sensor_pos]}, to: {table: dim_sensor_position, columns: [sensor_pos]}, cardinality: many_to_one}
+  - {id: daily_colony, kind: fk, from: {table: agg_colony_daily, columns: [colony_key]}, to: {table: dim_colony, columns: [colony_key]}, cardinality: many_to_one}
+  - {id: daily_date, kind: fk, from: {table: agg_colony_daily, columns: [date]}, to: {table: dim_date, columns: [date]}, cardinality: many_to_one}
+  - {id: event_colony, kind: fk, from: {table: fact_event, columns: [colony_key]}, to: {table: dim_colony, columns: [colony_key]}, cardinality: many_to_one}
+  - {id: event_type, kind: fk, from: {table: fact_event, columns: [event_type]}, to: {table: dim_event_type, columns: [event_type]}, cardinality: many_to_one}
+  - id: event_date
+    kind: fk
+    from: {table: fact_event, expr: "fact_event.event_ts::DATE"}
+    to: {table: dim_date, columns: [date]}
     cardinality: many_to_one
     note: "events are recorded per inspection; use dim_date, not the hourly dim_time"
-  - {left: dim_colony.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
-  - {left: dim_cell.district_id, right: dim_district.district_id, cardinality: many_to_one, note: "main district of the cell (largest share)"}
-  - {left: dim_district.state_id, right: dim_state.state_id, cardinality: many_to_one}
-  - {left: dim_state.country, right: dim_country.country, cardinality: many_to_one}
-  - {left: dim_colony.country, right: dim_country.country, cardinality: many_to_one}
-  - {left: dim_time.date, right: dim_date.date, cardinality: many_to_one, note: "roll-up: hour -> day"}
-  - {left: dim_date.year, right: dim_year.year, cardinality: many_to_one, note: "roll-up: day -> year"}
-  - {left: dim_date.bee_winter, right: dim_bee_winter.bee_winter, cardinality: many_to_one, note: "roll-up: day -> winter; NULL in April-September"}
-  - left: agg_colony_daily.date
-    right: dim_bee_winter
-    on: "agg_colony_daily.date BETWEEN dim_bee_winter.winter_start AND dim_bee_winter.winter_end"
+
+  # Geography hierarchy colony -> cell -> district -> state -> country
+  - {id: colony_cell, kind: rollup, from: {table: dim_colony, columns: [cell_id]}, to: {table: dim_cell, columns: [cell_id]}, cardinality: many_to_one}
+  - {id: cell_district, kind: rollup, from: {table: dim_cell, columns: [district_id]}, to: {table: dim_district, columns: [district_id]}, cardinality: many_to_one, note: "main district of the cell (largest share)"}
+  - {id: district_state, kind: rollup, from: {table: dim_district, columns: [state_id]}, to: {table: dim_state, columns: [state_id]}, cardinality: many_to_one}
+  - {id: state_country, kind: rollup, from: {table: dim_state, columns: [country]}, to: {table: dim_country, columns: [country]}, cardinality: many_to_one}
+  - {id: colony_country, kind: rollup, from: {table: dim_colony, columns: [country]}, to: {table: dim_country, columns: [country]}, cardinality: many_to_one}
+  - id: cell_district_weighted
+    kind: bridge
+    from: {table: dim_cell, columns: [cell_id]}
+    to: {table: dim_district, columns: [district_id]}
+    bridge: {table: bridge_cell_district, from_columns: [cell_id], to_columns: [district_id], weight: weight}
+    cardinality: many_to_many
+    note: "all districts a cell overlaps; use instead of cell_district when a cell must be split by area"
+
+  # Time hierarchy hour -> day -> year / bee winter
+  - {id: time_date, kind: rollup, from: {table: dim_time, columns: [date]}, to: {table: dim_date, columns: [date]}, cardinality: many_to_one, note: "roll-up: hour -> day"}
+  - {id: date_year, kind: rollup, from: {table: dim_date, columns: [year]}, to: {table: dim_year, columns: [year]}, cardinality: many_to_one, note: "roll-up: day -> year"}
+  - {id: date_winter, kind: rollup, from: {table: dim_date, columns: [bee_winter]}, to: {table: dim_bee_winter, columns: [bee_winter]}, cardinality: many_to_one, optional: true, note: "roll-up: day -> winter; NULL in April-September"}
+  - id: daily_winter
+    kind: range
+    from: {table: agg_colony_daily, columns: [date]}
+    to: {table: dim_bee_winter, start: winter_start, end: winter_end}
     cardinality: many_to_one
+    optional: true
     note: "range join; the same works for fact_event.event_ts::DATE"
-  - {left: fact_bloom_phenology.year, right: dim_year.year, cardinality: many_to_one}
-  - {left: agg_cell_bloom.year, right: dim_year.year, cardinality: many_to_one}
-  - {left: fact_crop_area.year, right: dim_year.year, cardinality: many_to_one}
-  - {left: fact_crop_yield.year, right: dim_year.year, cardinality: many_to_one}
-  - {left: agg_cell_crop.year, right: dim_year.year, cardinality: many_to_one}
-  - {left: fact_country_bees.country, right: dim_country.country, cardinality: many_to_one}
-  - {left: fact_country_bees.year, right: dim_year.year, cardinality: many_to_one}
-  - {left: fact_winter_loss.country, right: dim_country.country, cardinality: many_to_one}
-  - {left: fact_winter_loss.bee_winter, right: dim_bee_winter.bee_winter, cardinality: many_to_one}
-  - {left: bridge_cell_district.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
-  - {left: bridge_cell_district.district_id, right: dim_district.district_id, cardinality: many_to_one}
-  - {left: fact_weather.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
-  - {left: fact_weather.time_key, right: dim_time.time_key, cardinality: many_to_one}
-  - {left: agg_weather_daily.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
-  - {left: agg_weather_daily.date, right: dim_date.date, cardinality: many_to_one}
-  - left: agg_colony_daily
-    right: agg_weather_daily
-    on: "agg_weather_daily.cell_id = dim_colony.cell_id AND agg_weather_daily.date = agg_colony_daily.date"
+
+  # Year and winter grain facts
+  - {id: bloom_year, kind: fk, from: {table: fact_bloom_phenology, columns: [year]}, to: {table: dim_year, columns: [year]}, cardinality: many_to_one}
+  - {id: cell_bloom_year, kind: fk, from: {table: agg_cell_bloom, columns: [year]}, to: {table: dim_year, columns: [year]}, cardinality: many_to_one}
+  - {id: crop_area_year, kind: fk, from: {table: fact_crop_area, columns: [year]}, to: {table: dim_year, columns: [year]}, cardinality: many_to_one}
+  - {id: crop_yield_year, kind: fk, from: {table: fact_crop_yield, columns: [year]}, to: {table: dim_year, columns: [year]}, cardinality: many_to_one}
+  - {id: cell_crop_year, kind: fk, from: {table: agg_cell_crop, columns: [year]}, to: {table: dim_year, columns: [year]}, cardinality: many_to_one}
+  - {id: country_bees_country, kind: fk, from: {table: fact_country_bees, columns: [country]}, to: {table: dim_country, columns: [country]}, cardinality: many_to_one}
+  - {id: country_bees_year, kind: fk, from: {table: fact_country_bees, columns: [year]}, to: {table: dim_year, columns: [year]}, cardinality: many_to_one}
+  - {id: winter_loss_country, kind: fk, from: {table: fact_winter_loss, columns: [country]}, to: {table: dim_country, columns: [country]}, cardinality: many_to_one}
+  - {id: winter_loss_winter, kind: fk, from: {table: fact_winter_loss, columns: [bee_winter]}, to: {table: dim_bee_winter, columns: [bee_winter]}, cardinality: many_to_one}
+
+  # Weather and vegetation per cell
+  - {id: weather_cell, kind: fk, from: {table: fact_weather, columns: [cell_id]}, to: {table: dim_cell, columns: [cell_id]}, cardinality: many_to_one}
+  - {id: weather_time, kind: fk, from: {table: fact_weather, columns: [time_key]}, to: {table: dim_time, columns: [time_key]}, cardinality: many_to_one}
+  - {id: weather_daily_cell, kind: fk, from: {table: agg_weather_daily, columns: [cell_id]}, to: {table: dim_cell, columns: [cell_id]}, cardinality: many_to_one}
+  - {id: weather_daily_date, kind: fk, from: {table: agg_weather_daily, columns: [date]}, to: {table: dim_date, columns: [date]}, cardinality: many_to_one}
+  - {id: vegetation_cell, kind: fk, from: {table: fact_vegetation, columns: [cell_id]}, to: {table: dim_cell, columns: [cell_id]}, cardinality: many_to_one}
+  - {id: vegetation_date, kind: fk, from: {table: fact_vegetation, columns: [date]}, to: {table: dim_date, columns: [date]}, cardinality: many_to_one}
+
+  # Phenology and crops
+  - {id: bloom_station, kind: fk, from: {table: fact_bloom_phenology, columns: [station_id]}, to: {table: dim_station, columns: [station_id]}, cardinality: many_to_one}
+  - {id: bloom_plant, kind: fk, from: {table: fact_bloom_phenology, columns: [plant_id]}, to: {table: dim_plant, columns: [plant_id]}, cardinality: many_to_one}
+  - {id: cell_bloom_cell, kind: fk, from: {table: agg_cell_bloom, columns: [cell_id]}, to: {table: dim_cell, columns: [cell_id]}, cardinality: many_to_one}
+  - {id: cell_bloom_plant, kind: fk, from: {table: agg_cell_bloom, columns: [plant_id]}, to: {table: dim_plant, columns: [plant_id]}, cardinality: many_to_one}
+  - {id: crop_area_district, kind: fk, from: {table: fact_crop_area, columns: [district_id]}, to: {table: dim_district, columns: [district_id]}, cardinality: many_to_one}
+  - {id: crop_area_crop, kind: fk, from: {table: fact_crop_area, columns: [crop]}, to: {table: dim_crop, columns: [crop]}, cardinality: many_to_one}
+  - {id: crop_yield_district, kind: fk, from: {table: fact_crop_yield, columns: [district_id]}, to: {table: dim_district, columns: [district_id]}, cardinality: many_to_one}
+  - {id: crop_yield_crop, kind: fk, from: {table: fact_crop_yield, columns: [crop]}, to: {table: dim_crop, columns: [crop]}, cardinality: many_to_one}
+  - {id: cell_crop_cell, kind: fk, from: {table: agg_cell_crop, columns: [cell_id]}, to: {table: dim_cell, columns: [cell_id]}, cardinality: many_to_one}
+  - {id: cell_crop_crop, kind: fk, from: {table: agg_cell_crop, columns: [crop]}, to: {table: dim_crop, columns: [crop]}, cardinality: many_to_one}
+
+  # Fact -> fact at the same grain through shared dimensions (rule R8)
+  - id: daily_weather
+    kind: drill_across
+    from: {table: agg_colony_daily, columns: [dim_colony.cell_id, date]}
+    to: {table: agg_weather_daily, columns: [cell_id, date]}
+    via: [daily_colony]
     cardinality: many_to_one
-    note: "via dim_colony; daily hive data join only daily weather"
-  - left: fact_hive_hourly
-    right: fact_weather
-    on: "fact_weather.cell_id = dim_colony.cell_id AND fact_weather.time_key = fact_hive_hourly.time_key"
+    note: "daily hive data join only daily weather"
+  - id: hourly_weather
+    kind: drill_across
+    from: {table: fact_hive_hourly, columns: [dim_colony.cell_id, time_key]}
+    to: {table: fact_weather, columns: [cell_id, time_key]}
+    via: [hourly_colony]
     cardinality: many_to_one
-    note: "via dim_colony; hourly hive data join hourly weather"
-  - {left: fact_vegetation.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
-  - {left: fact_vegetation.date, right: dim_date.date, cardinality: many_to_one}
-  - {left: fact_bloom_phenology.station_id, right: dim_station.station_id, cardinality: many_to_one}
-  - {left: fact_bloom_phenology.plant_id, right: dim_plant.plant_id, cardinality: many_to_one}
-  - {left: agg_cell_bloom.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
-  - {left: agg_cell_bloom.plant_id, right: dim_plant.plant_id, cardinality: many_to_one}
-  - left: agg_colony_daily
-    right: agg_cell_bloom
-    on: "agg_cell_bloom.cell_id = dim_colony.cell_id AND agg_cell_bloom.year = year(agg_colony_daily.date)"
+    note: "hourly hive data join hourly weather"
+  - id: daily_bloom
+    kind: drill_across
+    from: {table: agg_colony_daily, columns: [dim_colony.cell_id, dim_date.year]}
+    to: {table: agg_cell_bloom, columns: [cell_id, year]}
+    via: [daily_colony, daily_date]
     cardinality: many_to_one
-    note: "via dim_colony; filter one plant"
-  - {left: fact_crop_area.district_id, right: dim_district.district_id, cardinality: many_to_one}
-  - {left: fact_crop_area.crop, right: dim_crop.crop, cardinality: many_to_one}
-  - {left: fact_crop_yield.district_id, right: dim_district.district_id, cardinality: many_to_one}
-  - {left: fact_crop_yield.crop, right: dim_crop.crop, cardinality: many_to_one}
-  - {left: agg_cell_crop.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
-  - {left: agg_cell_crop.crop, right: dim_crop.crop, cardinality: many_to_one}
-  - left: fact_hive_hourly
-    right: fact_event
-    type: asof
-    on: "fact_hive_hourly.colony_key = fact_event.colony_key AND fact_hive_hourly.time_key >= fact_event.event_ts"
+    note: "filter one plant; dim_date.year equals year(agg_colony_daily.date)"
+
+  # Fact -> fact only via ASOF (rule R2)
+  - id: hourly_event_asof
+    kind: asof
+    from: {table: fact_hive_hourly, columns: [colony_key], time: time_key}
+    to: {table: fact_event, columns: [colony_key], time: event_ts}
+    direction: ">="
+    cardinality: many_to_one
     note: "The only allowed row-level join between these two facts; alternatively use EXISTS."
-  - left: agg_colony_daily
-    right: fact_event
-    type: asof
-    on: "agg_colony_daily.colony_key = fact_event.colony_key AND agg_colony_daily.date >= fact_event.event_ts::DATE"
-  - left: agg_colony_daily
-    right: fact_vegetation
-    type: asof
-    on: "fact_vegetation.cell_id = dim_colony.cell_id AND agg_colony_daily.date >= fact_vegetation.date"
+  - id: daily_event_asof
+    kind: asof
+    from: {table: agg_colony_daily, columns: [colony_key], time: date}
+    to: {table: fact_event, columns: [colony_key], time_expr: "fact_event.event_ts::DATE"}
+    direction: ">="
+    cardinality: many_to_one
+  - id: daily_vegetation_asof
+    kind: asof
+    from: {table: agg_colony_daily, columns: [dim_colony.cell_id], time: date}
+    to: {table: fact_vegetation, columns: [cell_id], time: date}
+    via: [daily_colony]
+    direction: ">="
+    cardinality: many_to_one
     note: "NDVI is a 16-day composite: take the latest composite that started on or before the day."
+
 
 dimensions:
   time:
