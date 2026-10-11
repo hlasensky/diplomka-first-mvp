@@ -1,7 +1,7 @@
 """LLM factory. Selects the chat backend from config and caches a single instance."""
 
-from functools import lru_cache
-from typing import TypeVar, cast
+from functools import cache
+from typing import cast
 
 from langchain_core.language_models import BaseChatModel, LanguageModelInput
 from langchain_core.runnables import Runnable
@@ -9,11 +9,10 @@ from pydantic import BaseModel
 
 from diplomka import config
 
-SchemaT = TypeVar("SchemaT", bound=BaseModel)
 
-
-def build_llm(model: str | None = None) -> BaseChatModel:
-    """Construct the chat model for the configured backend (``ollama``, ``anthropic``, or ``openrouter``).
+@cache
+def get_llm(model: str | None = None) -> BaseChatModel:
+    """Cached chat model for the configured backend (``ollama``, ``anthropic``, or ``openrouter``).
 
     ``model`` overrides the backend's configured default - used to switch OpenRouter models
     at runtime (e.g. from a UI picker) without touching the ``ollama``/``anthropic`` backends.
@@ -46,13 +45,9 @@ def build_llm(model: str | None = None) -> BaseChatModel:
     return ChatOllama(model=model or config.OLLAMA_MODEL, temperature=0)
 
 
-@lru_cache(maxsize=None)
-def get_llm(model: str | None = None) -> BaseChatModel:
-    """Return a cached chat model for ``model`` (or the backend's configured default), built on first use."""
-    return build_llm(model)
-
-
-def get_structured_llm(schema: type[SchemaT], model: str | None = None) -> Runnable[LanguageModelInput, SchemaT]:
+def get_structured_llm[SchemaT: BaseModel](
+    schema: type[SchemaT], model: str | None = None
+) -> Runnable[LanguageModelInput, SchemaT]:
     """``get_llm(model).with_structured_output(schema)``, forced onto tool-calling.
 
     The default structured-output method varies by backend - ``ChatOpenAI`` prefers OpenAI's

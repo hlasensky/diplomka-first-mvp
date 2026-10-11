@@ -7,7 +7,7 @@ from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
-from diplomka.models import AgentState, GraphInput
+from diplomka.models import AgentState, ChartSpec, Filters, GraphInput, LevelFilter, MeasureAgg, SqlGeneration
 from diplomka.nodes import (
     clarify_intent,
     complex_query,
@@ -26,20 +26,28 @@ from diplomka.nodes import (
     validate_sql,
 )
 
+NODES = (
+    user_input,
+    clarify_intent,
+    complex_query,
+    unclear_query,
+    embedding_lookup,
+    improve_prompt,
+    generate_sql,
+    validate_sql,
+    execute_query,
+    generate_response,
+    validate_chart_spec,
+)
+
+# Pydantic models stored in the graph state, which the checkpointer may deserialize.
+STATE_MODELS = (Filters, MeasureAgg, LevelFilter, ChartSpec, SqlGeneration)
+
 
 def _build_workflow() -> StateGraph[AgentState, None, GraphInput, AgentState]:
     workflow = StateGraph(AgentState, input_schema=GraphInput)
-    workflow.add_node("user_input", user_input)
-    workflow.add_node("clarify_intent", clarify_intent)
-    workflow.add_node("complex_query", complex_query)
-    workflow.add_node("unclear_query", unclear_query)
-    workflow.add_node("embedding_lookup", embedding_lookup)
-    workflow.add_node("improve_prompt", improve_prompt)
-    workflow.add_node("generate_sql", generate_sql)
-    workflow.add_node("validate_sql", validate_sql)
-    workflow.add_node("execute_query", execute_query)
-    workflow.add_node("generate_response", generate_response)
-    workflow.add_node("validate_chart_spec", validate_chart_spec)
+    for node in NODES:
+        workflow.add_node(node.__name__, node)
 
     workflow.add_edge(START, "user_input")
     workflow.add_edge("user_input", "clarify_intent")
@@ -92,15 +100,6 @@ def _build_workflow() -> StateGraph[AgentState, None, GraphInput, AgentState]:
 @lru_cache(maxsize=1)
 def get_graph() -> CompiledStateGraph[AgentState, None, GraphInput, AgentState]:
     """Compile (once) and return the agent graph with an in-memory checkpointer."""
-    checkpointer = InMemorySaver(
-        serde=JsonPlusSerializer(
-            allowed_msgpack_modules=[
-                ("diplomka.models", "Filters"),
-                ("diplomka.models", "MeasureAgg"),
-                ("diplomka.models", "LevelFilter"),
-                ("diplomka.models", "ChartSpec"),
-                ("diplomka.models", "SqlGeneration"),
-            ]
-        )
-    )
+    allowed = [(model.__module__, model.__name__) for model in STATE_MODELS]
+    checkpointer = InMemorySaver(serde=JsonPlusSerializer(allowed_msgpack_modules=allowed))
     return _build_workflow().compile(checkpointer=checkpointer)

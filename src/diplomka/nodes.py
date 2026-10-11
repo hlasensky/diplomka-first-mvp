@@ -25,6 +25,9 @@ from diplomka.semantic_validator import format_feedback, validate_semantics
 # one more than the chart retries: the semantic validator can also send a query back
 MAX_SQL_ATTEMPTS = 3
 MAX_CHART_ATTEMPTS = 2
+# Clarification rounds before the agent gives up on a question.
+MAX_CLARIFY_ATTEMPTS = 3
+GIVE_UP_MESSAGE = "Sorry, I still don't understand your question."
 # Minimum embedding similarity for a fuzzy filter-value match to be accepted.
 MIN_MATCH_SCORE = 0.5
 
@@ -32,6 +35,11 @@ MIN_MATCH_SCORE = 0.5
 def _selected_model(config: RunnableConfig) -> str | None:
     """Runtime model override (e.g. from a UI picker), passed as config={"configurable": {"model": ...}}."""
     return config.get("configurable", {}).get("model")
+
+
+def _preview(columns: list[str], rows: list[tuple], n: int) -> str:
+    """First ``n`` result rows as one dict per line, for LLM prompts."""
+    return "\n".join(str(dict(zip(columns, row, strict=False))) for row in rows[:n])
 
 
 def user_input(state: AgentState) -> PartialAgentState:
@@ -81,8 +89,8 @@ def clarify_intent(state: AgentState, config: RunnableConfig) -> PartialAgentSta
 
 
 def _unresolved_filters(intent: Filters) -> list[LevelFilter]:
-    """Filters whose value is not in the known domain of its level (e.g. free text like "beauty
-    products" instead of a real category value). Levels without a domain are taken as-is."""
+    """Filters whose value is not in the known domain of its level (e.g. free text like "swarm
+    cell" instead of the real event type ``queencell``). Levels without a domain are taken as-is."""
     domains = get_domains()
     return [f for f in intent.filters if f.level in domains and f.value not in domains[f.level]]
 
@@ -99,12 +107,11 @@ def unclear_query(state: AgentState) -> PartialAgentState:
     """Intent could not be recognized even after clarify_intent - ends the turn
     and returns `clarification_question` to the user."""
 
-    if state["attempts"] >= 3:
-        message = "Sorry, I still don't understand your question."
+    if state["attempts"] >= MAX_CLARIFY_ATTEMPTS:
         return {
             "needs_clarification": False,
-            "clarification_question": message,
-            "messages": [AIMessage(content=message)],
+            "clarification_question": GIVE_UP_MESSAGE,
+            "messages": [AIMessage(content=GIVE_UP_MESSAGE)],
         }
     return {
         "attempts": state["attempts"] + 1,
@@ -130,11 +137,8 @@ def improve_prompt(state: AgentState) -> PartialAgentState:
     resolved: dict[tuple[str, str], str] = {}
     for f, candidates in zip(state["unresolved_filters"], state["filter_candidates"], strict=True):
         if not candidates or candidates[0][1] <= MIN_MATCH_SCORE:
-            if state["attempts"] >= 3:
-                return {
-                    "needs_clarification": False,
-                    "clarification_question": "Sorry, I still don't understand your question.",
-                }
+            if state["attempts"] >= MAX_CLARIFY_ATTEMPTS:
+                return {"needs_clarification": False, "clarification_question": GIVE_UP_MESSAGE}
             label = LAYER.levels[f.level].label
             return {
                 "attempts": state["attempts"] + 1,
@@ -278,7 +282,6 @@ def _valid_chart_generation(generation: SqlGeneration, columns: list[str]) -> bo
     arity rules that depend on chart_type (e.g. histogram needs no y, heatmap needs a z)."""
 
     if generation.chart_type is None:
-        print("No chart_type in generation")
         return False
     if generation.chart_type == "table":
         return True
@@ -290,10 +293,7 @@ def _valid_chart_generation(generation: SqlGeneration, columns: list[str]) -> bo
         return False
     if generation.chart_type in ("pie", "scatter", "box") and len(generation.y) != 1:
         return False
-    if generation.chart_type == "heatmap" and (generation.z is None or generation.z not in columns):
-        return False
-    print(f"Valid chart generation: {generation.chart_type} x={generation.x} y={generation.y} z={generation.z}")
-    return True
+    return generation.chart_type != "heatmap" or generation.z in columns
 
 
 def _source_tables(sql: str) -> list[str]:
@@ -390,8 +390,7 @@ def generate_response(state: AgentState, config: RunnableConfig) -> PartialAgent
             title=generation.title or (", ".join(generation.y) if generation.y else generation.x or ""),
         )
 
-    preview = "\n".join(str(dict(zip(columns, row, strict=False))) for row in rows[:20])
-    prompt = response_prompt(state["question"], columns, preview, _derivation_facts(state))
+    prompt = response_prompt(state["question"], columns, _preview(columns, rows, 20), _derivation_facts(state))
     content = get_llm(_selected_model(config)).invoke(prompt).content
     answer = content if isinstance(content, str) else str(content)
     # the derivation steps stay out of the history - clarify_intent only needs the answer itself
@@ -414,7 +413,7 @@ def validate_chart_spec(state: AgentState, config: RunnableConfig) -> PartialAge
     if chart_spec is None or chart_spec.chart_type == "table":
         return {"chart_validation_error": None}
 
-    preview = "\n".join(str(dict(zip(state["columns"], row, strict=False))) for row in state["rows"][:10])
+    preview = _preview(state["columns"], state["rows"], 10)
     structured_llm = get_structured_llm(ChartCritique, _selected_model(config))
     critique = structured_llm.invoke(
         [
@@ -472,9 +471,7 @@ def route_intent(state: AgentState) -> str:
 
 
 def route_clarification(state: AgentState) -> str:
-    if state["needs_clarification"]:
-        return "user_input"
-    return "proceed"
+    return "user_input" if state["needs_clarification"] else "proceed"
 
 
 def route_sql_validation(state: AgentState) -> str:

@@ -7,69 +7,29 @@ It does not check the exact wording of `answer` (that's up to the LLM), only the
 `intent` and execution success.
 """
 
-from langchain_core.runnables import RunnableConfig
-
 from diplomka.config import DATASET
-from diplomka.eval import MULTI_TURN_CASES, TEST_CASES, check
-from diplomka.graph import get_graph
-
-graph = get_graph()
+from diplomka.eval import MULTI_TURN_CASES, TEST_CASES, run_case, run_multi_turn_case
 
 
-def run_multi_turn() -> bool:
-    passed = 0
-    for i, case in enumerate(MULTI_TURN_CASES, 1):
-        thread: RunnableConfig = {"configurable": {"thread_id": f"eval-multiturn-{i}"}}
-        results = [graph.invoke({"question": q}, config=thread) for q in case["questions"]]
-        result = results[-1]
-
-        intent = result.get("intent")
-        mismatches = check(intent, case["expected_last"])
-        if result.get("validation_error"):
-            mismatches.append(f"SQL error: {result['validation_error']}")
-        if result.get("rows") == results[0].get("rows"):
-            mismatches.append("rows same as in the first turn - the second query probably didn't run with a new intent")
-
-        ok = not mismatches
-        passed += ok
-        status = "OK " if ok else "FAIL"
-        print(f"[{status}] multi-turn {i}. {' -> '.join(case['questions'])}")
-        for m in mismatches:
-            print(f"        - {m}")
-
-    print(f"Multi-turn accuracy: {passed}/{len(MULTI_TURN_CASES)}")
-    return passed == len(MULTI_TURN_CASES)
+def _report(label: str, mismatches: list[str]) -> bool:
+    print(f"[{'FAIL' if mismatches else 'OK '}] {label}")
+    for m in mismatches:
+        print(f"        - {m}")
+    return not mismatches
 
 
 def main() -> None:
     print(f"Dataset: {DATASET}\n")
-    passed = 0
-    for i, case in enumerate(TEST_CASES, 1):
-        thread: RunnableConfig = {"configurable": {"thread_id": f"eval-{i}"}}
-        result = graph.invoke({"question": case["question"]}, config=thread)
+    passed = sum(
+        _report(f"{i:2d}. {case['question']}", run_case(case, f"eval-{i}")) for i, case in enumerate(TEST_CASES, 1)
+    )
+    print(f"\nAccuracy: {passed}/{len(TEST_CASES)} ({100 * passed / len(TEST_CASES):.0f}%)\n")
 
-        intent = result.get("intent")
-        mismatches = check(intent, case["expected"])
-
-        exec_ok = not case["expected"].get("unclear") and result.get("validation_error") is None
-        if case["expected"].get("unclear"):
-            exec_ok = True  # unclear queries never reach execute_query at all
-
-        ok = not mismatches and exec_ok
-        passed += ok
-
-        status = "OK " if ok else "FAIL"
-        print(f"[{status}] {i:2d}. {case['question']}")
-        if mismatches:
-            for m in mismatches:
-                print(f"        - {m}")
-        if not case["expected"].get("unclear") and result.get("validation_error"):
-            print(f"        - SQL error: {result['validation_error']}")
-
-    print(f"\nAccuracy: {passed}/{len(TEST_CASES)} ({100 * passed / len(TEST_CASES):.0f}%)")
-
-    print()
-    run_multi_turn()
+    passed = sum(
+        _report(f"multi-turn {i}. {' -> '.join(case['questions'])}", run_multi_turn_case(case, f"eval-multiturn-{i}"))
+        for i, case in enumerate(MULTI_TURN_CASES, 1)
+    )
+    print(f"Multi-turn accuracy: {passed}/{len(MULTI_TURN_CASES)}")
 
 
 if __name__ == "__main__":

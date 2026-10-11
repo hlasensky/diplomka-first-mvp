@@ -1,6 +1,5 @@
-"""diplomka - an LLM analytics agent (LangGraph + DuckDB) over the Olist dataset."""
+"""diplomka - an LLM analytics agent (LangGraph + DuckDB) over dataset packs described by a YAML semantic layer."""
 
 from diplomka.graph import get_graph
 
-__version__ = "0.1.0"
-__all__ = ["get_graph", "__version__"]
+__all__ = ["get_graph"]

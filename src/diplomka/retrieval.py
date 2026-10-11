@@ -2,7 +2,7 @@
 
 For a level with a known domain (``domain: from_data`` in the semantic layer) the vector store
 indexes its values from DuckDB plus every glossary term/synonym that maps to one of them, so
-both "beauty products" -> ``beleza_saude`` and "swarm cell" -> ``queencell`` resolve.
+e.g. "swarm cell" resolves to ``queencell``.
 
 The embedding model and the per-level vector stores are built lazily on first use (not at
 import time), keeping ``import diplomka`` cheap and side-effect free.

@@ -7,7 +7,7 @@ numbers live in papers) are listed in docs/data.md and added by hand.
 
     uv run --with remotezip python scripts/fetch_multi_senger.py [source ...]
 
-Sources: bob_minute, geo, weather, phenology, ndvi, faostat, eurostat, crops (default: all).
+Sources: bob_minute, geo, weather, phenology, ndvi, faostat, crops (default: all).
 `meta` only refreshes descriptions and licences in MANIFEST.json.
 Re-running skips files that already exist.
 """
@@ -82,13 +82,6 @@ META = {
         "license": "CC BY 4.0 (FAO statistical database terms of use)",
         "license_url": "https://www.fao.org/contact-us/terms/db-terms-of-use",
         "citation": "FAO (2025), FAOSTAT: Crops and livestock products",
-    },
-    "eurostat": {
-        "description": "Eurostat ef_lsk_bees: beehives on farms by NUTS 2 region (farm structure survey years only), "
-                       "Germany.",
-        "license": "Eurostat reuse policy - free reuse with source acknowledgement (CC BY 4.0)",
-        "license_url": "https://ec.europa.eu/eurostat/help/copyright-notice",
-        "citation": "Eurostat (2025), Beehives on farms by NUTS 2 region (ef_lsk_bees)",
     },
     "crops": {
         "description": "Regionalstatistik, districts (Kreise und krfr. Städte), manual CSV exports. "
@@ -277,15 +270,6 @@ def faostat() -> None:
     manifest_add("faostat", url, [dest], "FAOSTAT QCL normalized, filtered to Germany, items Bees (stocks = hives) + Natural honey")
 
 
-def eurostat() -> None:
-    url = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ef_lsk_bees?geo=DE&lang=en"
-    dest = RAW / "eurostat" / "ef_lsk_bees_DE.json"
-    if not dest.exists():
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_bytes(get(url))
-    manifest_add("eurostat", url, [dest], "Beehives on farms (farm structure survey years only), Germany")
-
-
 def crops() -> None:
     """Manual source: Regionalstatistik needs an account for its API, so the CSVs are exported in the web UI
     (www.regionalstatistik.de, Werteabruf -> CSV) and saved to data/raw/multi-senger/crops/<table>.csv."""
@@ -298,7 +282,7 @@ def crops() -> None:
 
 
 SOURCES = {"bob_minute": bob_minute, "geo": geo, "weather": weather, "phenology": phenology,
-           "ndvi": ndvi, "faostat": faostat, "eurostat": eurostat, "crops": crops}
+           "ndvi": ndvi, "faostat": faostat, "crops": crops}
 
 if __name__ == "__main__":
     RAW.mkdir(parents=True, exist_ok=True)

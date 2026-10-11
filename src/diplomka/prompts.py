@@ -30,30 +30,51 @@ def _dataset_header() -> str:
     return "\n".join(lines)
 
 
-def _metrics_section() -> str:
-    if not LAYER.metrics:
-        return "(none - use `measures`)"
-    return "\n".join(
-        f"- {name}: {m.get('label', name)}" + (f" [{m['unit']}]" if m.get("unit") else "")
-        for name, m in LAYER.metrics.items()
-    )
+# The section helpers render a short form for the intent prompt and, with sql=True, the
+# detailed form (SQL expressions, columns, additivity, tables) for the SQL prompt.
 
 
-def _measures_section() -> str:
-    return "\n".join(
-        f"- {m.measure_id}: {m.label}{f' [{m.unit}]' if m.unit else ''}; agg: {', '.join(sorted(m.allowed_aggs))}"
-        for m in LAYER.measures.values()
-    )
+def _metrics_section(sql: bool = False) -> str:
+    lines = []
+    for name, m in LAYER.metrics.items():
+        if sql:
+            table = f" on {m['table']}" if m.get("table") else ""
+            note = f" - {m['note']}" if m.get("note") else ""
+            lines.append(f"- {name}: {m['sql']}{table}{note}")
+        else:
+            lines.append(f"- {name}: {m.get('label', name)}" + (f" [{m['unit']}]" if m.get("unit") else ""))
+    return "\n".join(lines) or ("(none)" if sql else "(none - use `measures`)")
 
 
-def _levels_section() -> str:
+def _measures_section(sql: bool = False) -> str:
+    lines = []
+    for m in LAYER.measures.values():
+        unit = f" [{m.unit}]" if m.unit else ""
+        if sql:
+            additivity = "; ".join(f"{dim}: {', '.join(aggs)}" for dim, aggs in m.additivity.items())
+            line = f"- {m.measure_id} = column {', '.join(m.columns)} in {', '.join(m.tables)}{unit}"
+            line += f"; allowed aggregations by dimension: {additivity}"
+            lines.append(line + (f" - {m.description.strip()}" if m.description else ""))
+        else:
+            lines.append(f"- {m.measure_id}: {m.label}{unit}; agg: {', '.join(sorted(m.allowed_aggs))}")
+    return "\n".join(lines)
+
+
+def _levels_section(sql: bool = False) -> str:
     lines = []
     for dim_name, dimension in LAYER.raw["dimensions"].items():
-        lines.append(f"{dim_name}:")
+        if sql:
+            hierarchies = "; ".join(
+                f"{h}: {' > '.join(path)}" for h, path in (dimension.get("hierarchies") or {}).items()
+            )
+            lines.append(f"{dim_name} (table {dimension['table']}, key {dimension.get('key', '-')}) {hierarchies}")
+        else:
+            lines.append(f"{dim_name}:")
         for level_name in dimension.get("levels") or {}:
             level = LAYER.levels[level_name]
+            expr = f" = {level.expr}" if sql and level.expr else ""
             note = f" ({level.note})" if level.note else ""
-            lines.append(f"  - {level.name}: {level.label}{note}{_domain_hint(level.name)}")
+            lines.append(f"  - {level.name}{expr}: {level.label}{note}{_domain_hint(level.name)}")
     return "\n".join(lines)
 
 
@@ -141,41 +162,6 @@ def _joins_section() -> str:
     return "\n".join(lines) or "(single table, no joins)"
 
 
-def _sql_metrics_section() -> str:
-    lines = []
-    for name, m in LAYER.metrics.items():
-        table = f" on {m['table']}" if m.get("table") else ""
-        note = f" - {m['note']}" if m.get("note") else ""
-        lines.append(f"- {name}: {m['sql']}{table}{note}")
-    return "\n".join(lines) or "(none)"
-
-
-def _sql_measures_section() -> str:
-    lines = []
-    for m in LAYER.measures.values():
-        additivity = "; ".join(f"{dim}: {', '.join(aggs)}" for dim, aggs in m.additivity.items())
-        line = f"- {m.measure_id} = column {', '.join(m.columns)} in {', '.join(m.tables)}"
-        line += f" [{m.unit}]" if m.unit else ""
-        line += f"; allowed aggregations by dimension: {additivity}"
-        if m.description:
-            line += f" - {m.description.strip()}"
-        lines.append(line)
-    return "\n".join(lines)
-
-
-def _sql_levels_section() -> str:
-    lines = []
-    for dim_name, dimension in LAYER.raw["dimensions"].items():
-        hierarchies = "; ".join(f"{h}: {' > '.join(path)}" for h, path in (dimension.get("hierarchies") or {}).items())
-        lines.append(f"{dim_name} (table {dimension['table']}, key {dimension.get('key', '-')}) {hierarchies}")
-        for level_name in dimension.get("levels") or {}:
-            level = LAYER.levels[level_name]
-            expr = f" = {level.expr}" if level.expr else ""
-            note = f" ({level.note})" if level.note else ""
-            lines.append(f"  - {level.name}{expr}: {level.label}{note}{_domain_hint(level.name)}")
-    return "\n".join(lines)
-
-
 def _rules_section() -> str:
     return "\n".join(f"- [{r['id']}] {r['text']}" for r in LAYER.raw.get("rules") or []) or "(none)"
 
@@ -196,9 +182,9 @@ def sql_prompt() -> str:
         f"== TABLES AND COLUMNS ==\n{_tables_section()}\n\n"
         f"== JOINS ==\n{_joins_section()}\n\n"
         f"== NAMED METRICS (use these exact SQL expressions when they match the intent) ==\n"
-        f"{_sql_metrics_section()}\n\n"
-        f"== MEASURES ==\n{_sql_measures_section()}\n\n"
-        f"== DIMENSIONS AND LEVELS ==\n{_sql_levels_section()}\n\n"
+        f"{_metrics_section(sql=True)}\n\n"
+        f"== MEASURES ==\n{_measures_section(sql=True)}\n\n"
+        f"== DIMENSIONS AND LEVELS ==\n{_levels_section(sql=True)}\n\n"
         f"== SEMANTIC RULES ==\n{_rules_section()}\n\n"
         f"== EXAMPLE QUERIES ==\n{_examples_section()}\n\n"
         "== SQL RULES ==\n"
