@@ -146,18 +146,35 @@ def _tables_section() -> str:
 
 def _joins_section() -> str:
     lines = []
-    for join in LAYER.raw.get("joins") or []:
-        if join.get("type") == "asof":
+    for join in LAYER.joins.values():
+        source, target = join.from_.table, join.to.table
+        details = [join.cardinality or "", "optional: LEFT JOIN" if join.optional else ""]
+        if join.via:
+            details.insert(0, "via " + ", ".join(LAYER.joins[v].to.table for v in join.via))
+        details = ", ".join(detail for detail in details if detail)
+        if join.kind == "asof":
             # Rendered as literal SQL: a prose form ("ASOF JOIN a with b ON ...") made models emit
             # "ASOF JOIN ON ..." without the right-hand table, a DuckDB parser error.
-            line = f"- FROM {join['left']} ASOF [LEFT] JOIN {join['right']} ON {join['on']}"
-        elif join.get("on"):
-            # Fact-to-fact join through a shared dimension: the condition names the bridge columns.
-            line = f"- {join['left']} JOIN {join['right']} ON {join['on']} ({join.get('cardinality', '')})"
+            line = f"- FROM {source} ASOF [LEFT] JOIN {target} ON {join.condition_sql}"
+            line += f" ({details})" if details else ""
+        elif join.kind == "bridge" and join.bridge:
+            b = join.bridge
+            into = " AND ".join(
+                f"{source}.{c} = {b.table}.{bc}" for c, bc in zip(join.from_.columns, b.from_columns, strict=True)
+            )
+            out = " AND ".join(
+                f"{b.table}.{bc} = {target}.{c}" for bc, c in zip(b.to_columns, join.to.columns, strict=True)
+            )
+            line = (
+                f"- {source} JOIN {b.table} ON {into} JOIN {target} ON {out} ({details}) - weighted: "
+                f"multiply additive measures by {b.table}.{b.weight} (sums to 1 per {source} row)"
+            )
+        elif join.kind in {"range", "drill_across"}:
+            line = f"- {source} JOIN {target} ON {join.condition_sql} ({details})"
         else:
-            line = f"- {join['left']} = {join['right']} ({join.get('cardinality', '')})"
-        if join.get("note"):
-            line += f" - {join['note']}"
+            line = f"- {join.condition_sql} ({details})"
+        if join.note:
+            line += f" - {join.note}"
         lines.append(line)
     return "\n".join(lines) or "(single table, no joins)"
 

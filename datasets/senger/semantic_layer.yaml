@@ -60,29 +60,35 @@ tables:
   dim_event_type: {kind: dimension}
 
 joins:
-  - {left: fact_hive_hourly.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
-  - {left: fact_hive_hourly.time_key, right: dim_time.time_key, cardinality: many_to_one}
-  - {left: fact_temperature.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
-  - {left: fact_temperature.time_key, right: dim_time.time_key, cardinality: many_to_one}
-  - {left: fact_temperature.sensor_pos, right: dim_sensor_position.sensor_pos, cardinality: many_to_one}
-  - {left: agg_colony_daily.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
-  - {left: agg_colony_daily.date, right: dim_time.date, cardinality: one_to_many, note: "aggregate dim_time to date first"}
-  - {left: fact_event.colony_key, right: dim_colony.colony_key, cardinality: many_to_one}
-  - {left: fact_event.event_type, right: dim_event_type.event_type, cardinality: many_to_one}
-  - left: "date_trunc('hour', fact_event.event_ts)"
-    right: dim_time.time_key
+  - {id: hourly_colony, kind: fk, from: {table: fact_hive_hourly, columns: [colony_key]}, to: {table: dim_colony, columns: [colony_key]}, cardinality: many_to_one}
+  - {id: hourly_time, kind: fk, from: {table: fact_hive_hourly, columns: [time_key]}, to: {table: dim_time, columns: [time_key]}, cardinality: many_to_one}
+  - {id: temperature_colony, kind: fk, from: {table: fact_temperature, columns: [colony_key]}, to: {table: dim_colony, columns: [colony_key]}, cardinality: many_to_one}
+  - {id: temperature_time, kind: fk, from: {table: fact_temperature, columns: [time_key]}, to: {table: dim_time, columns: [time_key]}, cardinality: many_to_one}
+  - {id: temperature_sensor, kind: fk, from: {table: fact_temperature, columns: [sensor_pos]}, to: {table: dim_sensor_position, columns: [sensor_pos]}, cardinality: many_to_one}
+  - {id: daily_colony, kind: fk, from: {table: agg_colony_daily, columns: [colony_key]}, to: {table: dim_colony, columns: [colony_key]}, cardinality: many_to_one}
+  - {id: daily_time, kind: fk, from: {table: agg_colony_daily, columns: [date]}, to: {table: dim_time, columns: [date]}, cardinality: one_to_many, note: "aggregate dim_time to date first"}
+  - {id: event_colony, kind: fk, from: {table: fact_event, columns: [colony_key]}, to: {table: dim_colony, columns: [colony_key]}, cardinality: many_to_one}
+  - {id: event_type, kind: fk, from: {table: fact_event, columns: [event_type]}, to: {table: dim_event_type, columns: [event_type]}, cardinality: many_to_one}
+  - id: event_time
+    kind: fk
+    from: {table: fact_event, expr: "date_trunc('hour', fact_event.event_ts)"}
+    to: {table: dim_time, columns: [time_key]}
     cardinality: many_to_one
     note: "dim_time has one row per HOUR: never join it on date, that multiplies rows by 24; or use year(event_ts) etc. directly"
-  - {left: dim_colony.cell_id, right: dim_cell.cell_id, cardinality: many_to_one}
-  - left: fact_hive_hourly
-    right: fact_event
-    type: asof
-    on: "fact_hive_hourly.colony_key = fact_event.colony_key AND fact_hive_hourly.time_key >= fact_event.event_ts"
+  - {id: colony_cell, kind: rollup, from: {table: dim_colony, columns: [cell_id]}, to: {table: dim_cell, columns: [cell_id]}, cardinality: many_to_one}
+  - id: hourly_event_asof
+    kind: asof
+    from: {table: fact_hive_hourly, columns: [colony_key], time: time_key}
+    to: {table: fact_event, columns: [colony_key], time: event_ts}
+    direction: ">="
+    cardinality: many_to_one
     note: "The only allowed row-level join between these two facts; alternatively use EXISTS."
-  - left: agg_colony_daily
-    right: fact_event
-    type: asof
-    on: "agg_colony_daily.colony_key = fact_event.colony_key AND agg_colony_daily.date >= fact_event.event_ts::DATE"
+  - id: daily_event_asof
+    kind: asof
+    from: {table: agg_colony_daily, columns: [colony_key], time: date}
+    to: {table: fact_event, columns: [colony_key], time_expr: "fact_event.event_ts::DATE"}
+    direction: ">="
+    cardinality: many_to_one
 
 dimensions:
   time:
