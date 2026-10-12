@@ -2,11 +2,11 @@
 
 import pytest
 
-from diplomka.config import DATASET, DATASETS_DIR
+from diplomka.config import DATASETS_DIR
 from diplomka.schema import SemanticLayer
 from diplomka.semantic_validator import validate_semantics
 
-LAYER = SemanticLayer.from_yaml(DATASETS_DIR / DATASET / "semantic_layer.yaml")
+LAYER = SemanticLayer.from_yaml(DATASETS_DIR / "senger" / "semantic_layer.yaml")
 DOMAINS = {
     "state": {"Bremen", "Nordrhein-Westfalen"},
     "event_type": {"queencell", "swarming", "died", "feeding", "honey", "treatment"},
@@ -57,3 +57,27 @@ def test_invalid_queries(sql, expected):
 
 def test_unparseable_sql_is_not_checked():
     assert rules("SELECT FROM WHERE (((") == []
+
+
+MULTI = SemanticLayer.from_yaml(DATASETS_DIR / "multi-senger" / "semantic_layer.yaml")
+TODO = pytest.mark.xfail(strict=True, reason="validator lacks this check")
+
+@pytest.mark.parametrize("sql, expected", [
+    ("SELECT h.colony_key, sum(h.weight_gain_kg) FROM fact_hive_hourly h "
+     "JOIN fact_event e ON h.colony_key = e.colony_key GROUP BY 1", ["R2"]),
+    pytest.param("SELECT date, sum(precip_mm) FROM agg_weather_daily GROUP BY date", ["R1"], marks=TODO),
+    pytest.param("SELECT district_id, sum(area_ha) FROM fact_crop_area GROUP BY district_id", ["R1"], marks=TODO),
+    pytest.param("SELECT t.hour, avg(d.t_center_avg) FROM agg_colony_daily d "
+                 "JOIN dim_time t ON d.date = t.date GROUP BY 1", ["R7"], marks=TODO),
+])
+def test_multi_senger_invalid(sql, expected):
+    assert [v.rule for v in validate_semantics(sql, MULTI, {})] == expected
+    
+@pytest.mark.parametrize("sql", [
+    # sum over time within one cell: allowed (precip_mm time: sum)
+    "SELECT cell_id, sum(precip_mm) FROM agg_weather_daily GROUP BY cell_id",
+    # sum over districts of one crop in each year: allowed (area_ha geography: sum)
+    "SELECT year, sum(area_ha) FROM fact_crop_area WHERE crop = 'winter_rape' GROUP BY year",
+])
+def test_multi_senger_valid(sql):
+    assert validate_semantics(sql, MULTI, {}) == []

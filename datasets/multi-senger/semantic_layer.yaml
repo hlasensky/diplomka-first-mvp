@@ -1133,7 +1133,7 @@ examples:
           ASOF LEFT JOIN agg_event_daily AS e
             ON d.colony_key = e.colony_key AND d.date >= e.date
           WHERE d.n_hours >= 20
-          ORDER BY d.max_hourly_drop_raw_kg
+          ORDER BY d.max_hourly_drop_raw_kg, d.colony_key, d.date
           LIMIT 20
     - id: EX4
       question: "How variable was the center temperature in the three weeks before recorded swarming events?"
