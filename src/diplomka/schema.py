@@ -326,6 +326,19 @@ class SemanticLayer:
     def starters(self) -> list[dict]:
         return self.raw.get("starters") or []
 
+    def allowed_aggs(self, measure_id: str, aggregated_over: set[str]) -> frozenset[str]:
+        """Aggregation functions allowed for one measure when the dimensions in `aggregated_over` collapse.
+        """
+        measure = self.measures[measure_id]
+        unknown = aggregated_over - set(self.raw["dimensions"])
+        if unknown:
+            raise ValueError(f"Unknown dimensions {sorted(unknown)}; known: {sorted(self.raw['dimensions'])}")
+        if not aggregated_over:
+            return measure.allowed_aggs
+        everywhere = set(measure.additivity.get("all") or ())
+        per_dimension = [everywhere | set(measure.additivity.get(dim) or ()) for dim in aggregated_over]
+        return frozenset(set.intersection(*per_dimension))
+
     def load_domains(self, con) -> dict[str, set[str]]:
         """Read the allowed values of every level marked `domain: from_data` from DuckDB.
 
