@@ -59,6 +59,22 @@ SELECT * FROM (VALUES
     ('treatment', 'beekeeper', 'treatment')
 ) AS t(event_type, cause_class, label);
 
+-- One row per colony and inspection day: the target of the daily ASOF join. Several events of one
+-- inspection (e.g. honey + queencell) share a day, so an ASOF join straight to fact_event would
+-- keep one of them at random.
+CREATE OR REPLACE TABLE agg_event_daily AS
+SELECT
+    e.colony_key,
+    e.event_ts::DATE                                      AS date,
+    count(*)                                              AS n_events,
+    list(DISTINCT e.event_type ORDER BY e.event_type)     AS event_types,
+    list(DISTINCT t.cause_class ORDER BY t.cause_class)   AS cause_classes,
+    min(e.event_ts)                                       AS first_event_ts,
+    max(e.event_ts)                                       AS last_event_ts
+FROM fact_event AS e
+JOIN dim_event_type AS t USING (event_type)
+GROUP BY e.colony_key, e.event_ts::DATE;
+
 -- ---------------------------------------------------------------------------
 -- 3) TIME
 -- ---------------------------------------------------------------------------
@@ -81,9 +97,9 @@ SELECT
 FROM (
     SELECT unnest(generate_series(lo, hi, INTERVAL 1 HOUR)) AS ts
     FROM (
-        SELECT date_trunc('hour', min(ts)) AS lo,
-               date_trunc('hour', max(ts)) AS hi
-        FROM stg_h
+        -- inspections start before and end after the sensor data: cover both
+        SELECT date_trunc('hour', least((SELECT min(ts) FROM stg_h), (SELECT min(event_ts) FROM fact_event)))    AS lo,
+               date_trunc('hour', greatest((SELECT max(ts) FROM stg_h), (SELECT max(event_ts) FROM fact_event))) AS hi
     )
 );
 

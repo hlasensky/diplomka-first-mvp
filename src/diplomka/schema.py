@@ -32,6 +32,8 @@ to a table reached through the joins listed in ``via``. A key that is not a plai
   such fact pairs must never be joined with a plain JOIN (rule R2)
 
 ``optional: true`` marks a key that may be NULL or unmatched (use LEFT JOIN).
+``requires_filter`` lists ``to`` columns that the query must fix to one value (in the ON clause or
+a subquery, not in WHERE after the join): only together with them do the keys identify one row.
 """
 
 from __future__ import annotations
@@ -75,7 +77,9 @@ class Measure:
 
 
 JOIN_KINDS = frozenset({"fk", "rollup", "bridge", "range", "drill_across", "asof"})
-JOIN_KEYS = frozenset({"id", "kind", "from", "to", "via", "bridge", "cardinality", "optional", "direction", "note"})
+JOIN_KEYS = frozenset(
+    {"id", "kind", "from", "to", "via", "bridge", "cardinality", "optional", "requires_filter", "direction", "note"}
+)
 SIDE_KEYS = frozenset({"table", "columns", "expr", "time", "time_expr", "start", "end"})
 CARDINALITIES = frozenset({"many_to_one", "one_to_many", "many_to_many", "one_to_one"})
 ASOF_DIRECTIONS = frozenset({">=", "<=", ">", "<"})
@@ -121,6 +125,7 @@ class Join:
     bridge: Bridge | None = None
     cardinality: str | None = None
     optional: bool = False
+    requires_filter: tuple[str, ...] = ()
     direction: str | None = None
     note: str | None = None
 
@@ -185,6 +190,7 @@ def _parse_join(spec: dict) -> Join:
         else None,
         cardinality=spec.get("cardinality"),
         optional=bool(spec.get("optional")),
+        requires_filter=tuple(spec.get("requires_filter") or ()),
         direction=spec.get("direction"),
         note=spec.get("note"),
     )
@@ -225,6 +231,8 @@ def _check_join(join: Join, joins: dict[str, Join], tables: set[str]) -> None:
         join.direction not in ASOF_DIRECTIONS or not (join.from_.time_sql and join.to.time_sql)
     ):
         raise ValueError(f"{where}: an asof join needs `time` on both sides and a direction {sorted(ASOF_DIRECTIONS)}")
+    if any("." in column for column in join.requires_filter):
+        raise ValueError(f"{where}: requires_filter names plain columns of {join.to.table}")
     if join.kind == "drill_across" and not join.via:
         raise ValueError(f"{where}: a drill_across join needs `via`")
 

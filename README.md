@@ -6,8 +6,8 @@ The code is dataset-agnostic: everything specific to one dataset lives in a *dat
 
 | Pack     | Data                                                                 | Model                        |
 |----------|----------------------------------------------------------------------|------------------------------|
-| `senger` (default) | BeeObserver hive sensors, 78 colonies, 2019-2022 ([Senger et al. 2024](https://doi.org/10.5281/zenodo.10407693)) | star schema, 9 tables/views |
-| `multi-senger` | BeeObserver at 1-minute and hourly resolution + context: ERA5 weather, MODIS NDVI, DWD flowering onset, crops by district, national hives and winter losses | fact constellation, 26 tables/views, district bridge table |
+| `senger` (default) | BeeObserver hive sensors, 78 colonies, 2019-2022 ([Senger et al. 2024](https://doi.org/10.5281/zenodo.10407693)) | star schema, 10 tables/views |
+| `multi-senger` | BeeObserver at 1-minute and hourly resolution + context: ERA5 weather, MODIS NDVI, DWD flowering onset, crops by district, national hives and winter losses | fact constellation, 27 tables/views, district bridge table |
 
 ## Architecture
 

@@ -53,6 +53,13 @@ tables:
     kind: factless_fact
     grain: [colony_key, event_ts, event_type]
     description: Events recorded by beekeepers during inspections; incomplete.
+  agg_event_daily:
+    kind: aggregate
+    grain: [colony_key, date]
+    derived_from: fact_event
+    description: >
+      One row per colony and inspection day with the list of event types (event_types,
+      cause_classes); the target of the daily ASOF join, which keeps every event of the day.
   dim_time: {kind: dimension}
   dim_colony: {kind: dimension}
   dim_cell: {kind: dimension}
@@ -75,20 +82,26 @@ joins:
     to: {table: dim_time, columns: [time_key]}
     cardinality: many_to_one
     note: "dim_time has one row per HOUR: never join it on date, that multiplies rows by 24; or use year(event_ts) etc. directly"
+  - {id: event_daily_colony, kind: fk, from: {table: agg_event_daily, columns: [colony_key]}, to: {table: dim_colony, columns: [colony_key]}, cardinality: many_to_one}
   - {id: colony_cell, kind: rollup, from: {table: dim_colony, columns: [cell_id]}, to: {table: dim_cell, columns: [cell_id]}, cardinality: many_to_one}
   - id: hourly_event_asof
     kind: asof
     from: {table: fact_hive_hourly, columns: [colony_key], time: time_key}
     to: {table: fact_event, columns: [colony_key], time: event_ts}
+    requires_filter: [event_type]
     direction: ">="
     cardinality: many_to_one
-    note: "The only allowed row-level join between these two facts; alternatively use EXISTS."
+    note: >
+      Latest event of ONE type, e.g. ON ... AND fact_event.event_type = 'swarming'; without the
+      type filter one of several events at the same time is picked at random. For "was there an
+      event in the window" use EXISTS instead.
   - id: daily_event_asof
     kind: asof
     from: {table: agg_colony_daily, columns: [colony_key], time: date}
-    to: {table: fact_event, columns: [colony_key], time_expr: "fact_event.event_ts::DATE"}
+    to: {table: agg_event_daily, columns: [colony_key], time: date}
     direction: ">="
     cardinality: many_to_one
+    note: "latest inspection day with all its event types; for event windows use EXISTS on fact_event"
 
 dimensions:
   time:
@@ -256,7 +269,7 @@ metrics:
 
 rules:
   - {id: R1, enforced: true, text: "Aggregate every measure only with the functions listed in its additivity; temperatures, humidity and pressure are never summed."}
-  - {id: R2, enforced: true, text: "Join fact_hive_hourly or agg_colony_daily with fact_event only via ASOF JOIN or EXISTS; a plain JOIN multiplies rows (fan trap)."}
+  - {id: R2, enforced: true, text: "Join fact_hive_hourly or agg_colony_daily with fact_event or agg_event_daily only via ASOF JOIN or EXISTS; a plain JOIN multiplies rows (fan trap). ASOF to fact_event only for one event_type fixed in the ON clause; the latest inspection of any type comes from agg_event_daily; whether an event happened in a time window is an EXISTS on fact_event."}
   - {id: R3, enforced: true, text: "Filter dimension attributes only with values from their domain."}
   - {id: R4, enforced: false, text: "Do not compare weight_kg levels between colonies; compare weight gains."}
   - {id: R5, enforced: false, text: "Exclude days with n_hours < 20 from daily analyses."}
@@ -294,11 +307,10 @@ examples:
     pattern: asof_event_context
     sql: |
       SELECT d.colony_key, d.date, d.max_hourly_drop_raw_kg,
-             e.event_type, e.event_ts, et.cause_class
+             e.date AS inspection_date, e.event_types, e.cause_classes
       FROM agg_colony_daily AS d
-      ASOF LEFT JOIN fact_event AS e
-        ON d.colony_key = e.colony_key AND d.date >= e.event_ts::DATE
-      LEFT JOIN dim_event_type AS et ON e.event_type = et.event_type
+      ASOF LEFT JOIN agg_event_daily AS e
+        ON d.colony_key = e.colony_key AND d.date >= e.date
       WHERE d.n_hours >= 20
       ORDER BY d.max_hourly_drop_raw_kg
       LIMIT 20

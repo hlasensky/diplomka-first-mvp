@@ -149,6 +149,10 @@ def _joins_section() -> str:
     for join in LAYER.joins.values():
         source, target = join.from_.table, join.to.table
         details = [join.cardinality or "", "optional: LEFT JOIN" if join.optional else ""]
+        if join.requires_filter:
+            details.append(
+                f"only with one value of {', '.join(join.requires_filter)} filtered in ON or a subquery, not in WHERE"
+            )
         if join.via:
             details.insert(0, "via " + ", ".join(LAYER.joins[v].to.table for v in join.via))
         details = ", ".join(detail for detail in details if detail)

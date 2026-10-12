@@ -178,6 +178,22 @@ SELECT * FROM (VALUES
     ('treatment', 'beekeeper', 'treatment')
 ) AS t(event_type, cause_class, label);
 
+-- One row per colony and inspection day: the target of the daily ASOF join. Several events of one
+-- inspection (e.g. honey + queencell) share a day, so an ASOF join straight to fact_event would
+-- keep one of them at random.
+CREATE OR REPLACE TABLE agg_event_daily AS
+SELECT
+    e.colony_key,
+    e.event_ts::DATE                                      AS date,
+    count(*)                                              AS n_events,
+    list(DISTINCT e.event_type ORDER BY e.event_type)     AS event_types,
+    list(DISTINCT t.cause_class ORDER BY t.cause_class)   AS cause_classes,
+    min(e.event_ts)                                       AS first_event_ts,
+    max(e.event_ts)                                       AS last_event_ts
+FROM fact_event AS e
+JOIN dim_event_type AS t USING (event_type)
+GROUP BY e.colony_key, e.event_ts::DATE;
+
 -- ---------------------------------------------------------------------------
 -- 4) WEATHER: Open-Meteo archive (ERA5), hourly, UTC, one file per cell (3 metadata lines).
 --    Radiation is the mean of the preceding hour; temperature is instantaneous.
@@ -356,7 +372,7 @@ SELECT * FROM (VALUES
 ) AS t(plant_id, plant_de, plant, plant_group, flow_period, is_bee_forage);
 
 CREATE OR REPLACE TABLE dim_station AS
-SELECT
+SELECT DISTINCT
     trim(column00)::INTEGER           AS station_id,
     trim(column01)                    AS station_name,
     trim(column02)::DOUBLE            AS lat,
@@ -590,12 +606,15 @@ SELECT * FROM (VALUES
 -- ---------------------------------------------------------------------------
 CREATE OR REPLACE TABLE dim_date AS
 WITH r AS (
+    -- every fact that joins dim_date must fall inside the range (inspections run into 2023)
     SELECT least((SELECT min(ts)::DATE FROM stg_m),
                  (SELECT min(time_key)::DATE FROM fact_weather),
-                 (SELECT min(date) FROM fact_vegetation))      AS lo,
+                 (SELECT min(date) FROM fact_vegetation),
+                 (SELECT min(event_ts)::DATE FROM fact_event))     AS lo,
            greatest((SELECT max(ts)::DATE FROM stg_m),
                     (SELECT max(time_key)::DATE FROM fact_weather),
-                    (SELECT max(date) FROM fact_vegetation))   AS hi
+                    (SELECT max(date) FROM fact_vegetation),
+                    (SELECT max(event_ts)::DATE FROM fact_event))  AS hi
 ), d AS (
     SELECT unnest(generate_series(lo, hi, INTERVAL 1 DAY))::DATE AS date FROM r
 )
@@ -687,7 +706,14 @@ SELECT * FROM (
     UNION ALL SELECT 'daily facts -> dim_date',
            (SELECT count(*) FROM (
                 SELECT date FROM agg_colony_daily UNION ALL SELECT date FROM agg_weather_daily
-                UNION ALL SELECT date FROM fact_vegetation) x ANTI JOIN dim_date USING (date))
+                UNION ALL SELECT date FROM fact_vegetation UNION ALL SELECT date FROM agg_event_daily) x
+            ANTI JOIN dim_date USING (date))
+    UNION ALL SELECT 'agg_event_daily grain',
+           (SELECT count(*) FROM (SELECT colony_key, date FROM agg_event_daily GROUP BY ALL HAVING count(*) > 1))
+    UNION ALL SELECT 'agg_event_daily keeps every event',
+           (SELECT abs((SELECT sum(n_events) FROM agg_event_daily) - (SELECT count(*) FROM fact_event)))
+    UNION ALL SELECT 'fact_event -> dim_date',
+           (SELECT count(*) FROM fact_event e ANTI JOIN dim_date d ON d.date = e.event_ts::DATE)
     UNION ALL SELECT 'fact_weather grain',
            (SELECT count(*) FROM (SELECT cell_id, time_key FROM fact_weather GROUP BY ALL HAVING count(*) > 1))
     UNION ALL SELECT 'fact_weather -> dim_cell',
@@ -708,6 +734,8 @@ SELECT * FROM (
            (SELECT count(*) FROM (SELECT district_id, year, crop FROM fact_crop_area GROUP BY ALL HAVING count(*) > 1))
     UNION ALL SELECT 'fact_crop_yield grain',
            (SELECT count(*) FROM (SELECT district_id, year, crop FROM fact_crop_yield GROUP BY ALL HAVING count(*) > 1))
+    UNION ALL SELECT 'dim_station grain',
+           (SELECT count(*) FROM (SELECT station_id FROM dim_station GROUP BY ALL HAVING count(*) > 1))
     UNION ALL SELECT 'crop area: 400 districts x 2 years',
            (SELECT abs(count(DISTINCT (district_id, year)) - 800) FROM fact_crop_area)
     UNION ALL SELECT 'crop yield: 400 districts x 10 years (city states may lack rows)',

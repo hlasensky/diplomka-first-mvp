@@ -2,11 +2,11 @@
 
 import pytest
 
-from diplomka.config import DATASETS_DIR
+from diplomka.config import DATASET, DATASETS_DIR
 from diplomka.schema import SemanticLayer
 from diplomka.semantic_validator import validate_semantics
 
-LAYER = SemanticLayer.from_yaml(DATASETS_DIR / "senger" / "semantic_layer.yaml")
+LAYER = SemanticLayer.from_yaml(DATASETS_DIR / DATASET / "semantic_layer.yaml")
 DOMAINS = {
     "state": {"Bremen", "Nordrhein-Westfalen"},
     "event_type": {"queencell", "swarming", "died", "feeding", "honey", "treatment"},

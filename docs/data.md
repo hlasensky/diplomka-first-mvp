@@ -54,6 +54,7 @@ Build: `DATASET=multi-senger uv run python scripts/build_db.py` (asi 20 s). Kód
 | `fact_temperature` (view) | úl × hodina × senzor | 2,8 mil. | `temp_c` |
 | `agg_colony_daily` | úl × den | 29 172 | `weight_gain_kg`, `max_hourly_drop_raw_kg`, `t_center_avg/std`, `t_diff_avg`, `h_avg`, `n_hours`, `n_minutes` |
 | `fact_event` | 1 událost | 443 | `event_type`, `event_ts` |
+| `agg_event_daily` | kolonie × den inspekce | 367 | `n_events`, `event_types`, `cause_classes` (seznamy); cíl denního ASOF joinu, žádná událost se neztratí |
 | `fact_weather` | buňka × hodina | 1 068 960 | `air_temp_c`, `precip_mm`, `rain_mm`, `wind_kmh`, `radiation_wm2`, `air_rh_pct` |
 | `agg_weather_daily` | buňka × den | 44 540 | `air_temp_avg/min/max_c`, `precip_mm`, `rain_hours`, `radiation_kwh_m2`, `wind_avg_kmh`, `air_rh_avg_pct`, `n_hours` |
 | `fact_vegetation` | buňka × 16denní kompozit | 3 128 | `ndvi` |
@@ -76,7 +77,7 @@ Build: `DATASET=multi-senger uv run python scripts/build_db.py` (asi 20 s). Kód
 | `dim_year` | 10 | roky 2016–2025, `has_hive_data`, `is_farm_survey_year`; zmenšená dimenze pro fakty na grainu rok |
 | `dim_bee_winter` | 5 | zimy 2018/19–2022/23, `winter_start`/`winter_end`, `has_full_hive_data` (2018/19 a 2022/23 bez úplných dat z úlů) |
 | `dim_time` | 31 440 | hodina → `date` (FK na `dim_date`), atributy dne denormalizované; jen pro hodinové fakty |
-| `dim_date` | 1 461 | den (2019–2022) → týden → měsíc → rok; `season`, `is_beekeeping_season`, `bee_winter` (říjen–březen); pro denní fakty a data událostí |
+| `dim_date` | 1 637 | den (2019-01-01 až 2023-06-25, konec = poslední inspekce) → týden → měsíc → rok; `season`, `is_beekeeping_season`, `bee_winter` (říjen–březen); pro denní fakty a data událostí |
 | `dim_station` | 6 627 | fenologická stanice DWD (`lat`, `lon`, výška, země) |
 | `dim_plant` | 4 | řepka, pampeliška, akát, lípa; skupina, období snůšky |
 | `dim_crop` | 19 | plodina → `parent_crop`, `is_bee_forage` (plodiny jsou vnořené) |

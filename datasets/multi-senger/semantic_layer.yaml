@@ -93,6 +93,13 @@ tables:
         kind: factless_fact
         grain: [colony_key, event_ts, event_type]
         description: Events recorded by beekeepers during inspections; incomplete.
+    agg_event_daily:
+        kind: aggregate
+        grain: [colony_key, date]
+        derived_from: fact_event
+        description: >
+            One row per colony and inspection day with the list of event types (event_types,
+            cause_classes); the target of the daily ASOF join, which keeps every event of the day.
     fact_weather:
         kind: fact
         grain: [cell_id, time_key]
@@ -159,7 +166,7 @@ tables:
     dim_date:
         kind: dimension
         description: >
-            One row per day (2019-2022) with the same calendar attributes as dim_time. Daily facts
+            One row per day (2019-01-01 to 2023-06-25: inspections run past the sensor data) with the same calendar attributes as dim_time. Daily facts
             (agg_colony_daily, agg_weather_daily, fact_vegetation) and event dates join here.
     dim_country:
         kind: dimension
@@ -260,6 +267,20 @@ joins:
       to: { table: dim_date, columns: [date] }
       cardinality: many_to_one
       note: "events are recorded per inspection; use dim_date, not the hourly dim_time"
+    - {
+          id: event_daily_colony,
+          kind: fk,
+          from: { table: agg_event_daily, columns: [colony_key] },
+          to: { table: dim_colony, columns: [colony_key] },
+          cardinality: many_to_one,
+      }
+    - {
+          id: event_daily_date,
+          kind: fk,
+          from: { table: agg_event_daily, columns: [date] },
+          to: { table: dim_date, columns: [date] },
+          cardinality: many_to_one,
+      }
 
     # Geography hierarchy colony -> cell -> district -> state -> country
     - {
@@ -547,7 +568,7 @@ joins:
       from: { table: agg_colony_daily, columns: [dim_colony.cell_id, dim_date.year] }
       to: { table: agg_cell_bloom, columns: [cell_id, year] }
       via: [daily_colony, daily_date]
-      cardinality: many_to_one
+      cardinality: many_to_many
       note: "filter one plant; dim_date.year equals year(agg_colony_daily.date)"
 
     # Fact -> fact only via ASOF (rule R2)
@@ -555,15 +576,20 @@ joins:
       kind: asof
       from: { table: fact_hive_hourly, columns: [colony_key], time: time_key }
       to: { table: fact_event, columns: [colony_key], time: event_ts }
+      requires_filter: [event_type]
       direction: ">="
       cardinality: many_to_one
-      note: "The only allowed row-level join between these two facts; alternatively use EXISTS."
+      note: >
+          Latest event of ONE type, e.g. ON ... AND fact_event.event_type = 'swarming'; without the
+          type filter one of several events at the same time is picked at random. For "was there an
+          event in the window" use EXISTS instead.
     - id: daily_event_asof
       kind: asof
       from: { table: agg_colony_daily, columns: [colony_key], time: date }
-      to: { table: fact_event, columns: [colony_key], time_expr: "fact_event.event_ts::DATE" }
+      to: { table: agg_event_daily, columns: [colony_key], time: date }
       direction: ">="
       cardinality: many_to_one
+      note: "latest inspection day with all its event types; for event windows use EXISTS on fact_event"
     - id: daily_vegetation_asof
       kind: asof
       from: { table: agg_colony_daily, columns: [dim_colony.cell_id], time: date }
@@ -1022,7 +1048,7 @@ rules:
     - {
           id: R2,
           enforced: true,
-          text: "Join hive facts with fact_event, and agg_colony_daily with fact_vegetation, only via ASOF JOIN or EXISTS; a plain JOIN multiplies or loses rows.",
+          text: "Join hive facts with fact_event or agg_event_daily, and agg_colony_daily with fact_vegetation, only via ASOF JOIN or EXISTS; a plain JOIN multiplies or loses rows. ASOF to fact_event only for one event_type fixed in the ON clause; the latest inspection of any type comes from agg_event_daily; whether an event happened in a time window is an EXISTS on fact_event.",
       }
     - {
           id: R3,
@@ -1102,11 +1128,10 @@ examples:
       pattern: asof_event_context
       sql: |
           SELECT d.colony_key, d.date, d.max_hourly_drop_raw_kg,
-                 e.event_type, e.event_ts, et.cause_class
+                 e.date AS inspection_date, e.event_types, e.cause_classes
           FROM agg_colony_daily AS d
-          ASOF LEFT JOIN fact_event AS e
-            ON d.colony_key = e.colony_key AND d.date >= e.event_ts::DATE
-          LEFT JOIN dim_event_type AS et ON e.event_type = et.event_type
+          ASOF LEFT JOIN agg_event_daily AS e
+            ON d.colony_key = e.colony_key AND d.date >= e.date
           WHERE d.n_hours >= 20
           ORDER BY d.max_hourly_drop_raw_kg
           LIMIT 20
