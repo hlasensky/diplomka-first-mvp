@@ -1,0 +1,198 @@
+{
+  "citekey": "bunemanWhyWhereCharacterization2001",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Data provenance — sometimes called “lineage” or “pedigree” — is the description of the origins of a piece of data and the process by which it arrived in a database."
+        },
+        {
+          "page": 1,
+          "quote": "Suppose a database (a view) V = Q(D) is constructed by a query Q applied to"
+        },
+        {
+          "page": 2,
+          "quote": "we ask for the provenance of some piece of data d in Q(D): what parts of the database D contributed to d?"
+        },
+        {
+          "page": 2,
+          "quote": "The crucial question here is what is meant by “contributed to”."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "cbd8d7cb24e5"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "we draw a distinction between “where-provenance” – where does a given piece of data come from and – “why-provenance” – why is it in the database."
+        },
+        {
+          "page": 2,
+          "quote": "one could argue that every tuple in contributed to it, for modifying any tuple in the employee relation could affect the presence of"
+        },
+        {
+          "page": 2,
+          "quote": "the answer is apparently much simpler: from the telephone field “John Doe” tuple in the input."
+        },
+        {
+          "page": 2,
+          "quote": "Where-provenance is important for understanding the source of errors in data (what source data should John Doe investigate if he discovers that his telephone number is incorrect in the view.) It is also important for carrying annotations through database queries."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a4394e25ee8e"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "Here, any node in the deterministic tree is uniquely determined by a path of edge labels from root node to that node."
+        },
+        {
+          "page": 6,
+          "quote": "Languages, see [13,5] vary in their choice of the “union” operation. In our case, we use the deep union operation."
+        },
+        {
+          "page": 7,
+          "quote": "Restrictive as it may seem, DQL can capture positive (SPJU) relational queries and positive nested relational algebra ([12])."
+        },
+        {
+          "page": 7,
+          "quote": "every well-formed query has an equivalent normal form which can be determined from our rewrite system R. We omit the details of R and state the strong normalization result"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b8db203d6d2b"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "We call the collection of values taken from D that proves an output, a witness for the output."
+        },
+        {
+          "page": 9,
+          "quote": "We describe next our notion of a witness basis which captures the set of all witnesses of the former type for any value t in Q(D). Our definition closely follows the syntax of the query."
+        },
+        {
+          "page": 10,
+          "quote": "This technique is sound and complete in the sense that the set of witnesses in"
+        },
+        {
+          "page": 10,
+          "quote": "our notion of witness basis coincides with the derivation of a tuple in [7] for SPJU queries where the general case of theta-join is considered."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "fbe8f14e9773"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "Observe that a witness for a value is invariant under all equivalent queries but the witness basis is not."
+        },
+        {
+          "page": 10,
+          "quote": "We show next that a subset of the witness basis, called minimal witness basis, is in fact invariant under queries with only equalities."
+        },
+        {
+          "page": 11,
+          "quote": "Based on the ideas in [11], we can also extend this theorem to certain subclasses of queries with inequalities."
+        },
+        {
+          "page": 11,
+          "quote": "We show next that the witness basis obtained in this manner is the same as first “composing out” the views in the query using the composition rule in our rewrite system R"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "14eb5f69c6de"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 11,
+          "quote": "We refer to the path Composers.{name:\"G.F. Handel\"}.born in the input as the where-provenance of this output value."
+        },
+        {
+          "page": 12,
+          "quote": "we will consider the where-provenance of a specific value in the output to be defined only if it can be associated with one or more variables in the output expression of a query."
+        },
+        {
+          "page": 12,
+          "quote": "The where-provenance of this value in Q1 is the query itself since the value is hard-wired into the query output."
+        },
+        {
+          "page": 12,
+          "quote": "This suggests that in general the syntactic structure of a query may not suffice for identifying the where-provenance."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "530558ac1864"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "we use the syntactic approach and identify a restricted class of queries referred to as traceable queries, for which where-provenance is preserved under rewriting."
+        },
+        {
+          "page": 13,
+          "quote": "To determine where-provenance of a value resulting from a traceable query, it suffices to work with the normal form of the query."
+        },
+        {
+          "page": 13,
+          "quote": "The “where” clause of the generated query is the “where” clause of Q and the “collect” clause of the generated query emits two things: the patterns and the paths pointing to x in the “where” clause of Q."
+        },
+        {
+          "page": 14,
+          "quote": "every subquery in Q is a view which does not share any variables with the outer scope (c) only a singular pattern is allowed to match against a subquery"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4eeea712d677"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "there is semantic characterization for where-provenance nor do we know whether there is a semantic characterization of why-provenance that is well behaved on anything beyond than SPJU queries."
+        },
+        {
+          "page": 7,
+          "quote": "it cannot express path patterns involving a Kleene-star(*), (b) it works only on hierarchical structures"
+        },
+        {
+          "page": 13,
+          "quote": "a purely syntactic characterization of where-provenance is unlikely to yield a complete description of the where-provenance."
+        },
+        {
+          "page": 15,
+          "quote": "is to study how additional constraints on the input instances, e.g., functional dependencies, can help us obtain a more complete description"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "94245c978e61"
+    }
+  },
+  "stamped": "2026-10-30"
+}

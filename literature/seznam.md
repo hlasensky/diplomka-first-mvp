@@ -28,10 +28,10 @@ Bez těchto zdrojů nelze obhájit přínos práce ani splnit zadání. Řazeno 
 14. Jensen, S. K., Pedersen, T. B., Thomsen, C. — Time Series Management Systems: A Survey IEEE TKDE 29(11):2581–2600, 2017 ⚠ https://doi.org/10.1109/TKDE.2017.2740932 — ověřit Přehled TSDB a systémů pro správu senzorových dat. Podklad pro zdůvodnění volby DuckDB oproti InfluxDB/TimescaleDB a pro analýzu požadavků (bod 3). [rev. 4: povýšeno z úrovně 2 — analýza požadavků (bod 3) a volba DuckDB]
 15. Francia, M., Gallinucci, E., Golfarelli, M. — COOL: A Framework for Conversational OLAP, Information Systems 104:101752, 2022 DOI: https://doi.org/10.1016/j.is.2021.101752 https://www.sciencedirect.com/science/article/pii/S0306437921000211 Nejbližší prior work. Musíš přesně vědět, co dělá a co nedělá.
 16. VOOL — přirozenojazyková vokalizace výsledků OLAP sessions Information Systems, 2025 https://dl.acm.org/doi/10.1016/j.is.2024.102496 Přímý předchůdce pilíře 3. Převezmi jejich evaluační protokol.
-17. NavLLM — interaktivní LLM navigace nad multidimenzionálními daty EDBT 2026 Volné PDF: https://backend.orbit.dtu.dk/ws/portalfiles/portal/437649807/paper-316.pdf Záznam: https://orbit.dtu.dk/en/publications/navllm-interactive-llm-assisted-navigation-over-multidimensional-/
+17. Liu, X., Yang, Y. — LLM-Assisted Conversational Navigation over Multidimensional Data Cubes (NavLLM) Expert Systems With Applications 328:132958, 2026 DOI: https://doi.org/10.1016/j.eswa.2026.132958 Plná verze s formalizací a vyhodnocením. Demo: Liu, X., Liu, R., Yang, Y. — NavLLM, EDBT 2026, s. 740–743 DOI: https://doi.org/10.48786/edbt.2026.69 Volné PDF dema: https://backend.orbit.dtu.dk/ws/portalfiles/portal/437649807/paper-316.pdf
 18. ChartInsighter — redukce halucinací při shrnutí grafů časových řad IEEE TVCG, 2025 https://ieeexplore.ieee.org/document/11113164 Preprint: https://arxiv.org/abs/2501.09349 Metodika proti halucinacím při popisu časových řad = přímo pilíř 3.
 19. Yao, S. et al. — ReAct: Synergizing Reasoning and Acting in Language Models ICLR 2023 arXiv: https://arxiv.org/abs/2210.03629 Projekt: https://react-lm.github.io/ Tvůj drill-down agent je v podstatě ReAct smyčka. Primární zdroj pro návrhové rozhodnutí.
-20. BIRD — benchmark pro Text-to-SQL nad rozsáhlými reálnými databázemi NeurIPS 2023 https://arxiv.org/abs/2305.03111
+20. BIRD — benchmark pro Text-to-SQL nad rozsáhlými reálnými databázemi NeurIPS 2023 https://arxiv.org/abs/2305.03111 DOI: https://doi.org/10.52202/075280-1835
 21. Lei, F. et al. — Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-SQL Workflows ICLR 2025 (Oral) arXiv: https://arxiv.org/abs/2411.07763 Na realistických schématech padá execution accuracy z ~91 % (Spider 1.0) a ~73 % (BIRD) na ~21 %. Musíš explicitně vymezit podmínky, za nichž platí tvoje očekávaná přesnost.
 22. Schulhoff, S. et al. — The Prompt Report: A Systematic Survey of Prompt Engineering Techniques arXiv 2024 https://arxiv.org/abs/2406.06608 Terminologický a taxonomický rámec pro kapitolu o promptingu.
 23. Lewis, J. R. — The System Usability Scale: Past, Present, and Future [NOVÉ] International Journal of Human–Computer Interaction 34(7):577–590, 2018 ⚠ https://doi.org/10.1080/10447318.2018.1455307 — ověřit Uživatelské testování je podle zadání primární evaluace. Tento zdroj ti dá standardizovaný dotazník (SUS), normy pro interpretaci skóre a argumentaci pro jeho použití vedle vlastních Likertových položek.
@@ -76,6 +76,7 @@ Text-to-SQL a sémantická vrstva
 49. Automatic Metadata Extraction for Text-to-SQL arXiv 2025 https://arxiv.org/abs/2505.19988
 50. Gao, D. et al. — DAIL-SQL: Text-to-SQL Empowered by Large Language Models: A Benchmark Evaluation PVLDB 2024 https://arxiv.org/abs/2308.15363 ⚠ ověřit Systematická evaluace promptovacích strategií v doméně Text-to-SQL.
 51. Pourreza, M., Rafiei, D. — DIN-SQL: Decomposed In-Context Learning of Text-to-SQL with Self-Correction NeurIPS 2023 https://arxiv.org/abs/2304.11015 ⚠ ověřit
+97. Weng, L. et al. — DataLab: A Unified Platform for LLM-Powered Business Intelligence IEEE ICDE 2025, s. 4346–4359 DOI: https://doi.org/10.1109/ICDE65448.2025.00326 Multiagentní LLM platforma pro BI: generování znalostí o tabulkách, NL → JSON DSL → SQL/Vega-Lite.
 Agenti a prompting
 52. Wei, J. et al. — Chain-of-Thought Prompting Elicits Reasoning in Large Language Models NeurIPS 2022, sv. 35, s. 24824–24837 arXiv: https://arxiv.org/abs/2201.11903
 53. Shinn, N. et al. — Reflexion: Language Agents with Verbal Reinforcement Learning NeurIPS 2023 arXiv: https://arxiv.org/abs/2303.11366 Pro self-correction při chybně vygenerovaném dotazu.
@@ -137,7 +138,7 @@ Datasety a datové zdroje citovat s verzí a datem přístupu. Dokumentace nást
 MAPOVÁNÍ NA BODY ZADÁNÍ
 Bod 1 — IoT, chytrá zařízení, časové řady: 8, 9, 10, 11, 12, 13, 14, 26, 27, 28, 29, 71, 72
 Bod 2a — vizualizace a nástroje pro analýzu časových řad: 30, 57, 58, 75, 76, 90
-Bod 2b — LLM nad daty: 6, 7, 16, 19, 20, 21, 22, 43, 44, 45, 46, 47, 48, 61, 81
+Bod 2b — LLM nad daty: 6, 7, 16, 19, 20, 21, 22, 43, 44, 45, 46, 47, 48, 61, 81, 97
 Bod 3 — OLAP nad časovými řadami, požadavky na LLM augmentaci: 1, 2, 3, 4, 5, 15, 17, 24, 35, 36, 37, 38, 39, 40, 67, 68
 Bod 4 — návrh platformy, vysvětlování dotazů, lokální vs. cloudové modely: 19, 25, 34, 56, 83, 90
 Bod 6a — uživatelské testování, scénáře, Likertova škála: 23, 65, 66

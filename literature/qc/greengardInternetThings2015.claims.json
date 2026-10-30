@@ -1,0 +1,198 @@
+{
+  "citekey": "greengardInternetThings2015",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 14,
+          "quote": "the Internet of Things quite literally means “things” or “objects” that connect to the Internet—and each other."
+        },
+        {
+          "page": 14,
+          "quote": "Each of these devices or things has a unique identification number (UID) and an Internet Protocol (IP) address."
+        },
+        {
+          "page": 14,
+          "quote": "These objects connect via cords, wires and wireless technology, including satellites, cellular networks, Wi-Fi, and Bluetooth."
+        },
+        {
+          "page": 14,
+          "quote": "Regardless of the exact approach, the IoT involves the movement of data to enable processes from across the room or somewhere on the other side of the world."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9899a37eb67c"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 14,
+          "quote": "the term “connected devices” refers to devices that exchange data through the standard Internet and gain some benefit by connecting over a network—sometimes a private or closed"
+        },
+        {
+          "page": 15,
+          "quote": "Two basic types of connected objects exist: physical-first and digital-first, according to a May 2014 briefing paper from ABI Research"
+        },
+        {
+          "page": 15,
+          "quote": "Within the Industrial Internet, communication typically takes place in three different ways: machine to machine (M2M), human to machine (H2M), and machine to smartphone (M2S) or other device"
+        },
+        {
+          "page": 15,
+          "quote": "The sum of all this is the Internet of Everything (IoE), a term created by networking firm Cisco Systems."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9b16fa0cf90f"
+    },
+    "C3": {
+      "verdict": "partial",
+      "evidence": [
+        {
+          "page": 15,
+          "quote": "The concept of connected devices first emerged in the early 1990s. At that time researchers at the Auto-ID Center at MIT began pondering the idea"
+        },
+        {
+          "page": 15,
+          "quote": "As early as 1997, he had pondered the possibility of using RFID to help manage the supply chain at consumer products firm P&G"
+        },
+        {
+          "page": 15,
+          "quote": "At the time, researchers viewed RFID as a necessary precursor to the Internet of Things."
+        },
+        {
+          "page": 16,
+          "quote": "As Ashton pointed out in a 2009 RFID Journal article, the Internet of Things or IoT, alters the equation from human-based data input to both human- and machine-based data input."
+        }
+      ],
+      "note": "„Z čistě lidského“ přehání: kniha píše „human-based“ a citovaný Ashton výslovně „almost wholly dependent on human beings“ (s. 16), tedy převážně, ne čistě; ostatní části sedí.",
+      "fix": "Myšlenka propojených zařízení se podle autora objevila na začátku devadesátých let ve výzkumu Auto-ID Center na MIT. Termín „Internet of Things“ zavedl v roce 1999 Kevin Ashton, spoluzakladatel Auto-ID Center, který už v roce 1997 zvažoval RFID pro dodavatelský řetězec firmy P&G. RFID tehdy výzkumníci považovali za nutného předchůdce IoT. Ashton v článku pro RFID Journal (2009) uvádí, že IoT mění vstup dat z lidského na lidský i strojový: počítače dnes téměř zcela závisejí na datech od lidí, kteří mají omezený čas, pozornost a přesnost, a proto musí umět sbírat informace o světě samy. (s. 15–16, §Defining the Terms)",
+      "claim_sha": "a793342e0308"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "Although it’s impossible to identify a single happening that sparked this revolution, it’s safe to say that Apple’s introduction of the iPhone in 2007 was a crystalizing event."
+        },
+        {
+          "page": 9,
+          "quote": "While it will someday serve as the practical framework for life and business, it now resides somewhere between the innovator and early adopter phases."
+        },
+        {
+          "page": 10,
+          "quote": "The Internet serves as the electrical wiring for the IoT. It makes real-time communication and data sharing possible on a mass scale."
+        },
+        {
+          "page": 13,
+          "quote": "Credit the 2007 introduction of the iPhone and the 2010 introduction of the iPad with changing the stakes and lighting the fire for today’s emerging IoT."
+        }
+      ],
+      "note": "Další části ověřeny: komercializace internetu a WWW v roce 1995 (s. 12), Bohlen, Beal a Rogers 1957 (s. 9), každé zařízení dostává IP adresu a IP je standardní kanál (s. 13).",
+      "fix": "",
+      "claim_sha": "659b1c388b3c"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 14,
+          "quote": "Cisco Systems estimates that approximately 12.1 billion Internet connected devices were in use in April 2014, and the figure is expected to zoom to above 50 billion by 2020."
+        },
+        {
+          "page": 14,
+          "quote": "about 100 “things” currently connect to the Internet every second but the number will reach 250 per second by 2020."
+        },
+        {
+          "page": 14,
+          "quote": "estimates that more than 1.5 trillion “things” exist in the physical world and 99 percent of physical objects will eventually become part of a network."
+        },
+        {
+          "page": 14,
+          "quote": "Of course, time will tell whether this estimate is overly optimistic or grounded in reality."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b311ebfb8bae"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 16,
+          "quote": "Because the IoT is still in its infancy, there are many technical and engineering issues to tackle, including developing better and longer lasting batteries for mobile devices"
+        },
+        {
+          "page": 16,
+          "quote": "identifying ways to embed sensors in everything from clothing to machinery, perfecting miniaturization, developing better algorithms to sort through all the data and keep the signal-to-noise ratio low"
+        },
+        {
+          "page": 17,
+          "quote": "The Internet of Things ratchets up the risk—and it also creates entirely new threats."
+        },
+        {
+          "page": 17,
+          "quote": "According to a 2013 survey conducted by ISACA (formerly the Information Systems Audit and Control Association), 92 percent of the public expresses concerns about the information collected by Internet-connected devices."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a5cd31fc1120"
+    },
+    "C7": {
+      "verdict": "partial",
+      "evidence": [
+        {
+          "page": 20,
+          "quote": "One thing that distinguishes connected devices is that they can continuously report about usage, operating behavior, conditions, and other information."
+        },
+        {
+          "page": 20,
+          "quote": "Yet mobile devices and networks alone could not produce the Internet of Things."
+        },
+        {
+          "page": 21,
+          "quote": "It would be virtually impossible for any one organization or government to build a data storage infrastructure capable of supporting the IoT."
+        },
+        {
+          "page": 21,
+          "quote": "it essentially refers to a distributed computing environment that operates over an extended network, such as the Internet."
+        }
+      ],
+      "note": "Kniha píše „virtually impossible“ (s. 21), tvrzení tuto výhradu vypouští a říká kategoricky, že by to žádná organizace ani vláda nedokázala; ostatní části (s. 20–21) sedí.",
+      "fix": "Připojená zařízení podle autora průběžně hlásí využití, provozní chování, stav a další informace, takže vytvářejí velké množství dat, která lze analyzovat a podle nich jednat. Samotná mobilní zařízení a sítě by ale IoT nevytvořily. Teprve propojení mobility s cloudem, sociálními médii a big data vytváří silnější platformu. Cloud autor popisuje jako distribuované výpočetní prostředí běžící přes rozsáhlou síť, jako je internet. Podle něj by pro jakoukoli jednotlivou organizaci či vládu bylo prakticky nemožné vybudovat úložnou infrastrukturu pro IoT. API umožňují zařízením a systémům komunikovat, i když používají různé standardy nebo protokoly. (s. 20, §How Mobile Technology Changes Everything; s. 21, §A Clearer View through Clouds)",
+      "claim_sha": "32ab669f622c"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 22,
+          "quote": "Overall, data volumes are expanding at somewhere between 50 and 60 percent annually while mobile data traffic is growing at an annual rate of about 61 percent"
+        },
+        {
+          "page": 22,
+          "quote": "By 2020, International Data Corporation predicts that 40 zettabytes of data will exist worldwide"
+        },
+        {
+          "page": 23,
+          "quote": "He argued that it has three primary components: volume, velocity, and variety."
+        },
+        {
+          "page": 23,
+          "quote": "The IoT exponentially increases the number of data sources along with the volume, velocity, and variety of data."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "dc3d4c7c68f9"
+    }
+  },
+  "stamped": "2026-10-30"
+}

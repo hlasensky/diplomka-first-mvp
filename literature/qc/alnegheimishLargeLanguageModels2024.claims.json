@@ -1,0 +1,194 @@
+{
+  "citekey": "alnegheimishLargeLanguageModels2024",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "In this paper, we present a thorough study of LLMs used for the challenging task of anomaly detection from time series data"
+        },
+        {
+          "page": 2,
+          "quote": "If LLMs are genuine anomaly detectors, and can be employed directly in zeroshot (without any additional training), they could serve as off-the-shelf anomaly detectors for users"
+        },
+        {
+          "page": 2,
+          "quote": "Considering that training deep learning models is time-consuming, skipping this phase could make anomaly detection more efficent overall."
+        },
+        {
+          "page": 3,
+          "quote": "By leveraging LLMs' ability to forecast time series in zero-shot without any additional data or fine-tuning."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "0899dcd23f46"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "We follow a sequence of reversible steps, beginning with scaling, quantization, and processing the time series into segments using rolling windows, and ending with tokenizing each window."
+        },
+        {
+          "page": 3,
+          "quote": "we subtract the minimum value from the time series"
+        },
+        {
+          "page": 3,
+          "quote": "To make sure GPT tokenizes each digit separately, we adopt the approach introduced by Gruver et al. [2023], which inserts spaces between the digits in a number."
+        },
+        {
+          "page": 5,
+          "quote": "Overall, we find that scaling reduces the number of tokenized digits, and yields better results than not scaling. Moreover, GPT performs better with added space between digits, while M ISTRAL does not."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "87d0b644a83c"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "this pipeline involves querying the LLMs directly for time series anomalies through a text prompt"
+        },
+        {
+          "page": 5,
+          "quote": "For each window, we generate 10 samples from the output probability distribution."
+        },
+        {
+          "page": 5,
+          "quote": "an index is considered an anomaly if it appears in at least β percent of the total number of overlapping windows"
+        },
+        {
+          "page": 7,
+          "quote": "We observed that on all datasets, for M ISTRAL, α = 0.4 and β = 0.9 yielded the best F1 score; for GPT, α = 0.2 and β = 0.9 yielded the best F1 score"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2542e769785a"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "We denote this discrepancy as an error signal e by computing point-wise residuals, given their simplicity and ease of interpretation."
+        },
+        {
+          "page": 6,
+          "quote": "Moreover, we apply an exponentially weighted moving average to reduce the sensitivity of the detection algorithm"
+        },
+        {
+          "page": 6,
+          "quote": "We set a static threshold for each sliding window as four standard deviations away from the mean."
+        },
+        {
+          "page": 7,
+          "quote": "Our preliminary results suggested that a window size of 140 was as performative as a window size of 200, and was better than a window size of 100. We set the horizon to 5."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "17861ca8a0d3"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "In total, these datasets contain 492 univariate time series and 2,349 anomalies."
+        },
+        {
+          "page": 6,
+          "quote": "Due to cost constraints, we explored the usage of GPT for D E TECTOR on a 5% sample of all datasets"
+        },
+        {
+          "page": 7,
+          "quote": "Namely, we looked at the F1 score, under which both partial and full anomaly detection are considered correct identification."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "8d5117fd83ae"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "with an improvement of 135% in F1 Score, as the latter suffers from false positives."
+        },
+        {
+          "page": 2,
+          "quote": "show that LLMs are able to find anomalies with an average F1 score of 0.525."
+        },
+        {
+          "page": 7,
+          "quote": "After running the models on the full datasets, we computed the precision, recall, and F1 scores, shown in Table 3."
+        },
+        {
+          "page": 8,
+          "quote": "P ROMPTER raised a large number of false alarms, with an average precision of 0.219. Using the filtering method described in Section 4.1 does not eliminate false positives."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a6deb157af49"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "outperforms AT in 7 out of the 11 datasets. However, this observation is only relevant to D ETECTOR. LLM-based methods can perform surprisingly well. Our methods achieved an F1 score 14.6% higher than that of MAvg, and only 10.9% lower"
+        },
+        {
+          "page": 8,
+          "quote": "than that of ARIMA which is a reasonable model. Moreover, the D ETECTOR pipeline alone surpasses MAvg performance in 6 out of 11 datasets, and ARIMA in 4 out of 11 dataset."
+        },
+        {
+          "page": 8,
+          "quote": "AER, the current best deep learning model, is 30% better than LLM-based approaches. Deep learning methods still perform better than LLM-based methods by 18% on average."
+        },
+        {
+          "page": 9,
+          "quote": "Table 5: Benchmark Summary Results depicting F1 Score."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "0220be6df303"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "It is unreasonable to wait half an hour to two hours for the model to produce a response, especially when deep learning models take less than an hour to train."
+        },
+        {
+          "page": 9,
+          "quote": "In S IG LLM, we rely on rolling windows to chop the time series up into smaller segments. This is both inefficient and costly."
+        },
+        {
+          "page": 9,
+          "quote": "In total, running P ROMPTER experiments using the gpt-3.5-turbo-instruct version has cost us approximately $834.11 – an average of $1.69 per signal."
+        },
+        {
+          "page": 9,
+          "quote": "we ran a small-scale experiment where we sampled 22 signals of the data, roughly 5%. The total reached $95.08 – an average of $4.3 per signal"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "e59ee22683fb"
+    }
+  },
+  "stamped": "2026-10-30"
+}

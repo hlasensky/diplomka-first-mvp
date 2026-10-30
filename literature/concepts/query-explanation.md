@@ -15,3 +15,4 @@ Automatické vysvětlení, proč má agregovaná hodnota (nebo změna mezi dvěm
 - [[intentional-analytics]]
 - [[anomaly-detection]]
 - [[guided-data-exploration]]
+- [[data-provenance]]

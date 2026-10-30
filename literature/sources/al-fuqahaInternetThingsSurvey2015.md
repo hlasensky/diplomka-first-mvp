@@ -38,10 +38,17 @@ Přehledový článek o Internetu věcí. Popisuje, jak se IoT definuje, jaký m
 
 ## Pozor
 - Číslování stran: PDF strana N = tištěná strana N + 2346 (PDF 1–30 = s. 2347–2376 v časopise). V tvrzeních výše jsou PDF strany; při citaci v LaTeXu použij tištěné.
-- PAGE_WARN s. 5 (tabulky I a II, kategorie služeb a začátek aplikací) a s. 25 (obr. 28, tabulka IX, část „Lessons Learned“) – shoda s OCR jen 0,84 / 0,76; C7 cituje s. 5 (souhrnná věta o doménách); citát z ní sedí s fulltextem i OCR, přesto ověř v PDF.
+- PAGE_WARN: po přepisu tabulek (2026-10-30) zbývá jen s. 25 (obr. 28, tabulka IX, část „Lessons Learned“, shoda s OCR 0,80). Varování na s. 5 (tabulky I a II) zmizelo. C7 cituje s. 5 (souhrnná věta o doménách) a citát sedí s fulltextem i OCR.
 - Podíly jednotlivých aplikací na trhu do roku 2025 jsou jen v obr. 2 (s. 3), ne v textu – fulltext je neobsahuje.
 - Všechna tržní čísla (C2) jsou převzatá z jiných zdrojů (IDC [9], Cisco [1], [10], McKinsey [11]); autoři je sami neměří. Pro práci psanou v roce 2026 jde o historické prognózy.
 - Sekce VI (s. 17): v extrahovaném textu jsou nadpisy D. Performance, E. Management, F. Scalability, G. Interoperability přeházené kvůli dvousloupcové sazbě – pořadí a příslušnost odstavců ověř v PDF.
 - Srovnání MQTT vs. CoAP (C6) je jen převzaté z citovaných prací [78], [79]; autoři vlastní měření nedělají.
-- Kategorie služeb (identity-related, information aggregation, collaborative-aware, ubiquitous) jsou na s. 5 (PAGE_WARN).
+- Kategorie služeb (identity-related, information aggregation, collaborative-aware, ubiquitous) jsou na s. 5 (v textu i v přepsané tab. II).
 - Zmíněný TSaaaS (s. 18, §VII-A) je služba pro analýzu časových řad senzorových dat nad Time Series Database – případně dohledat původní zdroj [169].
+- Tabulky byly v PDF jako obrázky a v extrahovaném textu chyběly. Ručně přepsané do fulltextu jsou tab. II (s. 5, stavební bloky IoT), III (s. 7, standardy podle vrstev), IV (s. 11, srovnání aplikačních protokolů) a IX (s. 25, paměť IBF). Nepřepsané a jen v PDF jsou tab. I (s. 5, OS), V (s. 14, třídy EPC tagů), VI (s. 15, PHY protokoly), VII (s. 16, projekty k výzvám) a VIII (s. 19, cloudové platformy). PAGE_WARN na s. 5 a 25 se týká právě těchto tabulek; text kolem nich sedí.
+- Rozpor uvnitř článku: tab. IV (s. 11) uvádí u MQTT-SN transport TCP, kdežto text (s. 8, §V-A2) říká, že MQTT-SN definuje mapování MQTT na UDP (tak to má i C5). Transport MQTT-SN necituj z tab. IV.
+
+## Obrázky
+- Obr. 3 (s. 3) – srovnání architektur IoT (třívrstvá, middleware, SOA, pětivrstvá) ![[figures/al-fuqahaInternetThingsSurvey2015/fig3.png]]
+- Obr. 24 (s. 20) – role cloudu a fog vrstvy při doručování IoT služeb ![[figures/al-fuqahaInternetThingsSurvey2015/fig24.png]]
+- Obr. 26 (s. 22) – navržená architektura pravidlové inteligentní IoT brány ![[figures/al-fuqahaInternetThingsSurvey2015/fig26.png]]

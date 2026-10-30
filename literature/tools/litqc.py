@@ -574,7 +574,7 @@ def cmd_lint(bib: dict, res: Result) -> None:
         body = re.sub(r"```.*?```|`[^`\n]*`", "", path.read_text(encoding="utf-8"), flags=re.S)  # skip code
         for m in WIKILINK_RE.finditer(body):
             target = m.group(1).strip()
-            if target not in names and Path(target).name not in names:
+            if target not in names and Path(target).name not in names and not (VAULT / target).is_file():
                 res.add("ERROR", "BROKEN_LINK", f"{path.relative_to(VAULT)}: [[{target}]] neexistuje")
     for ft in sorted(FULLTEXT.glob("*.txt")):
         stem = ft.name.split(".")[0]

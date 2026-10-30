@@ -1,0 +1,198 @@
+{
+  "citekey": "lenzSummarizabilityOLAPStatistical1997",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "The purpose of this paper is to explore under what conditions such summarization operations produce the correct result."
+        },
+        {
+          "page": 1,
+          "quote": "Summarizability is an extremely important property, in that an incorrect (and not always obvious) summarization can lead to erroneous analysis, conclusions, and decisions."
+        },
+        {
+          "page": 1,
+          "quote": "Thus, it is necessary to inform users when they attempt to perform a non-summarizable operation."
+        },
+        {
+          "page": 2,
+          "quote": "dimensions but not others. We will show further that summarizability depends on the type of summary measure and the summarization function."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "366462c9599d"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Adding the figures for each year (e.g. 15+17+13=45) is incorrect if students attended the department for more than one year, which is usually the case."
+        },
+        {
+          "page": 2,
+          "quote": "Thus the total number of students that attended over the 3 year period is: 15+2+11=28."
+        },
+        {
+          "page": 2,
+          "quote": "Thus, for nonsummarizable measures the totals can be extracted only from the base data"
+        },
+        {
+          "page": 3,
+          "quote": "Thus, a student that attends a joint program is counted twice when we summarize over departments."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "8ce8f2ac6124"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "There are three steps involved in determining the structure of a statistical object."
+        },
+        {
+          "page": 5,
+          "quote": "This step involves 4 parts that need to be identified:"
+        },
+        {
+          "page": 6,
+          "quote": "we need to apply a functional dependency analysis to the category attributes to determine which belong to the multidimensional space, and which belong to a classification hierarchy."
+        },
+        {
+          "page": 7,
+          "quote": "The functional dependency analysis is necessary to determine which attributes form the independent dimensions of the multidimensional space."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a82cfaace144"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "The disjointness condition states that the category attributes must form disjoint subsets over the individuals/objects."
+        },
+        {
+          "page": 7,
+          "quote": "In case that the test is made on the data, it applies only to the current data set."
+        },
+        {
+          "page": 8,
+          "quote": "In this case the disjointness test is made relative to the node below it."
+        },
+        {
+          "page": 8,
+          "quote": "fixed easily by renaming the offending instances or assigning an extension to names (e.g. extending the city name with the state name, such as Rome-NY)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2aed2c169c5b"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "Given that we have the knowledge that museums only exist in cities, then this measure will be summarizable to the state level."
+        },
+        {
+          "page": 4,
+          "quote": "if we added to the list of cities for each state an instance called"
+        },
+        {
+          "page": 8,
+          "quote": "That is, the union of all clusters constitutes the entire set of the individuals/objects."
+        },
+        {
+          "page": 9,
+          "quote": "Here again, it is possible to fix such a problem by adding a car-make category named"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "70c6b699bdb8"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "The distinction between these two types should be made on what is recorded, not when it is recorded."
+        },
+        {
+          "page": 10,
+          "quote": "One has to determine the type of the category attribute (temporal, non-temporal), the type of the summary attribute (stock, flow, value-per-unit)"
+        },
+        {
+          "page": 10,
+          "quote": "First, as mentioned above, a “count” must be carried along with the “sum” in order to support the “avg” function."
+        },
+        {
+          "page": 10,
+          "quote": "Figure 7: Temporal Summarizability by the type of function and summary attribute"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "cc8865bc2ac2"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "it is possible to make this measure summarizable if we carry both the"
+        },
+        {
+          "page": 4,
+          "quote": "In general, any complex statistics that can be expressed as component aggregates is summarizable."
+        },
+        {
+          "page": 4,
+          "quote": "In such cases one has to generate the summary values directly from the micro-data."
+        },
+        {
+          "page": 10,
+          "quote": "We note here that such an approach only applies to statistical objects that are summarizable relative to all category attributes."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "60efe189d34a"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "This happens even in cases when the summarizability conditions listed above are fulfilled."
+        },
+        {
+          "page": 11,
+          "quote": "As can be seen, the sex proportion of males increased in both age groups over time."
+        },
+        {
+          "page": 11,
+          "quote": "We have not developed such a formal proof, but wish to give the reasoning as to why we believe these 3 conditions are indeed sufficient."
+        },
+        {
+          "page": 12,
+          "quote": "The above arguments are informal, but we believe that the reasoning for the sufficiency of these summarizability conditions can lead to a formal proof."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3d6a02c7749a"
+    }
+  },
+  "stamped": "2026-10-30"
+}

@@ -1,0 +1,126 @@
+{
+  "citekey": "wengDataLabUnifiedPlatform2025",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "As illustrated in Figure 1, DataLab consists of two primary components: (1) LLM-based Agent Framework and (2) Computational Notebook Interface."
+        },
+        {
+          "page": 4,
+          "quote": "each BI agent is represented as a DAG for high flexibility and easy extensibility. Within the DAG, nodes depict reusable components (e.g., LLM APIs, tools)"
+        },
+        {
+          "page": 4,
+          "quote": "we add a proxy agent to the framework, which serves as a hub to directly interact with users and allocate tasks to each specialized agent based on user queries."
+        },
+        {
+          "page": 4,
+          "quote": "First, DataLab wrangles SQL, Python/PySpark, Markdown, and Chart cells altogether, allowing both technical and nontechnical users to easily adopt their familiar workflows on the notebook."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "7e95bcc7c79a"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "It was observed that, while 85% of the tables lack comprehensive metadata, they are predominantly linked to various SQL or Python scripts utilized for data processing."
+        },
+        {
+          "page": 5,
+          "quote": "This automated approach comprises a Map-Reduce process with a self-calibration mechanism [32] to generate high-quality knowledge for databases, tables, and columns."
+        },
+        {
+          "page": 6,
+          "quote": "Should the rating score si fall below the predefined threshold T , the knowledge generation process must be repeated."
+        },
+        {
+          "page": 6,
+          "quote": "To address the common challenge of terminological inconsistencies in user queries (e.g., synonyms, acronyms), an additional node type, alias, has been introduced."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "0d5743ad536b"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "Notably, temporal references (e.g., ‘last year’) are also standardized based on the current time."
+        },
+        {
+          "page": 6,
+          "quote": "We employ a coarse-to-fine approach (Algorithm 2) to ensure comprehensive and precise knowledge retrieval."
+        },
+        {
+          "page": 7,
+          "quote": "The generated DSL specification is validated using JSON Schema [37] to ensure syntactic and semantic correctness. This specification can then be directly converted to high-level languages like SQL and Vega-Lite based on predefined rules"
+        },
+        {
+          "page": 7,
+          "quote": "We also introduce a fallback strategy to address scenarios where relevant knowledge is scarce, especially for in-thewild tables. Specifically, we develop a Data Profiling module"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "24d77b732da7"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "We evaluate DataLab on both public research benchmarks (§A, §B) and proprietary datasets from Tencent (§C, §D, §E)."
+        },
+        {
+          "page": 11,
+          "quote": "real-world dataset comprising 439 query-table-column pairs, and use Recall @5 for evaluation. For NL2DSL, we compile another dataset comprising 326 query-DSL pairs"
+        },
+        {
+          "page": 11,
+          "quote": "Specifically, the Recall @5 of Schema Linking increases by 38.47%, and the Accuracy of NL2DSL improves by up to 58.58%."
+        },
+        {
+          "page": 11,
+          "quote": "the performance still exhibits a significant increase of 30.77% for Schema Linking and 29.14% for NL2DSL compared to the baseline (S1)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a93efd114d95"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 11,
+          "quote": "we collect 50 DataLab notebooks containing multi-language cells from practical settings, with cell counts ranging from 2 to 49."
+        },
+        {
+          "page": 12,
+          "quote": "we derive 3 real-world user queries, which involve NL2SQL, NL2DSCode, and NL2VIS tasks, totaling to 150 samples."
+        },
+        {
+          "page": 12,
+          "quote": "S2 significantly reduces the Token Cost per Query by 61.65% compared to S1, saving approximately $65.90 for every 1,000 queries using GPT-4."
+        },
+        {
+          "page": 12,
+          "quote": "which are occasionally failed to retrieve by our context retrieval mechanism due to limitations of embedding similarity [61]. This accounts for the slight 4.67% drop in Accuracy under S2."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9e66b8321510"
+    }
+  },
+  "stamped": "2026-10-30"
+}

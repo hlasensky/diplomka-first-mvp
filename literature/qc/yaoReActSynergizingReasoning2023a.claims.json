@@ -1,0 +1,198 @@
+{
+  "citekey": "yaoReActSynergizingReasoning2023a",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "their abilities for reasoning (e.g. chain-of-thought prompting) and acting (e.g. action plan generation) have primarily been studied as separate topics"
+        },
+        {
+          "page": 2,
+          "quote": "reasoning is a static black box, in that the model uses its own internal representations to generate thoughts and is not grounded in the external world"
+        },
+        {
+          "page": 2,
+          "quote": "This can lead to issues like fact hallucination and error propagation over the reasoning process"
+        },
+        {
+          "page": 2,
+          "quote": "they do not employ language models to reason abstractly about high-level goals or maintain a working memory to support acting, barring"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "010e9cd2873f"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "The idea of ReAct is simple: we augment the agent’s action space to Â = A ∪ L, where L is the space of language"
+        },
+        {
+          "page": 3,
+          "quote": "which we will refer to as a thought or a reasoning trace, does not affect the external environment, thus leading to no observation feedback"
+        },
+        {
+          "page": 3,
+          "quote": "Each in-context example is a human trajectory of actions, thoughts, and environment observations to solve a task instance"
+        },
+        {
+          "page": 4,
+          "quote": "appear sparsely in the most relevant positions of a trajectory, so we let the language model decide the asynchronous occurrence of thoughts and actions for itself"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "c322734ed192"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "the combination of reasoning and acting also contributes to model interpretability, trustworthiness, and diagnosability across all domains"
+        },
+        {
+          "page": 4,
+          "quote": "ReAct promises an interpretable sequential decision making and reasoning process where humans can easily inspect reasoning and factual correctness"
+        },
+        {
+          "page": 4,
+          "quote": "humans can also control or correct the agent behavior on the go by thought editing, as shown in Figure 5 in Section 4"
+        },
+        {
+          "page": 4,
+          "quote": "Designing ReAct prompts is straightforward as human annotators just type down their thoughts in language on top of their actions taken"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "942edd20b239"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "We conduct empirical evaluations of ReAct and state-of-the-art baselines on four diverse benchmarks"
+        },
+        {
+          "page": 4,
+          "quote": "For HotpotQA and Fever, we randomly select 6 and 3 cases2 from the training set and manually compose ReAct-format trajectories"
+        },
+        {
+          "page": 7,
+          "quote": "Following Shridhar et al. (2020b), we evaluate on 134 unseen evaluation games in a task-specific setup"
+        },
+        {
+          "page": 7,
+          "quote": "a recently proposed online shopping website environment with 1.18M real-world products and 12k human instructions"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "f355c90f4c28"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "We note that ReAct is better than Act on both tasks, demonstrating the value of reasoning to guide acting"
+        },
+        {
+          "page": 6,
+          "quote": "ReAct outperforms CoT on Fever (60.9 vs. 56.3) and slightly lags behind CoT on HotpotQA (27.4 vs. 29.4)"
+        },
+        {
+          "page": 6,
+          "quote": "they both significantly and consistently outperform CoT-SC across different number of samples, reaching CoT-SC performance with 21 samples using merely 3-5 samples"
+        },
+        {
+          "page": 6,
+          "quote": "As all prompting methods are still significantly far from domain-specific state-of-the-art approaches (Table 1)"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9a384517fbc2"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "randomly sampled 50 trajectories with correct and incorrect answers (judged by EM) from ReAct and CoT respectively (thus 200 examples in total)"
+        },
+        {
+          "page": 6,
+          "quote": "Hallucination is a serious problem for CoT, resulting in much higher false positive rate than ReAct (14% vs. 6%) in success mode, and make up its major failure mode (56%)"
+        },
+        {
+          "page": 6,
+          "quote": "there is one frequent error pattern specific to ReAct, in which the model repetitively generates the previous thoughts and actions"
+        },
+        {
+          "page": 6,
+          "quote": "Noninformative search, which counts for 23% of the error cases, derails the model reasoning and gives it a hard time to recover and reformulate thoughts"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "5b5962aca61b"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "For baselines, we use BUTLER (Shridhar et al., 2020b), an imitation learning agent trained on 105 expert trajectories for each task type5"
+        },
+        {
+          "page": 8,
+          "quote": "the best ReAct trial achieves an average success rate of 71%, significantly outperforming the best Act (45%) and BUTLER (37%) trials"
+        },
+        {
+          "page": 8,
+          "quote": "ReAct substantially outperforms IM-style prompting (ReAct-IM) (71 vs. 53 overall success rate), with consistent advantages on five out of six tasks"
+        },
+        {
+          "page": 8,
+          "quote": "However, existing methods are still far from the performance of expert humans (Table 4)"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "01927fa92c0e"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "With PaLM-8/62B, prompting ReAct performs worst among four methods due to the difficulty to learn both reasoning and acting from in-context examples"
+        },
+        {
+          "page": 6,
+          "quote": "However, when finetuned with just 3,000 examples, ReAct becomes the best method among the four"
+        },
+        {
+          "page": 9,
+          "quote": "complex tasks with large action spaces require more demonstrations to learn well, which unfortunately can easily go beyond the input length limit of in-context learning"
+        },
+        {
+          "page": 10,
+          "quote": "Our experiments minimize such risks by limiting the interactions to specific websites (Wikipedia or WebShop) that are free of private information"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "aece017e04b5"
+    }
+  },
+  "stamped": "2026-10-30"
+}

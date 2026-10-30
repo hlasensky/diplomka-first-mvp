@@ -12,6 +12,7 @@ literature/.obsidian/cache
 # fulltexty a PDF (autorská práva, velikost)
 literature/fulltext/*.txt
 literature/inbox/*.pdf
+literature/figures/
 thesis/
 # Dataset artifacts that are rebuilt by scripts/build_db.py
 data/raw/senger

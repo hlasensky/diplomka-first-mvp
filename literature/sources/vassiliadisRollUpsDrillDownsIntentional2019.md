@@ -39,6 +39,12 @@ Vizionářský článek navrhuje nahradit v [[olap]] nízkoúrovňové operace (
 - Bib záznam je @article v Information Systems, ale PDF je arXiv long-version. Obsah hlavní části (§1–7) odpovídá časopisu; navíc je příloha s formálními definicemi (§8 data a cube queries, §9 algoritmy, §10 modely, highlights a dashboardy, §11 formální definice operátorů; s. 57–74), která v časopise není.
 - Předběžná verze [18] (DOLAP 2018) měla jiné operátory: Describe pokrývá FocusOn a Abstract, Assess pokrývá Compare a Verify, Explain nahrazuje Analyze (s. 31, 34, 35).
 - Experiment (C7) je jen ukázka proveditelnosti: jedna session na jednom notebooku (Intel i5-7200U, 8 GB RAM), žádné srovnání ani uživatelská studie. Konkrétní časy jsou jen v obr. 4, který v textovém extraktu chybí.
-- Obrázky a část tabulek (např. Table 6, 8 u Example 7) jsou v extraktu rozházené, čísla ověř v PDF.
+- Tabulky 1–16 jsou v extraktu úplné, jen rozložené po sloupcích (ověřeno proti PDF, 2026-10-30); barevné zvýraznění highlights (Table 6, 9) v textu chybí, popisuje ho text Example 7. Algorithm 1 (s. 23) a obr. 5 (s. 60, příčina PAGE_WARN) jsou ve fulltextu doplněné ručním přepisem. Obr. 3 (screenshot) a obr. 4 (graf časů) přepsané nejsou.
+- Drobná nekonzistence v paperu (s. 25–26, Example 7): výpočet top-5 skóre v textu sčítá 0.447, Table 9 má u Assoc/Self-emp-not-inc 0.477. Výsledek 0.61 platí s oběma hodnotami (3,052/5 vs. 3,082/5).
 - Na Sarawagiho odkazují jako [3] Explaining differences in multidimensional aggregates (VLDB 1999), [4] User-adaptive exploration of multidimensional data (VLDB 2000) a [5] Sathe & Sarawagi, Intelligent rollups in multidimensional OLAP data (VLDB 2001). Na [[sarawagiDiscoverydrivenExplorationOLAP1998]] (EDBT'98) přímo neodkazují.
 - Strany v časopise (IS) pro PDF s. 5 (C2) a s. 36 (C6) nejsou dohledané – arXiv PDF je neobsahuje, doplnit z verze v IS.
+
+## Obrázky
+- Obr. 1 (s. 14) – typy modelů podle záměru se vstupní a výstupní signaturou ![[figures/vassiliadisRollUpsDrillDownsIntentional2019/fig1.png]]
+- Obr. 2 (s. 22) – princip výběru highlights (kroky 1–7) ![[figures/vassiliadisRollUpsDrillDownsIntentional2019/fig2.png]]
+- Algoritmus 1 (s. 23) – výběr highlights pomocí surprise ![[figures/vassiliadisRollUpsDrillDownsIntentional2019/alg1.png]]

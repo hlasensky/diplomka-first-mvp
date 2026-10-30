@@ -35,6 +35,12 @@ Přehledový článek o nesupervizované detekci odlehlých hodnot a anomálií 
 
 ## Pozor
 - Tištěné strany = 56:1–56:33 (article 56), odpovídají stranám PDF 1–33.
-- PAGE_WARN s. 4 (obr. 2 s taxonomií); claim C2 cituje s. 4 jen pro text úvodu §2, samotný obrázek ověř v PDF.
+- PAGE_WARN s. 4 (obr. 2 s taxonomií); claim C2 cituje s. 4 jen pro text úvodu §2. Popisky obr. 2 jsou nově ručně přepsané ve fulltextu (2026-10-30).
 - Přehled pokrývá literaturu 2000–2019 a jen nesupervizované metody; neobsahuje deep learning po roce 2019 ani LLM.
-- Software (Tab. 9, s. 28) je v extraktu rozházený, odkazy ověř v PDF.
+- Software (Tab. 9, s. 28) byl v extraktu rozházený; nově ručně přepsán ve fulltextu (2026-10-30).
+- Souhrnné tabulky bodových metod (Tab. 2 s. 12, Tab. 3 s. 14, Tab. 4 s. 16) ztratily v extraktu ✓/✗; nově ručně přepsány. Tab. 5 (s. 23), Tab. 6 (s. 24) a Tab. 8 (s. 27, jedno ✓ u Benkabou et al.) mají ✓/✗ ve fulltextu stále neúplné – před citací ověř v PDF.
+
+## Obrázky
+- Obr. 2 (s. 4) – taxonomie metod podle tří os ![[figures/blazquez-garciaReviewOutlierAnomaly2021/fig2.png]]
+- Obr. 8 (s. 7) – bodová odlehlá hodnota jako odchylka pozorované od očekávané hodnoty o víc než τ ![[figures/blazquez-garciaReviewOutlierAnomaly2021/fig8.png]]
+- Obr. 11 (s. 13) – vícerozměrná řada převedená transformací na nekorelované proměnné a jednorozměrnou detekci ![[figures/blazquez-garciaReviewOutlierAnomaly2021/fig11.png]]

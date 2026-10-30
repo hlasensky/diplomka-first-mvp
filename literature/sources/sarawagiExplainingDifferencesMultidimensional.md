@@ -39,5 +39,10 @@ PDF: [otevřít v Zoteru](zotero://open-pdf/library/items/P8FPTLFI)
 ## Pozor
 - Bib záznam je neúplný: chybí rok, venue i stránky. Rok 1999, VLDB Edinburgh a s. 42–53 jsou převzaté z PDF (patička s. 1) a z citace v [[franciaExplainingCubeMeasures2024]] [35]. Doplň je v Zoteru. Pozor: Better BibTeX pak nejspíš vygeneruje nový citekey (s rokem 1999); poznámku a fulltext bude potřeba přejmenovat.
 - Číslování stran: tištěná strana = PDF strana + 41 (PDF 1–12 = s. 42–53). V claims jsou PDF strany.
-- Tabulky a grafy (obr. 2–13, 16–18) jsou v extraktu rozházené, čísla ověřuj v PDF. Článek neuvádí, že vysvětlení tvoří jen řádky kostky (ne vztahy mezi mírami), ani že chybí uživatelské hodnocení kvality – to jsou vlastní pozorování (dříve v C7), patří do „Vztah k mé práci“.
+- Tabulky obr. 2, 3, 5, 6, 8, 9, 10 a 11 jsou ve fulltextu ručně přepsané z PDF (bloky `[Fig. N – ruční přepis z PDF]`). Obr. 1, 4 a 7 jsou v extraktu jen rozdělené do sloupců, obr. 12–14 jsou diagramy a obr. 16–18 grafy; čísla z nich ověřuj v PDF. Text s. 6 (PDF) uvádí u „System mgmt.“ nárůst na „287 million“ v roce 1994, tabulka obr. 8 má 278.612. Článek neuvádí, že vysvětlení tvoří jen řádky kostky (ne vztahy mezi mírami), ani že chybí uživatelské hodnocení kvality – to jsou vlastní pozorování (dříve v C7), patří do „Vztah k mé práci“.
 - Cituje [[sarawagiDiscoverydrivenExplorationOLAP1998]] jako [SAM98] (s. 2 a reference). Samotný DIFF citují [[vassiliadisRollUpsDrillDownsIntentional2019]] ([3]) a [[franciaExplainingCubeMeasures2024]] ([35]).
+
+## Obrázky
+- Obr. 3 (s. 3) – odpověď operátoru diff na pokles v Rest of World 1990→1991 (řádky s RATIO a ERROR) ![[figures/sarawagiExplainingDifferencesMultidimensional/fig3.png]]
+- Obr. 13 (s. 8) – stav dynamického programování pro N = 2, L = 2, R = 1 ![[figures/sarawagiExplainingDifferencesMultidimensional/fig13.png]]
+- Obr. 14 (s. 9) – architektura prototypu: Excel, OLAP server, stored procedure ![[figures/sarawagiExplainingDifferencesMultidimensional/fig14.png]]

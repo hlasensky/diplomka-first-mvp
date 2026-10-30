@@ -42,4 +42,9 @@ Scorpion vysvětluje odlehlé body ve výsledku group-by agregačního dotazu: u
 - Litqc: 0 PAGE_WARN. Strana 7 obsahuje v extraktu tisíce řádků bodů z bodových grafů (obr. 5–6, 8); text MC sekce je až za nimi. Grafy a tabulky (obr. 9–16) jsou v extraktu rozházené, čísla z obrázků ověřuj v PDF.
 - Čísla podsekcí v kapitole 8 (Datasets, Experimental Setup, Real-World Datasets) nejsou v extraktu čitelná; v claims jsou uváděná podle struktury textu, ověř v PDF. Sekce MC je §6.2 (nadpis na s. 7 čitelný).
 - Omezení předpokladů: dotazy jsou group-by nad jedinou tabulkou, joiny se modelují materializací (s. 3); vliv je definován mazáním řádků, perturbace hodnot nebyla zkoumána (s. 3, pozn. 3).
+- Ve fulltextu ručně přepsány z PDF: tab. 1 (příklad senzorových dat, s. 2) a tab. 3 (notace, s. 2). Tab. 2 a pseudokód MC (s. 7, bez popisku) jsou v extraktu čitelné, jen rozházené. Obr. 3–16 jsou grafy a ilustrace, nepřepisovány.
 - V related work cituje Sarawagi iDiff [15] = [[sarawagiExplainingDifferencesMultidimensional]] a cube exploration [16] = [[sarawagiDiscoverydrivenExplorationOLAP1998]] (s. 12).
+
+## Obrázky
+- Obr. 2 (s. 4) – architektura Scorpionu (Provenance, Partitioner, Scorer, Merger, Top-K) ![[figures/wuScorpionExplainingAway2013/fig2.png]]
+- Tab. 1–2 (s. 2) – běžící příklad: senzorová data a výsledky dotazu s anotacemi outlier/hold-out ![[figures/wuScorpionExplainingAway2013/tab1.png]]

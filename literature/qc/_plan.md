@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-10-06
+generated: 2026-10-30
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -13,8 +13,8 @@ generated: 2026-10-06
 
 | úroveň | položek | v Zoteru | poznámka | čteno víc než abstrakt | čteno celé | ověřeno |
 |---|---|---|---|---|---|---|
-| 1 povinné | 25 | 10 | 10 | 1 | 1 | 1 |
-| 2 důležité | 41 | 1 | 1 | 0 | 0 | 0 |
+| 1 povinné | 25 | 18 | 17 | 1 | 1 | 1 |
+| 2 důležité | 42 | 2 | 2 | 0 | 0 | 0 |
 | 3 doplňkové | 21 | 5 | 5 | 0 | 0 | 0 |
 | nástroje a data | 9 | 0 | 0 | 0 | 0 | 0 |
 
@@ -23,32 +23,32 @@ generated: 2026-10-06
 | č. | položka | citekey | stav |
 |---|---|---|---|
 | 1 | Sarawagi, S., Agrawal, R., Megiddo, N. — Discovery-Driven Exploration of OLAP Data Cubes E… | [[sarawagiDiscoverydrivenExplorationOLAP1998]] | ✅ ověřeno · čteno: cele · QC PASS s varováními |
-| 2 | Vassiliadis, P., Marcel, P., Rizzi, S. — Beyond Roll-Up's and Drill-Down's: An Intentional… | [[vassiliadisRollUpsDrillDownsIntentional2019]] | candidate · čteno: ne · QC PASS s varováními |
+| 2 | Vassiliadis, P., Marcel, P., Rizzi, S. — Beyond Roll-Up's and Drill-Down's: An Intentional… | [[vassiliadisRollUpsDrillDownsIntentional2019]] | candidate · čteno: ne · QC PASS |
 | 3 | Sarawagi, S. — Explaining Differences in Multidimensional Aggregates VLDB 1999, s. 42–53 Z… | [[sarawagiExplainingDifferencesMultidimensional]] | candidate · čteno: ne · QC PASS |
 | 4 | Francia, M., Rizzi, S., Marcel, P. — Explaining Cube Measures Through Intentional Analytic… | [[franciaExplainingCubeMeasures2024]] | candidate · čteno: ne · QC PASS |
 | 5 | Wu, E., Madden, S. — Scorpion: Explaining Away Outliers in Aggregate Queries PVLDB 6(8):55… | [[wuScorpionExplainingAway2013]] | candidate · čteno: ne · QC PASS |
 | 6 | Zhou, Z., Yu, R. — Can LLMs Understand Time Series Anomalies? ICLR 2025 arXiv: https://arx… | [[zhouCanLLMsUnderstand2025]] | candidate · čteno: ne · QC PASS s varováními |
-| 7 | Alnegheimish, S. et al. — SigLLM: Large Language Models Can Be Zero-shot Anomaly Detectors… | – | chybí v Zoteru |
-| 8 | Greengard, S. — The Internet of Things [NOVÉ, rev. 4] MIT Press, 2015, ISBN 978-026-2527-7… | – | chybí v Zoteru |
+| 7 | Alnegheimish, S. et al. — SigLLM: Large Language Models Can Be Zero-shot Anomaly Detectors… | [[alnegheimishLargeLanguageModels2024]] | candidate · čteno: ne · QC PASS |
+| 8 | Greengard, S. — The Internet of Things [NOVÉ, rev. 4] MIT Press, 2015, ISBN 978-026-2527-7… | [[greengardInternetThings2015]] | candidate · čteno: ne · QC FAIL |
 | 9 | John, P. — Optimising processes in IoT [NOVÉ, rev. 4] Pojednání o tématu disertační práce,… | – | chybí v Zoteru |
-| 10 | Senger, D., Gruber, C., Kluss, T., Johannsen, C. — Weight, Temperature and Humidity Sensor… | – | chybí v Zoteru |
+| 10 | Senger, D., Gruber, C., Kluss, T., Johannsen, C. — Weight, Temperature and Humidity Sensor… | [[sengerWeightTemperatureHumidity2024]] | candidate · čteno: ne · QC PASS s varováními |
 | 11 | Al-Fuqaha, A. et al. — Internet of Things: A Survey on Enabling Technologies, Protocols, a… | [[al-fuqahaInternetThingsSurvey2015]] | candidate · čteno: ne · QC PASS s varováními |
 | 12 | Hyndman, R. J., Athanasopoulos, G. — Forecasting: Principles and Practice, 3. vydání [NOVÉ… | – | chybí v Zoteru |
-| 13 | Blázquez-García, A. et al. — A Review on Outlier/Anomaly Detection in Time Series Data [PO… | [[blazquez-garciaReviewOutlierAnomaly2021]] | candidate · čteno: ne · QC PASS s varováními |
+| 13 | Blázquez-García, A. et al. — A Review on Outlier/Anomaly Detection in Time Series Data [PO… | [[blazquez-garciaReviewOutlierAnomaly2021]] | candidate · čteno: ne · QC PASS |
 | 14 | Jensen, S. K., Pedersen, T. B., Thomsen, C. — Time Series Management Systems: A Survey IEE… | – | chybí v Zoteru |
 | 15 | Francia, M., Gallinucci, E., Golfarelli, M. — COOL: A Framework for Conversational OLAP, I… | [[franciaCOOLFrameworkConversational2022]] | candidate · čteno: ne · QC PASS s varováními |
 | 16 | VOOL — přirozenojazyková vokalizace výsledků OLAP sessions Information Systems, 2025 https… | [[franciaVOOLModularInsightbased2025]] | candidate · čteno: ne · QC PASS |
-| 17 | NavLLM — interaktivní LLM navigace nad multidimenzionálními daty EDBT 2026 Volné PDF: http… | – | chybí v Zoteru |
+| 17 | Liu, X., Yang, Y. — LLM-Assisted Conversational Navigation over Multidimensional Data Cube… | liuNavLLMInteractiveLLMAssisted2026 | k ingestu |
 | 18 | ChartInsighter — redukce halucinací při shrnutí grafů časových řad IEEE TVCG, 2025 https:/… | – | chybí v Zoteru |
-| 19 | Yao, S. et al. — ReAct: Synergizing Reasoning and Acting in Language Models ICLR 2023 arXi… | – | chybí v Zoteru |
-| 20 | BIRD — benchmark pro Text-to-SQL nad rozsáhlými reálnými databázemi NeurIPS 2023 https://a… | – | chybí v Zoteru |
+| 19 | Yao, S. et al. — ReAct: Synergizing Reasoning and Acting in Language Models ICLR 2023 arXi… | [[yaoReActSynergizingReasoning2023a]] | candidate · čteno: ne · QC PASS s varováními |
+| 20 | BIRD — benchmark pro Text-to-SQL nad rozsáhlými reálnými databázemi NeurIPS 2023 https://a… | [[liCanLLMAlready2023a]] | candidate · čteno: ne · QC PASS s varováními |
 | 21 | Lei, F. et al. — Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-S… | – | chybí v Zoteru |
 | 22 | Schulhoff, S. et al. — The Prompt Report: A Systematic Survey of Prompt Engineering Techni… | – | chybí v Zoteru |
 | 23 | Lewis, J. R. — The System Usability Scale: Past, Present, and Future [NOVÉ] International … | – | chybí v Zoteru |
-| 24 | Lenz, H.-J., Shoshani, A. — Summarizability in OLAP and Statistical Data Bases [NOVÉ, rev.… | – | chybí v Zoteru |
-| 25 | Buneman, P., Khanna, S., Tan, W.-C. — Why and Where: A Characterization of Data Provenance… | – | chybí v Zoteru |
+| 24 | Lenz, H.-J., Shoshani, A. — Summarizability in OLAP and Statistical Data Bases [NOVÉ, rev.… | [[lenzSummarizabilityOLAPStatistical1997]] | candidate · čteno: ne · QC PASS |
+| 25 | Buneman, P., Khanna, S., Tan, W.-C. — Why and Where: A Characterization of Data Provenance… | [[bunemanWhyWhereCharacterization2001]] | candidate · čteno: ne · QC PASS |
 
-### Úroveň 2 důležité (41)
+### Úroveň 2 důležité (42)
 
 | č. | položka | citekey | stav |
 |---|---|---|---|
@@ -93,6 +93,7 @@ generated: 2026-10-06
 | 64 | Liang, P. et al. — Holistic Evaluation of Language Models (HELM) [NOVÉ] Transactions on Ma… | – | chybí v Zoteru |
 | 65 | Brooke, J. — SUS: A „Quick and Dirty" Usability Scale In: Jordan, P. W. et al. (eds.), Usa… | – | chybí v Zoteru |
 | 66 | Likert, R. — A Technique for the Measurement of Attitudes Archives of Psychology 22(140):1… | – | chybí v Zoteru |
+| 97 | Weng, L. et al. — DataLab: A Unified Platform for LLM-Powered Business Intelligence IEEE I… | [[wengDataLabUnifiedPlatform2025]] | candidate · čteno: ne · QC PASS s varováními |
 
 ### Úroveň 3 doplňkové (21)
 

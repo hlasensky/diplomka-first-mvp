@@ -44,3 +44,10 @@ VOOL hlasově popisuje výsledky OLAP session. Nečte celou tabulku, ale vybír�
 - s. 13, §6.3: VOOL záměrně nedává doménovou interpretaci výsledku. Jako příklad uvádějí precision agriculture: nízké teploty mohou být špatné pro produkci, ale dobré pro ochranu proti škůdcům. Může se hodit pro IoT doménu.
 - Předběžná verze je [4] (ADBIS 2022). Query-to-text navazuje na COOL [3] (text-to-query). Cituje [[vassiliadisRollUpsDrillDownsIntentional2019]] ([9]), [[franciaExplainingCubeMeasures2024]] ([32]) a [[sarawagiExplainingDifferencesMultidimensional]] ([33]).
 - Kód: https://github.com/big-unibo/conversational-olap (s. 8; v extraktu rozdělené jako „conversationalolap“).
+- Ruční přepisy z PDF ve fulltextu (2026-10-30): Obr. 3 (s. 4, data příkladu), Tab. 1 (s. 5), Alg. 1 (s. 5), Obr. 4 (s. 6, data příkladu drill-down), Tab. 8 (s. 11, červeně zvýrazněné chyby/halucinace v ⟦…⟧). Tab. 2–7 jsou v extraktu jen rozdělené do sloupců, nepřepisovány; Obr. 5–7 jsou grafy. Červené zvýraznění chyb u odpovědi Data Analyst s CSV (s. 10, mimo tabulku) v extraktu chybí.
+- Př. 5 (s. 5) nesedí s Tab. 1: Statistics insight je v Tab. 1 s^P, v Př. 5 s^S; prostor insightů uvádí {s_1^C, s_2^P} místo s_2^C; pořadí vokalizace začíná NL(s^A). Uvedená cena řešení 51 neodpovídá součtu cen z Tab. 1 pro {s^S, s_3^T, s_1^C, s_1^A} (5 + 17 + 18 + 22 = 62, nad limitem 60 slov). Tak to stojí v článku.
+
+## Obrázky
+- Obr. 1 (s. 2) – funkční pohled na VOOL: dotaz, generování, výběr a vokalizace insightů ![[figures/franciaVOOLModularInsightbased2025/fig1.png]]
+- Tab. 1 (s. 5) – ukázkové insighty s cenou, zájmem a pokrytím ![[figures/franciaVOOLModularInsightbased2025/tab1.png]]
+- Obr. 4 (s. 6) – dva po sobě jdoucí dotazy, drill-down z kategorie na produkt ![[figures/franciaVOOLModularInsightbased2025/fig4.png]]

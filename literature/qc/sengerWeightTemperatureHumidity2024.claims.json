@@ -1,0 +1,198 @@
+{
+  "citekey": "sengerWeightTemperatureHumidity2024",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "In this paper, we present sensor data from 78 honey bee colonies in Germany collected as part of a citizen science project."
+        },
+        {
+          "page": 1,
+          "quote": "Sensor data from honey bee colonies can contribute to new insights about development and health factors for honey bee colonies."
+        },
+        {
+          "page": 1,
+          "quote": "The data can be incorporated in smart decision support systems and warning tools for beekeepers."
+        },
+        {
+          "page": 8,
+          "quote": "The data was collected within the citizen science project BeeObserver."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "cb37de5e6d2b"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "located in every second clearance between frames, t_i_3 being in the centre and t_i_1 and t_i_5 at the margin of the hive"
+        },
+        {
+          "page": 5,
+          "quote": "weight_kg | overall weight (kg) | Bosche H30/ H40 and HX711 | underneath the hive"
+        },
+        {
+          "page": 5,
+          "quote": "h | relative humidity (%) | BME280 | in the clearance between two frames"
+        },
+        {
+          "page": 7,
+          "quote": "it consists of 6 one-wire digital temperature sensors (DS18B20), a combined sensor for humidity, pressure and temperature (BME280) and a single point load cell (Bosche H30 or Bosche H40)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "30c166c779ae"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "We use a Do-It-Yourself (DIY) sensor setup, which is aimed to be low-cost and at the same time allowing for different hive types"
+        },
+        {
+          "page": 7,
+          "quote": "All sensors are connected to a circuit board with an ESP32 microcontroller (Fipy by Pycom), positioned in a water-proof box outside of the hive."
+        },
+        {
+          "page": 8,
+          "quote": "The sensor measurements are taken every 5– 10 s. Our default data transmission protocol is wireless LAN"
+        },
+        {
+          "page": 8,
+          "quote": "The data is transferred to a central server and stored in an Influx database, a database optimised for time series."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "322502ef5c69"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "the one-minute interval data is calculated deriving the median of all available measurements for the one-minute periods"
+        },
+        {
+          "page": 9,
+          "quote": "The one-hour and one-day aggregates are later calculated using averages of the data with a one-minute interval"
+        },
+        {
+          "page": 9,
+          "quote": "The unprocessed data, without cleaning routines applied as described above, is available for the one-minute interval data and the raw data only."
+        },
+        {
+          "page": 9,
+          "quote": "The raw data is stored with intervals between 5 and 10 s"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "58d48e1efd68"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "In the years directory the data is divided based on the year of recording, starting in 2019 and ending with 2022."
+        },
+        {
+          "page": 5,
+          "quote": "In the events directory we provide 3-month periods of data from bee colonies before a certain event was observed by a beekeeper"
+        },
+        {
+          "page": 5,
+          "quote": "As events, swarming and the death of a colony were chosen. For each year and event, there are two sub-directories: unprocessed and processed."
+        },
+        {
+          "page": 6,
+          "quote": "For each honey bee colony assigned to the sub-directories there is its own file in csv format. The file name contains the unique key of the hive and, for the event specific data, the timestamp of the event."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "7fc2ed27d532"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "We use a fork of the open source beekeeping platform BEEP"
+        },
+        {
+          "page": 8,
+          "quote": "The data is stored in a MySQL database."
+        },
+        {
+          "page": 8,
+          "quote": "Overall, our data includes information from more than 2600 inspections."
+        },
+        {
+          "page": 6,
+          "quote": "four columns for each of the mentioned events specifying the timestamp and the distance in time for the last and next occurrence of each event"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "00d849d5c2ed"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "We then run a routine to exclude weight values larger than 150 kg and smaller than −50 kg, temperature values larger than 85 °C and smaller than −40 °C"
+        },
+        {
+          "page": 9,
+          "quote": "excluding values larger than 0.3, corresponding to changes with more than 300 g weight difference per minute."
+        },
+        {
+          "page": 9,
+          "quote": "By calculating the cumulative sum we obtain the processed absolute weight value, with the first value always being 0 kg."
+        },
+        {
+          "page": 6,
+          "quote": "Beekeepers frequently add or remove supers, adapting to a colony’s fluctuating size and for harvesting. Sometimes beekeepers use additional stones to secure their hives against wind."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4a11b43ce722"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "beekeepers might face theft and vandalism. We therefore rounded the coordinates of the locations to their first digits, corresponding to a precision of 5–7 km on the longitude scale for central Europe."
+        },
+        {
+          "page": 10,
+          "quote": "Therefore, the interval of inspections in our data is different for all colonies."
+        },
+        {
+          "page": 10,
+          "quote": "it is possible that the beekeeper missed an important event, e.g. a swarming event. As the participation in the project was voluntary, there are a few colonies with no or limited meta-data."
+        },
+        {
+          "page": 8,
+          "quote": "As in many citizen science project, there was no sampling strategy such as a location based selection of honey bee colonies."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "bf63004156fb"
+    }
+  },
+  "stamped": "2026-10-30"
+}

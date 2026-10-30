@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-10-05
+generated: 2026-10-30
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -9,19 +9,11 @@ generated: 2026-10-05
 
 Zdroj: [[vassiliadisRollUpsDrillDownsIntentional2019]]
 
-**QC: PASS s varováními** – 0 chyb, 1 varování
-
-| úroveň | kód | nález |
-|---|---|---|
-| WARN | PAGE_WARN | s. 60: shoda s OCR recall 0.78, pořadí 0.77, PUA 0, rozpalovaná slova 0 (tabulka/vzorec/sloupce?) – ověř v PDF, než z ní cituješ |
+**QC: PASS** – 0 chyb, 0 varování
 
 ### Fulltext vs. OCR
 
-74 stran PDF, 73 bez nálezu. recall = podíl slov z OCR, která jsou ve fulltextu; pořadí = shoda dvojic slov.
-
-| strana | stav | slov ft | slov OCR | recall | precision | pořadí | slovník ft | slovník OCR | cid+�/PUA/r o z p a l |
-|---|---|---|---|---|---|---|---|---|---|
-| 60 | WARN | 217 | 272 | 0.78 | 0.98 | 0.77 | 0.96 | 0.97 | 0/0/0 |
+74 stran PDF, 74 bez nálezu. recall = podíl slov z OCR, která jsou ve fulltextu; pořadí = shoda dvojic slov.
 
 ### Claims
 

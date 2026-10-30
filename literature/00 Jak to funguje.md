@@ -87,7 +87,8 @@ TL;DR, „Vztah k mé práci“, `status`, `verified` a `precteno` v existujíc�
 
 ## Specifika a pasti
 
-- **Fulltext Sarawagi 1998** je ručně opravené OCR, nastavené jen pro čtení, záloha je v `fulltext/…corrected.txt`. `pdf2txt.sh` i `litqc.py --repair` soubory jen pro čtení nepřepíšou.
+- **Ručně opravené fulltexty** jsou jen pro čtení, záloha je v `fulltext/…corrected.txt`. Sarawagi 1998 je celé opravené OCR, ostatní mají přepisy obrázků, tabulek a algoritmů v blocích `[Fig. N – ruční přepis z PDF] … [/Fig. N]`. `pdf2txt.sh` i `litqc.py --repair` soubory jen pro čtení nepřepíšou.
+- **Obrázky** z PDF jsou v `figures/<citekey>/figN.png` (gitignore, autorská práva), v poznámce sekce „Obrázky“.
 - **DBLP API** je za anti-bot ochranou, skripty na něj nedosáhnou. `meta` proto používá Crossref (DOI), Semantic Scholar (venue, DBLP klíč, stránky) a jako zálohu OpenAlex. Odpovědi se cachují v `qc/.cache/` (gitignore).
 - **betterbib** (aktuální verze) je placený a uzavřený, **rebiber** zná jen konference z DBLP snapshotu. Proto vlastní `meta`.
 - **tesseract běží ve firejailu** bez přístupu do Zotera. `litqc.py` mu proto posílá obrázek strany přes stdin (`pdftoppm | tesseract stdin stdout`). OCR jednoho článku trvá zhruba 10–50 s a ukládá se do cache.

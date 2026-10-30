@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-10-07
+generated: 2026-10-30
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -11,5 +11,6 @@ generated: 2026-10-07
 
 | úroveň | kód | nález |
 |---|---|---|
+| INFO | TO_INGEST | liuNavLLMInteractiveLLMAssisted2026: v bibu, ale bez poznámky (`/ingest liuNavLLMInteractiveLLMAssisted2026`) |
 | INFO | NO_CITE_FOR | sarawagiDiscoverydrivenExplorationOLAP1998: confirmed, ale „Citovat pro“ je prázdné |
 

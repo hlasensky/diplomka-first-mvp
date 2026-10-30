@@ -32,8 +32,12 @@ Benchmark TSB-AD pro detekci anomálií v časových řadách: 1070 ručně kur�
 
 
 ## Pozor
-- Strany 29–31 (přílohy) jsou nahrazeny OCR textem; PAGE_WARN s. 19, 24, 26 (tabulky v přílohách). Claims citují jen hlavní text (s. 1–10).
-- Tabulky a grafy (Tab. 1, Obr. 5–8) jsou v extraktu rozházené; pořadí metod v C4 je z textu, ne z grafu.
-- Text (s. 9) uvádí CNN a OmniAnomaly na TSB-AD-M na 2. a 3. místě, obr. 7(b) je ale řadí na 1. a 2. (PCA 3.). Pořadí necituj bez kontroly v PDF.
+- Strany 29–31 (přílohy) jsou nahrazeny OCR textem; PAGE_WARN s. 19, 24 (tabulky v přílohách; s. 26 vyřešena přepisem Tab. 5). Claims citují jen hlavní text (s. 1–10).
+- Tab. 1 (s. 2) a Tab. 5 (s. 26, průměry všech 9 měr pro TSB-AD-U/M vč. vyznačení nejlepší/druhé nejlepší) jsou ve fulltextu ručně přepsané z PDF. Grafy (Obr. 5–8, 11–17) přepsané nejsou; pořadí metod v C4 je z textu, ne z grafu. PAGE_WARN s. 19 (Tab. 2) a 24 (Tab. 3–4, hyperparametry) zůstává.
+- Text (s. 9) uvádí CNN a OmniAnomaly na TSB-AD-M na 2. a 3. místě, obr. 7(b) je ale řadí na 1. a 2. (PCA 3.). Pořadí necituj bez kontroly v PDF. Tab. 5 (s. 26) dává na TSB-AD-M ve VUS-PR CNN tučně (nejlepší) a OmniAnomaly podtrženě (druhá), obě 0.31 – tedy jako obr. 7(b), ne jako text.
 - „Neuspokojivý“ pokus o integraci LLM (C5) se opírá o jedinou citovanou práci [114] (OFA).
 - Benchmark je na univariátních i multivariátních řadách obecně, ne na datech z úlů; pro tvoji evaluaci jde hlavně o argument pro metriku VUS-PR a proti PA-F1.
+
+## Obrázky
+- Obr. 3 (s. 5) – pipeline tvorby TSB-AD (sběr, vyřazení vad, ověření značení) a souhrnné statistiky ![[figures/liuElephantRoomReliable2024/fig3.png]]
+- Obr. 4 (s. 6) – vývojový diagram ověření kvality značení a příklady případů ![[figures/liuElephantRoomReliable2024/fig4.png]]

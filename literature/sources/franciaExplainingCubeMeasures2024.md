@@ -37,5 +37,9 @@ PDF: [otevřít v Zoteru](zotero://open-pdf/library/items/GFKNRTBZ)
 ## Pozor
 - Stránkování: článek má číslo 102338, strany PDF 1–13 odpovídají stranám v časopise.
 - Přímo cituje [[vassiliadisRollUpsDrillDownsIntentional2019]] ([1], vize IAM) a [[sarawagiExplainingDifferencesMultidimensional]] ([35], DIFF) v related work §7.1–7.2. Předchozí verze explain je [8] (polynomiální regrese mezi dvěma mírami); describe a assess jsou v [2–4].
-- Výsledky uživatelského testu (C7) jsou jen v grafech obr. 11–13, konkrétní čísla v textu nejsou. Tabulka 1 (časy) je v extraktu rozházená.
+- Výsledky uživatelského testu (C7) jsou jen v grafech obr. 11–13, konkrétní čísla v textu nejsou. Tabulka 1 (časy, s. 9) a algoritmy 2–3 (MultiReg, CrossCorr, s. 7) byly v extraktu rozházené; ve fulltextu jsou nyní ručně přepsané z PDF (`[Table 1 – …]`, `[Algorithm 2/3 – …]`). Grafy (obr. 4–6, 8, 10–13) a screenshot (obr. 7) přepsané nejsou.
 - Kód: https://github.com/big-unibo/explain (Python, scikit-learn, MySQL, D3).
+
+## Obrázky
+- Obr. 1 (s. 2) – přehled přístupu IAM: intention explain nad kostkou → obohacená kostka s komponentami modelů a highlightem ![[figures/franciaExplainingCubeMeasures2024/fig1.png]]
+- Obr. 2 (s. 3) – DFM schémata kostek SALES a PURCHASE (pracovní příklad) ![[figures/franciaExplainingCubeMeasures2024/fig2.png]]

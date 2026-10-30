@@ -1,0 +1,190 @@
+{
+  "citekey": "liCanLLMAlready2023a",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "most of the prevalent benchmarks, i.e., Spider, and WikiSQL, focus on database schema with few rows of database values leaving the gap between academic study and real-world applications"
+        },
+        {
+          "page": 1,
+          "quote": "Our emphasis on database values highlights the new challenges of dirty and noisy database values, external knowledge grounding between NL questions and database values, and SQL efficiency"
+        },
+        {
+          "page": 2,
+          "quote": "first, we discovered that current state-of-the-art models still struggle to generalize to more realistic situations characterized by large database sizes and noisy values"
+        },
+        {
+          "page": 2,
+          "quote": "existing benchmarks do not account for SQL execution efficiency, which holds significant practical importance in real-life applications"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "7d366ad79774"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "contains complex 12,751 examples of querying information over 95 big databases with a total size of 33.4 GB spanning 37 professional domains"
+        },
+        {
+          "page": 2,
+          "quote": "To further avoid data leakage, we curated 15 additional relational databases for a hidden test set."
+        },
+        {
+          "page": 3,
+          "quote": "32% of our databases are sourced from Kaggle"
+        },
+        {
+          "page": 3,
+          "quote": "Another 48% come from CTU Prague Relational Learning Repository"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4e436178b3d9"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "Experts then teach and evaluate crowdsourcing people, keeping only those who pass the evaluation."
+        },
+        {
+          "page": 4,
+          "quote": "This approach involves two independent SQL annotators who generate SQLs for the same question without discussion. The annotated SQLs are executed in databases, and those yielding identical results are gathered. Otherwise, the SQLs are checked with experts until a consensus is reached."
+        },
+        {
+          "page": 4,
+          "quote": "we collect and classify such evidence into four categories: (1) Numeric Reasoning Knowledge"
+        },
+        {
+          "page": 5,
+          "quote": "In addition, we observe that 70.1% of the questions need value illustrations."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "655444b161ad"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "EX is defined as the proportion of examples in the evaluation set for which the executed results of both the predicted and ground-truth SQLs are identical, relative to the overall number of SQLs"
+        },
+        {
+          "page": 6,
+          "quote": "the term \"valid SQLs\" refers to predicted SQL queries whose result sets align with those of the ground-truth SQLs"
+        },
+        {
+          "page": 6,
+          "quote": "Here, efficiency can refer to running time, throughput, memory cost, or merged metrics. In B IRD, we consider the running time mainly at this time."
+        },
+        {
+          "page": 6,
+          "quote": "we run 100 times for each SQL in the same CPU and evaluate average results after dropping the outliers"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "bf3627b5a465"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "GPT-4, only achieve 54.89% in execution accuracy, which is still far from the human result of 92.96%"
+        },
+        {
+          "page": 7,
+          "quote": "GPT-4 | **30.90** | 46.35 (+15.45) | 34.88 | 54.89 (+20.01)\nGPT-4 + DIN-SQL | - | **50.72** | - | 55.90\nHuman Performance | - | - | **72.37** | **92.96** (+20.59)"
+        },
+        {
+          "page": 8,
+          "quote": "GPT-4 | **34.60** | 49.77 (+15.17) | 40.20 | 60.77 (+20.57)\nGPT-4 + DIN-SQL | - | **58.79** | - | 59.44\nHuman Performance | - | - | **70.36** | **90.27** (+19.91)"
+        },
+        {
+          "page": 8,
+          "quote": "To ensure a fair evaluation, all models are furnished with knowledge about values, and"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "bf5b0a96c095"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "GPT-4 | **30.90** | 46.35 (+15.45) | 34.88 | 54.89 (+20.01)\nGPT-4 + DIN-SQL | - | **50.72** | - | 55.90\nHuman Performance | - | - | **72.37** | **92.96** (+20.59)"
+        },
+        {
+          "page": 9,
+          "quote": "all models have a clear improvement across the different difficulty levels as shown in Table 2 and Table 4"
+        },
+        {
+          "page": 9,
+          "quote": "we observe a decline or limited improvements in performance for ChatGPT + external knowledge evidence for COT version"
+        },
+        {
+          "page": 9,
+          "quote": "there is a notable disparity in the performance of ranking and numerical computing (math) among all the models. This limitation may suggest the inadequacy of contemporary LLMs for deep data science tasks"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "e3ba885dc774"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "We observe 500 randomly sampled error cases, providing an in-depth assessment in the following"
+        },
+        {
+          "page": 10,
+          "quote": "Wrong Schema Linking (41.6%) pertains to the scenario where ChatGPT can accurately comprehend the structure of the database but erroneously associates it with inappropriate columns and tables"
+        },
+        {
+          "page": 10,
+          "quote": "generates fake schema items (e.g., lap_records is not appearing in the formula_1 database and many values are predicted incorrectly) especially when the database is very large"
+        },
+        {
+          "page": 10,
+          "quote": "Misunderstanding Knowledge Evidence (17.6%) refers to cases in which the model does not accurately interpret human-annotated evidence"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "595488e77ca4"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "Despite the high quality of SQL annotation produced by double-blind annotation, the procedure is resource-intensive."
+        },
+        {
+          "page": 10,
+          "quote": "While it presents difficulties in fetching Query Execution Plans (QEP) for precise efficiency computation and adapting to different SQL syntaxes. Future work will include PostgreSQL and MySQL versions of B IRD"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "6f6a3005cc04"
+    }
+  },
+  "stamped": "2026-10-30"
+}

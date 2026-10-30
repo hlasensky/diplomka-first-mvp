@@ -1,0 +1,198 @@
+{
+  "citekey": "liuLLMassistedConversationalNavigation2026",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Each move is a choice in an exponentially large space of possible views, and the system offers little guidance beyond basic drill-down menus."
+        },
+        {
+          "page": 1,
+          "quote": "exploring redundant or uninformative views, missing subtle but important patterns"
+        },
+        {
+          "page": 1,
+          "quote": "they can hallucinate facts, invent plausible but incorrect explanations, and produce numerically wrong computations without explicit warning"
+        },
+        {
+          "page": 2,
+          "quote": "which next views should be recommended to maximize the utility of exploration under limited interaction budget? We call this the next-view recommendation problem for multidimensional data cubes."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "eb2eea84fade"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "The key idea is to model cube navigation as a graph of views connected by primitive OLAP actions (drill-down, roll-up, slice, dice)"
+        },
+        {
+          "page": 2,
+          "quote": "We propose the first formal model of conversational navigation over multidimensional data cubes"
+        },
+        {
+          "page": 4,
+          "quote": "Higher values indicate greater novelty: a view far from all previously visited views receives a high diversity score"
+        },
+        {
+          "page": 6,
+          "quote": "measure how strongly aggregated measure values in 𝑉 deviate from their parent according to"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "207f6a4d8f1c"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "the LLM never executes OLAP queries nor computes aggregates; it only observes schema-level descriptions and summary statistics of candidate views, and it outputs preference-based scores and textual explanations"
+        },
+        {
+          "page": 6,
+          "quote": "This contrasts with text-to-SQL approaches where a single hallucinated token can produce invalid queries or incorrect result sets."
+        },
+        {
+          "page": 7,
+          "quote": "data-driven interestingness and diversity can be computed purely from cube statistics and the navigation graph, whereas the preference score relies on the LLM"
+        },
+        {
+          "page": 8,
+          "quote": "including mean value, coefficient of variation (CV), number of outliers (tuples exceeding 2𝜎 from the parent mean), and deviation score"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a31e1633e4f9"
+    },
+    "C4": {
+      "verdict": "partial",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "Our cube engine is implemented using an in-memory pandas-based architecture for the research prototype."
+        },
+        {
+          "page": 9,
+          "quote": "In our experiments, the failure rate was 2.3% of API calls (18 out of 782 calls across all sessions), with 14 resolved by retry and 4 requiring fallback."
+        },
+        {
+          "page": 10,
+          "quote": "In practice, these measures keep the end-to-end latency per navigation step to 2–4 s: approximately 0.5–1s for candidate generation"
+        },
+        {
+          "page": 9,
+          "quote": "All statistics (Mean=$710K, CV=0.51, outliers, deviation) computed by PostgreSQL"
+        }
+      ],
+      "note": "Čísla sedí, ale tvrzení mlčky přebírá pandas z §6.1, ačkoli obr. 3 na téže citované s. 9 uvádí, že statistiky počítá „PostgreSQL cube engine“.",
+      "fix": "Implementace: podle §6.1 in-memory cube engine v pandas (obr. 3 na s. 9 ale uvádí „PostgreSQL cube engine“), LLM DeepSeek-V3 (temperature 0,3), nejvýš 30 kandidátů na krok, latence 2–4 s na krok (LLM volání 1,5–3 s). Neplatná JSON odpověď LLM se zopakuje s přísnějším promptem, jinak fallback na I_pref = 0,5; chybovost byla 2,3 % volání (18 z 782; 14 vyřešeno opakováním, 4 fallbackem). Výchozí váhy 0,4/0,4/0,2 vybrala pilotní studie na 6 odložených úlohách se 4 účastníky. (s. 7, §6.1; s. 9, §6.2–6.3, obr. 3, Tab. 1; s. 10, §6.5; s. 11, §7.1.3)",
+      "claim_sha": "56a3bfe02441"
+    },
+    "C5": {
+      "verdict": "partial",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "target views were independently annotated by two researchers with inter-annotator agreement of 𝜅 = 0.82 (substantial agreement)"
+        },
+        {
+          "page": 11,
+          "quote": "yielding 20 tasks × 2 runs = 40 sessions per method, for a total of 400 sessions across all 10 methods."
+        },
+        {
+          "page": 10,
+          "quote": "The tasks are distributed as 8 for SalesCube, 6 for ManufacturingCube, and 6 for AirQualityCube"
+        },
+        {
+          "page": 10,
+          "quote": "For the research-scale datasets used in our evaluation (up to 30M fact rows), in-memory processing is sufficient"
+        }
+      ],
+      "note": "Údaje odpovídají §7.1 a Tab. 2, ale tvrzení mlčky volí jednu stranu dvou rozporů: ~1M řádků SalesCube (Tab. 2) vs. „up to 30M fact rows“ (§6.5) a 30M řádků M5 (obr. 3), a devět baselines / 10 metod (§7.1.3) vs. 7 metod a 280 session (abstrakt, §1).",
+      "fix": "Evaluace: tři kostky po 3 dimenzích – SalesCube (M5, Walmart, ~1M řádků podle Tab. 2; §6.5 a obr. 3 ale mluví o až 30M řádcích), syntetická ManufacturingCube (~394K) a AirQualityCube z veřejných senzorových dat o kvalitě ovzduší (~2,5M, 5 let); 20 úloh v přirozeném jazyce (8/6/6) s cílovými pohledy anotovanými dvěma výzkumníky (κ = 0,82); automatické simulace s rozpočtem 12 kroků, 2 běhy na úlohu = 40 session na metodu; §7.1.3 srovnává s devíti baselines (LLM-Only, Heuristic-Nav, SeeDB, Voyager, Smart Drill-Down, DeepEye, Greedy-Best, BFS, Random-Nav), tj. 400 session přes 10 metod, abstrakt a §1 ale uvádějí 280 session a 7 metod; Welchův t-test. (s. 1, abstrakt; s. 2, §1; s. 9, obr. 3; s. 10, §6.5, §7.1.1–7.1.2; s. 11, §7.1.3, Tab. 2)",
+      "claim_sha": "1b640f247af7"
+    },
+    "C6": {
+      "verdict": "partial",
+      "evidence": [
+        {
+          "page": 11,
+          "quote": "NavLLM achieves the highest strict hit rate (0.525), outperforming LLM-Only (0.300), BFS (0.350), and other baselines by a wide margin."
+        },
+        {
+          "page": 11,
+          "quote": "Critically, NavLLM also achieves the highest cumulative interestingness score of 13.21, outperforming all baselines by a wide margin: LLMOnly (7.74, 𝑝 = .002), Heuristic-Nav (6.88, 𝑝 < .001), and Random-Nav"
+        },
+        {
+          "page": 12,
+          "quote": "Only shows 66.5% redundancy while NavLLM shows 55.4%. The lower redundancy of NavLLM compared to LLM-Only indicates"
+        },
+        {
+          "page": 1,
+          "quote": "Results show NavLLM achieves 71% higher cumulative interestingness than LLM-only baselines (𝑝 = .002) and 92% higher than purely data-driven heuristics (𝑝 < .001)"
+        }
+      ],
+      "note": "Čísla z Tab. 3, 4 a 6 sedí, ale p = 0,194 vůči Random-Nav je z Tab. 6, která odporuje Tab. 3 (0,525 vs. 0,175 při n = 40 dává p ≈ 0,001; obdobně p = 1,000 vůči Heuristic-Nav), a tvrzení nezmiňuje, že §8 (s. 14) striktní hit rate NavLLM a LLM-Only prohazuje.",
+      "fix": "Výsledky (Tab. 3): NavLLM má nejvyšší striktní hit rate 0,525 (LLM-Only 0,300, BFS 0,350; vůči LLM-Only p = 0,041) a kumulativní zajímavost 13,21 proti 7,74 u LLM-Only (p = 0,002, +71 %), 6,88 u Heuristic-Nav a 5,96 u Random-Nav (obojí p < 0,001); abstrakt to uvádí jako +92 % proti čistě datovým heuristikám. V relaxed hit rate je NavLLM (0,800) pod LLM-Only (0,875) i Heuristic-Nav (0,950). Redundance 55,4 % vs. 66,5 % u LLM-Only. Diskuse v §8 ale striktní hit rate prohazuje (LLM-Only 0,525, NavLLM 0,300) a hit-rate p-hodnoty v Tab. 6 vůči Heuristic-Nav (1,000) a Random-Nav (0,194) neodpovídají Tab. 3. (s. 1, abstrakt; s. 11, §7.2.1, Tab. 3; s. 12, §7.2.2, §7.2.4, Tab. 4, Tab. 6; s. 14, §8)",
+      "claim_sha": "33978d186c20"
+    },
+    "C7": {
+      "verdict": "partial",
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "In the 74 conflict cases, the 𝐼pref -preferred candidate hits a target view in 35.1% of cases, compared to only 13.5% for the 𝐼data -preferred candidate; the hybrid top-1 achieves 27.0%."
+        },
+        {
+          "page": 13,
+          "quote": "DeepSeek-V3 achieves a higher strict hit rate (0.275 vs 0.175) while GPT-4o obtains slightly higher cumulative interestingness (12.59 vs 11.32); neither difference is statistically meaningful"
+        },
+        {
+          "page": 12,
+          "quote": "variant accumulates 11.3 over twelve highly diverse views, which works out to an average per-view interestingness of 0.94, whereas the full model accumulates 9.5 over a more concentrated path"
+        },
+        {
+          "page": 14,
+          "quote": "The ablation study (conducted with a smaller LLM for efficiency) confirms the value of this hybrid approach"
+        }
+      ],
+      "note": "Všechna čísla z Tab. 7, 9–11 a §7.5 sedí, ale tvrzení upozorňuje na odlišnou úroveň jen u robustnostních experimentů, ne u ablace: plný model má v Tab. 7 kumulativní zajímavost 9,5 místo 13,21 z Tab. 3 (proto je 11,3 bez I_data „nejvyšší“ jen uvnitř Tab. 7) a §7.3 (DeepSeek-V3 kvůli konzistenci s hlavními výsledky) odporuje §8 (menší LLM).",
+      "fix": "Ablace a robustnost: bez I_pref klesne hit rate z 0,53 na 0,36, bez I_data na 0,40 (ale s nejvyšším pokrytím 12,7 a kumulativní zajímavostí 11,3 v rámci Tab. 7), bez I_div na 0,30 s redundancí 0,72 (Tab. 7). Ablace sama neodpovídá Tab. 3: plný model v ní má kumulativní zajímavost 9,5 (Tab. 3: 13,21) a redundanci 0,55 (text §7.3: 0,63); §7.3 tvrdí, že ablace běžela na DeepSeek-V3 kvůli konzistenci s hlavními výsledky, §8 že na menším LLM. I_data a I_pref se na top-1 kandidátovi neshodnou v 66,1 % ze 112 kroků; v 74 konfliktech zasáhne cíl kandidát preferovaný I_pref v 35,1 %, I_data v 13,5 % a hybrid v 27,0 %. Parafráze promluv nemění kumulativní zajímavost (p > 0,63; hit rate netestován, striktní kolísá 0,100–0,275), záměna DeepSeek-V3 za GPT-4o nedává signifikantní rozdíl (p > 0,29) a pět opakovaných běhů dává 11,18 ± 0,42; tyto robustnostní experimenty vycházejí z další úrovně (NavLLM/DeepSeek-V3: striktní hit rate 0,275, CI 11,32 vs. 0,525 a 13,21 v Tab. 3) a článek rozdíly nevysvětluje. (s. 12, §7.3; s. 13, Tab. 7, Tab. 9, Tab. 10, §7.5.1–7.5.4; s. 14, Tab. 11, §8)",
+      "claim_sha": "5301bec38370"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 15,
+          "quote": "our evaluation focuses on cubes with 3–4 dimensions and 2–5 measures; real enterprise cubes often have 10+ dimensions"
+        },
+        {
+          "page": 15,
+          "quote": "Fifth, we used DeepSeek-V3 as the underlying LLM; other models may exhibit different behavior"
+        },
+        {
+          "page": 12,
+          "quote": "Heuristic-Nav achieving 0.667 hit rate, the highest across all cubemethod combinations."
+        },
+        {
+          "page": 16,
+          "quote": "NavLLM relies on the existence of a clean star schema with defined hierarchies."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "921be5da1f20"
+    }
+  },
+  "stamped": "2026-10-30"
+}

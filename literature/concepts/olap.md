@@ -13,9 +13,12 @@ On-Line Analytical Processing: analýza dat organizovaných do vícerozměrné k
 - [[wuScorpionExplainingAway2013]] — C4: vlastnosti agregací (inkrementální odebíratelnost aj.) vztahuje k distributivním a algebraickým funkcím OLAP kostek a uvádí, že nejsou totožné.
 - [[franciaCOOLFrameworkConversational2022]] — C4: OLAP session řízená přirozeným jazykem; gramatika operátorů drill down, roll up, slice and dice, add, drop, replace nad předchozím dotazem.
 - [[franciaVOOLModularInsightbased2025]] — C2, C4: insighty popisují výsledek dotazu v OLAP session a moduly zohledňují operátor (roll-up, drill-down, slice-and-dice), kterým vznikl z předchozího dotazu.
+- [[lenzSummarizabilityOLAPStatistical1997]] — C1: sumarizace v OLAP a statistických databázích je korektní jen za určitých podmínek; nesumarizovatelnou operaci je třeba uživateli ohlásit.
+- [[liuLLMassistedConversationalNavigation2026]] — C1, C2: navigace v kostce jako průchod grafem pohledů, jehož hrany jsou primitivní OLAP akce (drill-down, roll-up, slice, dice); ruční navigace v exponenciálně velkém prostoru pohledů je podle autorů hlavní problém.
 
 ## Související
 - [[conversational-olap]]
 - [[anomaly-detection]]
 - [[guided-data-exploration]]
 - [[query-explanation]]
+- [[summarizability]]

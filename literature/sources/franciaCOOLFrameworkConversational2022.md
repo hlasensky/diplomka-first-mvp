@@ -1,15 +1,18 @@
 ---
 citekey: franciaCOOLFrameworkConversational2022
 title: "COOL: A Framework for Conversational OLAP"
-authors: "Francia, Matteo; Gallinucci, Enrico; Golfarelli, Matteo"
+authors: Francia, Matteo; Gallinucci, Enrico; Golfarelli, Matteo
 year: 2022
-venue: "Information Systems 104, 101752"
-kind: journal   # journal | conference | preprint | book | misc
-status: candidate   # confirmed | candidate | rejected
-verified: false     # true = tvrzení ověřená proti PDF mnou
-precteno: ne         # ne | abstrakt | uvod-zaver | prolet | cele – jak daleko jsem paper četl (mění jen já)
+venue: Information Systems 104, 101752
+kind: journal
+status: candidate
+verified: true
+precteno: proleteno
 chapters: []
-concepts: [conversational-olap, text-to-sql, olap]
+concepts:
+  - conversational-olap
+  - text-to-sql
+  - olap
 uroven: 1
 ---
 
@@ -36,8 +39,16 @@ COOL překládá dialog v přirozeném jazyce na OLAP session: první dotaz je �
 
 ## Pozor
 - Stránkování: článek má číslo 101752, strany PDF 1–18 odpovídají tištěným stranám.
-- PAGE_WARN s. 1, 6, 8 (shoda s OCR jen 0,7–0,75 na s. 6 a 8 – gramatika OLAP operátorů, Tabulka 2 a scoring). C4 cituje s. 6 – ověř v PDF. Tabulka 2 (anotace AA…UC) je v extraktu rozházená; definice anotací v C5 jsou z textu na s. 7.
-- Strany 12 a 15 byly nahrazeny OCR (grafy obr. 11–14, obr. 18 a Tabulka 6 s výsledky uživatelského testu); Tabulka 6 je v extraktu nečitelná, čísla v C7 jsou z textu §9.3.3 na s. 16.
+- PAGE_WARN s. 1 a 8. Na s. 8 jsou stromy obr. 8 a Tabulka 2 rozdělená do sloupců (text je kompletní, jen řádky nejsou u sebe).
+- Ve fulltextu jsou ručně přepsané obr. 5 (s. 6), obr. 7 (s. 7) a Tabulka 6 (s. 15), ohraničené `[Fig. N …]` / `[Table 6 …]`, ověřené proti PDF. Fulltext je proto jen pro čtení, záloha `fulltext/…corrected.txt`. Tabulka 2 (anotace AA…UC) je v extraktu rozházená; definice anotací v C5 jsou z textu na s. 7.
+- Strany 12 a 15 byly nahrazeny OCR (grafy obr. 11–14, obr. 18 a Tabulka 6 s výsledky uživatelského testu); čísla v C7 jsou z textu §9.3.3 na s. 16 (Tabulka 6 je ve fulltextu přepsaná).
 - Údaj „average accuracy of 94%“ je z abstraktu (s. 1); v §9 jsem nenašel, ze kterého měření přesně vzniká (0,94 se objevuje u SSB po disambiguaci, s. 13, a ve formal-based uživatelských testech, s. 16). Při citaci raději použij konkrétní čísla z §9.1.2.
 - Předchozí verze: Francia, Gallinucci, Golfarelli, „Towards conversational OLAP“, DOLAP 2020 ([36]); tento článek ji rozšiřuje o OLAP operátory, log-based disambiguaci, vizuální rozhraní a uživatelské testy (s. 17, §10).
 - Implementace v Javě, DW na Oracle 11g; Speech-to-text přes Web Speech API.
+
+## Obrázky
+- Obr. 1 (s. 3) – funkční architektura COOL ![[figures/franciaCOOLFrameworkConversational2022/fig1.png]]
+- Obr. 2 (s. 3) – kroky interpretace ![[figures/franciaCOOLFrameworkConversational2022/fig2.png]]
+- Obr. 5 (s. 6) – gramatika Full query ![[figures/franciaCOOLFrameworkConversational2022/fig5.png]]
+- Obr. 7 (s. 7) – gramatika OLAP operátorů ![[figures/franciaCOOLFrameworkConversational2022/fig7.png]]
+- Obr. 8 (s. 8) – konverzační session nad parse tree ![[figures/franciaCOOLFrameworkConversational2022/fig8.png]]

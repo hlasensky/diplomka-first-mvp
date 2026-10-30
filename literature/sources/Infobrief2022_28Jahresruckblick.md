@@ -32,4 +32,5 @@ Výroční přehled včelařského roku 2022 v Německu z německého zpravodaje
 - Šedá literatura: zpravodaj (Infobrief) bez DOI a bez recenze; metodika průzkumů ztrát není v textu popsána (jen „Erhebung“ Fachzentra Mayen, „Tausende Rückmeldungen“ k výnosům na s. 2). Jako kontaktní autor je uveden Dr. Christoph Otten.
 - Hodnota 16–19 % (C1) je prognóza zimních ztrát 2022/23 vydaná v prosinci 2022, ne měření; navíc zima 2022/23 leží za koncem dat BeeObserver (12/2022).
 - C2 neuvádí zimu výslovně; z kontextu (průzkum v březnu 2022) jde o zimu 2021/22.
+- Abb. 1 (s. 1, měsíční odchylky teploty, srážek a slunečního svitu 2022 od normálu 1961–1990, data DWD) je ve fulltextu ručně přepsaná jako tabulka. Pozor: text uvádí pro leden „um 3,1 Grad wärmer“, Abb. 1 má pro leden 3,3 °C; únor text 4,5 °C (absolutní hodnota), Abb. 1 odchylka 4,1. Abb. 2 (průběh snůšky) a Abb. 3 (ceny medu, sloupcový graf) jsou grafy – nepřepsány.
 - PAGE_WARN na s. 1, 3, 5 (vícesloupcová sazba; s. 1 obsahuje C2, text odstavce se shoduje s OCR); s. 4 nahrazena OCR textem (program Apisticus-Tag, bez tvrzení). Při citaci ověř v PDF.

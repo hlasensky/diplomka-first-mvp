@@ -36,7 +36,11 @@ Kontrolovaná studie, zda (multimodální) LLM rozumí časovým řadám, zkouma
 
 ## Pozor
 - PAGE_WARN s. 24–38 (přílohy s grafy a tabulkami). C7 cituje s. 24–25 (Observation 9); text z nich je čitelný, čísla ověř v PDF.
+- Kontrola proti PDF (2026-10-30): tabulky 2–10 (s. 26–38, plné výsledky) jsou ve fulltextu kompletní, jen čísla jdou po sloupcích v rámci bloku modelu (počet čísel = řádky × 6 na každé straně) – nepřepisovány, PAGE_WARN tam zůstává. Na s. 24–25 jsou jen grafy (obr. 18–20), hodnoty z nich nečti. Tabulka 1 (s. 8) a Algoritmus 1 (s. 22) jsou ve fulltextu čitelné.
 - Hlavní metrika je affinity F1 (LLM vracejí intervaly, ne skóre), takže VUS-PR z [[liuElephantRoomReliable2024]] tu nejde použít.
 - „Překonávají“ v C7 platí pro affinity F1 (obr. 19); v klasickém F1 má Isolation Forest v příkladu na s. 8 vyšší skóre než LLM.
 - Data jsou syntetická (kromě přílohy s Yahoo S5); závěry jsou o schopnostech modelů z roku 2024.
 - Semantic Scholar uvádí rok 2024 (arXiv preprint), cituj ICLR 2025.
+
+## Obrázky
+- Obr. 1 (s. 4) – typy anomálií v časové řadě (trend, frekvence, bod, mimo rozsah) ![[figures/zhouCanLLMsUnderstand2025/fig1.png]]

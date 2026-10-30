@@ -42,3 +42,10 @@ PDF: [otevřít v Zoteru](zotero://open-pdf/library/items/W8XSP9PH)
 - Jde o zkrácenou verzi („abridged version“) technické zprávy [SAM98] (IBM RJ 10102). Výkonnostní experimenty, reálné datasety, práce s hierarchiemi a časem a řešení rovnice pro p jsou jen tam, v tomto textu ne.
 - Fulltext je OCR ze skenu, ručně opravený proti PDF strana po straně. Vzorce (Eq. 1–5) jsou přepsané lineárně (ŷ_{i1...in}, γ^AB_ij, …). Tabulky z obr. 1–4 a diagramy obr. 6–7 ve fulltextu nejsou, tabulka obr. 5 ano. Znovu spuštěný pdf2txt.sh opravy přepíše.
 - Prototyp: front-end Microsoft Excel s makry, backend Arbor Essbase (s. 3, §2).
+- Tabulky obr. 2 a 3 (s. 4–5) ve fulltextu stále chybí (fulltext je read-only, nic se do něj nevkládalo); hodnoty ověřuj v PDF nebo ve výřezech níže. Buňka Birch-B/Oct v obr. 2 je tmavě podbarvená a v PDF nečitelná, hodnotu 42 % uvádí jen text (s. 4). Obr. 6–7 jsou ve fulltextu jen jako zástupný popis.
+
+## Obrázky
+- Obr. 2 (s. 4) – rovina Product × Month se zvýrazněnými výjimkami (SelfExp podbarvení, InExp rámečky) ![[figures/sarawagiDiscoverydrivenExplorationOLAP1998/fig2.png]]
+- Obr. 3 (s. 5) – drill-down Diet-Soda podle regionů, výjimky v regionu E ![[figures/sarawagiDiscoverydrivenExplorationOLAP1998/fig3.png]]
+- Obr. 6 (s. 13) – pořadí průměrování a odčítání při fitu jedné rovnice (kostka ABC) ![[figures/sarawagiDiscoverydrivenExplorationOLAP1998/fig6.png]]
+- Obr. 7 (s. 13) – totéž pro fit rovnic všech group-by ![[figures/sarawagiDiscoverydrivenExplorationOLAP1998/fig7.png]]
