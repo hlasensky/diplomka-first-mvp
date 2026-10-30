@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: audit-senger
+expected_outcome: |
+  A findings report on the senger pack ranked by severity with query evidence (daily_time fan-out, empty state level, DST hour artefact, implausible sensor values, stale notes); nothing in the pack is changed. Needs the repository and data/senger.duckdb.

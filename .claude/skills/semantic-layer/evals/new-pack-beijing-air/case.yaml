@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: new-pack-beijing-air
+expected_outcome: |
+  A complete pack datasets/beijing-air (build.sql, semantic_layer.yaml, eval.yaml) that builds, loads and passes the pack's contract tests, with correct grain (station x hour), NA handled as NULL, no sum for concentrations, docs and diagrams. Needs the repository and the UCI files in data/raw/beijing-air/ (see the semantic-layer-workspace setup).

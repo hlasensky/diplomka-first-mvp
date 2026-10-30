@@ -38,6 +38,13 @@ Per paper (one writer subagent per paper when there are more than 3):
    - ERROR PAGE_BAD left: stop this paper and report it, do not write claims from a broken fulltext.
    - WARN PAGE_WARN (tables, formulas, columns): claims from that page must be checked against the OCR
      file or the PDF; mention the page under "Pozor".
+   - Lost figures/tables (caption with nothing readable after it, usually a PAGE_WARN page): render the page
+     (`pdftoppm -r 200 -f N -l N -png`) and look. Only grammars, algorithms and tables the claims or thesis may
+     need: transcribe them verbatim after the caption between `[Fig. N – ruční přepis z PDF]` and `[/Fig. N]`,
+     then `chmod a-w` the fulltext and copy it to `<citekey>.corrected.txt`. Never put your own description or
+     values read off a chart into the fulltext. Crop only key figures (architecture, grammar, worked example)
+     to literature/figures/<citekey>/figN.png and list them under "## Obrázky" in the note:
+     `- Obr. N (s. N) – what it shows ![[figures/<citekey>/figN.png]]`. Skip charts and screenshots.
    Work from the fulltext, not the PDF. Page numbers = the "=== PAGE N ===" markers (PDF pages; if the
    printed page numbers differ, note it under "Pozor").
 2. **Note.** Create literature/sources/<citekey>.md from literature/_templates/source.md:

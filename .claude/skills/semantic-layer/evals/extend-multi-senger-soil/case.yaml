@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: extend-multi-senger-soil
+expected_outcome: |
+  multi-senger gains a daily soil fact at cell x day, joined to dim_cell and dim_date and drill-across to agg_colony_daily, with intensive additivity, guard checks, eval cases, docs and diagrams updated; existing tests and golden snapshots still pass. Needs the repository, the multi-senger raw data and the 34 Open-Meteo soil CSVs in data/raw/multi-senger/soil/.
