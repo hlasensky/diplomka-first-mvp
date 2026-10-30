@@ -4,6 +4,7 @@ import sqlglot
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
 from sqlglot import exp
+from sqlglot.errors import ParseError
 
 from diplomka.config import MAX_ROWS
 from diplomka.db import connect
@@ -228,7 +229,11 @@ def validate_sql(state: AgentState) -> PartialAgentState:
 
     try:
         with connect(read_only=True) as conn:
+            conn.execute("SET enable_external_access = false")  # disallow reading local files, etc
+            conn.execute("SET lock_configuration = true")  # disallow changing config (e.g. to enable external access)
+            conn.interrupt()  # disallow long-running queries (e.g. a cartesian product)
             conn.execute(f"EXPLAIN {generation.sql}")
+            
     except Exception as e:
         return {"sql_error": str(e), "sql_attempts": state["sql_attempts"] + 1}
 
@@ -260,10 +265,13 @@ def execute_query(state: AgentState) -> PartialAgentState:
         error = f"No valid query after {state['sql_attempts']} attempts. Last problem: {state['sql_error']}"
     else:
         with connect(read_only=True) as conn:
+            conn.execute("SET enable_external_access = false")  # disallow reading local files, etc
+            conn.execute("SET lock_configuration = true")  # disallow changing config (e.g. to enable external access)
+            conn.interrupt()  # disallow long-running queries (e.g. a cartesian product)
             try:
-                result = conn.execute(generation.sql).fetchall()
+                result = conn.execute(generation.sql).fetchmany(MAX_ROWS)
                 columns = [desc[0] for desc in conn.description]
-                rows = result[:MAX_ROWS]
+                rows = result
             except Exception as e:
                 error = str(e)
 
@@ -300,7 +308,7 @@ def _source_tables(sql: str) -> list[str]:
     """Semantic-layer tables the query reads from (CTE names and unknown tables left out)."""
     try:
         tree = sqlglot.parse_one(sql, read="duckdb")
-    except sqlglot.errors.ParseError:
+    except ParseError:
         return []
     return sorted({t.name for t in tree.find_all(exp.Table) if t.name in LAYER.tables})
 
