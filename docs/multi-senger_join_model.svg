@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 880" width="1120" height="880" font-family="Inter, 'DejaVu Sans', Helvetica, Arial, sans-serif">
+<style>
+  .title { font-size:19px; font-weight:700; }
+  .name { font-family:'JetBrains Mono','DejaVu Sans Mono',monospace; font-size:13.5px; font-weight:700; }
+  .grain { font-size:11.5px; }
+  .src { font-size:11px; font-style:italic; }
+  .box { stroke-width:1.4; }
+  .ln { fill:none; stroke-width:1.6; }
+  .ln.asof { stroke-width:3; }
+  .ln.agg { stroke-dasharray:2 4; stroke-width:2; stroke-linecap:round; }
+  .ln.derived { stroke-dasharray:6 5; stroke-width:1.3; }
+  .lbl, .lbl-asof { font-size:11.5px; stroke-width:5px; stroke-linejoin:round; }
+  .lbl-asof { font-weight:700; }
+  .leg { font-size:12px; }
+  .foot-h { font-size:11px; font-weight:700; letter-spacing:1.2px; }
+  .foot-k, .foot { font-family:'JetBrains Mono','DejaVu Sans Mono',monospace; font-size:12px; }
+  .foot-note { font-size:11px; }
+  .foot-src { font-size:11px; font-style:italic; }
+  .rule { stroke-width:1; }
+
+  .bg { fill:#ffffff; }
+  .title, .name, .foot { fill:#1f2328; }
+  .grain, .lbl, .leg, .foot-h, .foot-k, .foot-note { fill:#57606a; }
+  .src.hive, .foot-src { fill:#9a5b06; } .src.ctx { fill:#1f7064; }
+  .box.hive { fill:#fff4e0; stroke:#c98a1b; } .box.ctx { fill:#e6f4f1; stroke:#2f8f7f; }
+  .ln { stroke:#6e7781; } .ln.asof { stroke:#d6336c; } .arrowhead { fill:#6e7781; }
+  .lbl, .lbl-asof { stroke:#ffffff; } .lbl-asof { fill:#d6336c; }
+  .rule { stroke:#d0d7de; }
+  @media (prefers-color-scheme: dark) {
+  .bg { fill:#1c1c1c; }
+  .title, .name, .foot { fill:#e8e8e8; }
+  .grain, .lbl, .leg, .foot-h, .foot-k, .foot-note { fill:#a8a8a8; }
+  .src.hive, .foot-src { fill:#e2b45c; } .src.ctx { fill:#7cc7b8; }
+  .box.hive { fill:#2e2416; stroke:#d9a441; } .box.ctx { fill:#13302b; stroke:#5fb3a3; }
+  .ln { stroke:#9a9a9a; } .ln.asof { stroke:#f06292; } .arrowhead { fill:#9a9a9a; }
+  .lbl, .lbl-asof { stroke:#1c1c1c; } .lbl-asof { fill:#f06292; }
+  .rule { stroke:#3a3a3a; }
+  }
+</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker></defs>
+<rect width="1120" height="880" class="bg"/>
+<text x="24" y="36" class="title" text-anchor="start" >Join model: which tables may meet, and on what</text>
+<polyline points="60,78 110,78" class="ln "/>
+<text x="124" y="82" class="leg" text-anchor="start" >same grain, through a shared dimension</text>
+<polyline points="60,102 110,102" class="ln asof"/>
+<text x="124" y="106" class="leg" text-anchor="start" >ASOF JOIN or EXISTS only (R2)</text>
+<polyline points="60,126 110,126" class="ln agg"/>
+<text x="124" y="130" class="leg" text-anchor="start" >aggregate the colonies first (R10)</text>
+<polyline points="60,150 110,150" class="ln derived" marker-end="url(#arrow)"/>
+<text x="124" y="154" class="leg" text-anchor="start" >derived from (build step)</text>
+<rect x="870" y="70" width="16" height="16" rx="3" class="box hive"/>
+<text x="896" y="83" class="leg" text-anchor="start" >hive data</text>
+<rect x="870" y="96" width="16" height="16" rx="3" class="box ctx"/>
+<text x="896" y="109" class="leg" text-anchor="start" >context data</text>
+<text x="870" y="136" class="src hive" text-anchor="start" >Italic line</text>
+<text x="934" y="136" class="leg" text-anchor="start" >= source dataset</text>
+<rect x="460" y="76" width="200" height="76" rx="7" class="box hive"/>
+<text x="560.0" y="101" class="name" text-anchor="middle" >fact_hive_minute</text>
+<text x="560.0" y="121" class="grain" text-anchor="middle" >colony × minute · 36.0 M</text>
+<text x="560.0" y="140" class="src hive" text-anchor="middle" >BeeObserver · minute CSVs</text>
+<rect x="60" y="206" width="200" height="76" rx="7" class="box hive"/>
+<text x="160.0" y="231" class="name" text-anchor="middle" >fact_event</text>
+<text x="160.0" y="251" class="grain" text-anchor="middle" >one row per event · 443</text>
+<text x="160.0" y="270" class="src hive" text-anchor="middle" >BeeObserver · inspections.csv</text>
+<rect x="460" y="206" width="200" height="76" rx="7" class="box hive"/>
+<text x="560.0" y="231" class="name" text-anchor="middle" >fact_hive_hourly</text>
+<text x="560.0" y="251" class="grain" text-anchor="middle" >colony × hour · 638 k</text>
+<text x="560.0" y="270" class="src hive" text-anchor="middle" >BeeObserver · from minutes</text>
+<rect x="860" y="206" width="200" height="76" rx="7" class="box ctx"/>
+<text x="960.0" y="231" class="name" text-anchor="middle" >fact_weather</text>
+<text x="960.0" y="251" class="grain" text-anchor="middle" >cell × hour · 1.07 M</text>
+<text x="960.0" y="270" class="src ctx" text-anchor="middle" >Open-Meteo · ERA5</text>
+<rect x="60" y="386" width="200" height="76" rx="7" class="box hive"/>
+<text x="160.0" y="411" class="name" text-anchor="middle" >agg_event_daily</text>
+<text x="160.0" y="431" class="grain" text-anchor="middle" >colony × inspection day · 367</text>
+<text x="160.0" y="450" class="src hive" text-anchor="middle" >BeeObserver · from fact_event</text>
+<rect x="460" y="386" width="200" height="76" rx="7" class="box hive"/>
+<text x="560.0" y="411" class="name" text-anchor="middle" >agg_colony_daily</text>
+<text x="560.0" y="431" class="grain" text-anchor="middle" >colony × day · 29 k</text>
+<text x="560.0" y="450" class="src hive" text-anchor="middle" >BeeObserver · from hourly</text>
+<rect x="860" y="386" width="200" height="76" rx="7" class="box ctx"/>
+<text x="960.0" y="411" class="name" text-anchor="middle" >agg_weather_daily</text>
+<text x="960.0" y="431" class="grain" text-anchor="middle" >cell × day · 44.5 k</text>
+<text x="960.0" y="450" class="src ctx" text-anchor="middle" >Open-Meteo · from hourly</text>
+<polyline points="560.0,152 560.0,202" class="ln derived" marker-end="url(#arrow)"/>
+<text x="572.0" y="183.0" class="lbl" text-anchor="start" >avg per hour</text>
+<polyline points="160.0,282 160.0,382" class="ln derived" marker-end="url(#arrow)"/>
+<text x="172.0" y="338.0" class="lbl" text-anchor="start" >per colony × day</text>
+<polyline points="560.0,282 560.0,382" class="ln derived" marker-end="url(#arrow)"/>
+<text x="572.0" y="338.0" class="lbl" text-anchor="start" >per day</text>
+<polyline points="960.0,282 960.0,382" class="ln derived" marker-end="url(#arrow)"/>
+<text x="972.0" y="338.0" class="lbl" text-anchor="start" >per day</text>
+<polyline points="260,244.0 460,244.0" class="ln asof"/>
+<text x="360.0" y="235.0" class="lbl-asof" text-anchor="middle" paint-order="stroke">ASOF time_key ≥ event_ts</text>
+<text x="360.0" y="264.0" class="lbl" text-anchor="middle" paint-order="stroke">one event_type in ON</text>
+<polyline points="660,244.0 860,244.0" class="ln "/>
+<text x="760.0" y="235.0" class="lbl" text-anchor="middle" paint-order="stroke">cell_id + time_key</text>
+<text x="760.0" y="264.0" class="lbl" text-anchor="middle" paint-order="stroke">hour to hour (R8)</text>
+<polyline points="260,424.0 460,424.0" class="ln asof"/>
+<text x="360.0" y="415.0" class="lbl-asof" text-anchor="middle" paint-order="stroke">ASOF date ≥ date</text>
+<text x="360.0" y="444.0" class="lbl" text-anchor="middle" paint-order="stroke">latest inspection day</text>
+<polyline points="660,424.0 860,424.0" class="ln "/>
+<text x="760.0" y="415.0" class="lbl" text-anchor="middle" paint-order="stroke">cell_id + date</text>
+<text x="760.0" y="444.0" class="lbl" text-anchor="middle" paint-order="stroke">day to day (R8)</text>
+<polyline points="560.0,462 560.0,506" class="ln "/>
+<polyline points="150.0,506 970.0,506" class="ln "/>
+<polyline points="150.0,506 150.0,524" class="ln agg"/>
+<polyline points="150.0,566 150.0,600" class="ln agg"/>
+<text x="150.0" y="542" class="lbl" text-anchor="middle" paint-order="stroke">aggregate colonies to winter</text>
+<text x="150.0" y="557" class="lbl" text-anchor="middle" paint-order="stroke">date in winter_start…winter_end</text>
+<rect x="60" y="600" width="180" height="80" rx="7" class="box ctx"/>
+<text x="150.0" y="625" class="name" text-anchor="middle" >fact_winter_loss</text>
+<text x="150.0" y="645" class="grain" text-anchor="middle" >country × winter × survey · 4</text>
+<text x="150.0" y="664" class="src ctx" text-anchor="middle" >DLR Mayen + COLOSS</text>
+<polyline points="355.0,506 355.0,524" class="ln agg"/>
+<polyline points="355.0,566 355.0,600" class="ln agg"/>
+<text x="355.0" y="542" class="lbl" text-anchor="middle" paint-order="stroke">aggregate colonies to year</text>
+<text x="355.0" y="557" class="lbl" text-anchor="middle" paint-order="stroke">→ dim_year.year</text>
+<rect x="265" y="600" width="180" height="80" rx="7" class="box ctx"/>
+<text x="355.0" y="625" class="name" text-anchor="middle" >fact_country_bees</text>
+<text x="355.0" y="645" class="grain" text-anchor="middle" >country × year · 8</text>
+<text x="355.0" y="664" class="src ctx" text-anchor="middle" >FAOSTAT QCL</text>
+<polyline points="560.0,506 560.0,524" class="ln "/>
+<polyline points="560.0,566 560.0,600" class="ln "/>
+<text x="560.0" y="542" class="lbl" text-anchor="middle" paint-order="stroke">cell_id + year, one crop (R9)</text>
+<text x="560.0" y="557" class="lbl" text-anchor="middle" paint-order="stroke">area: 2016 and 2020 only</text>
+<rect x="470" y="600" width="180" height="80" rx="7" class="box ctx"/>
+<text x="560.0" y="625" class="name" text-anchor="middle" >agg_cell_crop</text>
+<text x="560.0" y="645" class="grain" text-anchor="middle" >cell × year × crop · 2.8 k</text>
+<text x="560.0" y="664" class="src ctx" text-anchor="middle" >Regionalstatistik + VG250</text>
+<polyline points="765.0,506 765.0,524" class="ln "/>
+<polyline points="765.0,566 765.0,600" class="ln "/>
+<text x="765.0" y="542" class="lbl" text-anchor="middle" paint-order="stroke">cell_id + year</text>
+<text x="765.0" y="557" class="lbl" text-anchor="middle" paint-order="stroke">filter one plant</text>
+<rect x="675" y="600" width="180" height="80" rx="7" class="box ctx"/>
+<text x="765.0" y="625" class="name" text-anchor="middle" >agg_cell_bloom</text>
+<text x="765.0" y="645" class="grain" text-anchor="middle" >cell × year × plant · 930</text>
+<text x="765.0" y="664" class="src ctx" text-anchor="middle" >DWD phenology</text>
+<polyline points="970.0,506 970.0,524" class="ln asof"/>
+<polyline points="970.0,566 970.0,600" class="ln asof"/>
+<text x="970.0" y="542" class="lbl-asof" text-anchor="middle" paint-order="stroke">ASOF on cell_id,</text>
+<text x="970.0" y="557" class="lbl-asof" text-anchor="middle" paint-order="stroke">date ≥ composite start</text>
+<rect x="880" y="600" width="180" height="80" rx="7" class="box ctx"/>
+<text x="970.0" y="625" class="name" text-anchor="middle" >fact_vegetation</text>
+<text x="970.0" y="645" class="grain" text-anchor="middle" >cell × 16-day composite · 3.1 k</text>
+<text x="970.0" y="664" class="src ctx" text-anchor="middle" >MODIS MOD13Q1 · ORNL</text>
+<polyline points="60,258 34,258 34,578 94,578 94,600" class="ln agg"/>
+<text x="25" y="443.0" class="lbl" text-anchor="middle" paint-order="stroke" transform="rotate(-90 25 443.0)">fact_event (died) → count per winter (EX8)</text>
+<line x1="24" y1="702" x2="1096" y2="702" class="rule"/>
+<text x="24" y="720" class="foot-h" text-anchor="start" >SHARED DIMENSIONS EVERY JOIN ABOVE RUNS THROUGH</text>
+<text x="24" y="746" class="foot-k" text-anchor="start" >geography</text>
+<text x="118" y="746" class="foot" text-anchor="start" >dim_colony → dim_cell → dim_district (main district) → dim_state → dim_country</text>
+<text x="1096" y="746" class="foot-src" text-anchor="end" >BKG VG250</text>
+<text x="24" y="768" class="foot-k" text-anchor="start" >bridge</text>
+<text x="118" y="768" class="foot" text-anchor="start" >dim_cell ⇉ bridge_cell_district (area weights) ⇉ dim_district · crops only</text>
+<text x="24" y="790" class="foot-k" text-anchor="start" >time</text>
+<text x="118" y="790" class="foot" text-anchor="start" >dim_time (hour) → dim_date (day) → dim_year · dim_date → dim_bee_winter (Oct–Mar)</text>
+<text x="1096" y="790" class="foot-src" text-anchor="end" >generated in the build</text>
+<text x="24" y="828" class="foot-note" text-anchor="start" >Shown: facts and aggregates that join the hive data. Source tables (fact_temperature, fact_bloom_phenology, fact_crop_area, fact_crop_yield) and small dimensions: multi-senger_schema.svg.</text>
+</svg>
