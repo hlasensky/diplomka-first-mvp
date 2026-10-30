@@ -139,6 +139,8 @@ tables:
         description: >
             Crop context per cell, weighted over the districts the cell overlaps: crop share of arable
             land (2016, 2020) and weighted yield (2016-2025); *_coverage is the weight share with data.
+            crop_share_pct is NULL in every other year: for hive years other than 2020 fix year = 2020
+            in the ON clause instead of joining on year(date), and say that the 2020 crop pattern is used.
     fact_country_bees:
         kind: fact
         grain: [country, year]
@@ -951,7 +953,7 @@ measures:
         label: crop area
         unit: ha
         additivity: { geography: [sum, avg, min, max], time: [avg, min, max] }
-        description: Sum over districts of one crop only; NULL = suppressed or unreliable, not zero.
+        description: Sum over districts of one crop only; NULL = suppressed or unreliable, not zero. Only 2016 and 2020.
     yield_dt_ha:
         column: yield_dt_ha
         tables: [fact_crop_yield]
@@ -965,6 +967,9 @@ measures:
         label: crop share of arable land around the location
         unit: "%"
         additivity: { time: [avg, min, max], geography: [avg, median, min, max] }
+        description: >
+            Only 2016 and 2020 (farm structure surveys); NULL in other years, not zero. For the hive
+            years 2019, 2021 and 2022 use 2020 and say so.
     share_coverage:
         column: share_coverage
         tables: [agg_cell_crop]
@@ -1079,7 +1084,7 @@ rules:
     - {
           id: R9,
           enforced: false,
-          text: "Crop context for a location comes from agg_cell_crop (weighted over the districts of the cell); use fact_crop_area/fact_crop_yield only for district-level questions. Always filter exactly one crop: crops are nested and must not be summed.",
+          text: "Crop context for a location comes from agg_cell_crop (weighted over the districts of the cell); use fact_crop_area/fact_crop_yield only for district-level questions. Always filter exactly one crop: crops are nested and must not be summed. Crop area (crop_share_pct, area_ha) exists only for 2016 and 2020, yields for every year 2016-2025: for crop shares in other hive years fix year = 2020 in the ON clause and say that the 2020 crop pattern is used.",
       }
     - {
           id: R10,
