@@ -95,3 +95,34 @@ Stručný log rozhodnutí. Data jsou popsaná v [data.md](data.md).
 
     - Hierarchie: `dim_time` → `dim_date` → `dim_year` a `dim_bee_winter`.
     - Odpadla vazba 1:N mezi denními fakty a hodinovým `dim_time`, kde hrozil fan trap.
+
+## 2026-10-30 – jak LLM používá OLAP engine
+
+1. **LLM nepíše SQL ani Ibis.** Pro dotazy nad kostkou vyplní strukturovaný `CubeQuery` (engage) nebo volání operátoru nad aktuálním dotazem session (navigate). Ibis je jen uvnitř `engine/compiler.py` (balíček `ibis-framework[duckdb]`, ne `ibis`).
+   - Model nevolí tabulky ani joiny, jen míru, agregaci, úrovně a hodnoty. Ty jsou ve schématu nástroje jako enum vygenerovaný z YAML, takže s constrained decoding neexistující entitu nevygeneruje.
+   - `check_query` vrací konkrétní `Issue.message`, kterou model dostane jako zpětnou vazbu na opravu.
+   - Výchozím bodem je dnešní `Filters`, který je skoro `CubeQuery`.
+2. **Hybridní graf** (`docs/proposed_graph_engine.dot`, vykreslený jako `.svg` a `.png`):
+   - Hlavní odpověď jde pevným pipeline: `classify_intent` → `build_query` / `apply_operator` → `check_query` → `run_query` → `update_session`.
+   - Vyšetřování anomálií je omezená smyčka volání nástrojů `investigate ↔ engine_tools` (diff, explain_by_context, find_anomalies, compare, drill_down). Tady LLM orchestruje.
+   - Odpověď vzniká z claimů: `build_claims` → `narrate` → `claim_check`. Číslo, které neodpovídá žádnému claimu, je chyba.
+   - Volné SQL s `semantic_validator` zůstává jako fallback při `PlanningError`.
+3. **Kde modely selžou a jak to omezit:**
+   - Rozlišení engage a navigate („a co v roce 2021?“ je slice, ne nový dotaz) usnadní kontext `session.current.describe()` v promptu a příklady.
+   - Vícekrokové volání nástrojů je nejtěžší pro malé lokální modely a podpora tool-callingu se v Ollamě liší podle modelu. Model, který tool-calling neumí nebo opakovaně selže, smyčku `investigate` přeskočí a dostane deterministický `proactive_scan` + diff/relate. Odpověď je chudší, ale správná.
+   - Kolem 5 nástrojů, každý se 2–4 parametry. Pevný rozpočet: max. 4 volání nástrojů a 2 opravy po `check_query`.
+   - Příklady (`examples`) v YAML převést z SQL na volání enginu.
+   - Formulaci hlídá `claim_check`. Podpora v literatuře: LLM s daty v promptu dávají kvantitativně chybné insighty, s čísly z provedeného kódu správná (`franciaVOOLModularInsightbased2025` C8, zatím candidate, neověřeno).
+4. **Evaluace modelů** se stejnými nástroji a stejným rozpočtem pro všechny modely:
+   - podíl platných volání,
+   - počet oprav po `check_query`,
+   - počet kroků v `investigate`,
+   - přesnost určení engage a navigate,
+   - čísla bez claimu.
+
+   Baseline: cesta s volným SQL a validátorem. Měří, o kolik engine pomáhá, hlavně malým modelům.
+
+**Otevřené:**
+- velikost rozpočtu smyčky `investigate`,
+- `ask_user` přes LangGraph `interrupt`, nebo konec turnu,
+- specifikace grafu od LLM, nebo odvozená deterministicky z tvaru dotazu.

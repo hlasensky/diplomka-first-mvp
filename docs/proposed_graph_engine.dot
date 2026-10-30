@@ -1,0 +1,101 @@
+// Proposed LangGraph agent on top of the OLAP engine (src/diplomka/engine).
+// Hybrid: fixed pipeline for the main answer, bounded tool-calling loop for the investigation.
+// Render: dot -Tsvg docs/proposed_graph_engine.dot -o docs/proposed_graph_engine.svg
+//         dot -Tpng docs/proposed_graph_engine.dot -o docs/proposed_graph_engine.png
+digraph proposed_engine {
+    graph [rankdir=TB, fontname="Helvetica", nodesep=0.35, ranksep=0.45, pad=0.3,
+           label="Proposed agent graph with the OLAP engine\n(grey = existing, blue = modified, orange = new LLM node, green = new deterministic engine node)",
+           labelloc=t, fontsize=16];
+    node  [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, fillcolor="#E5E7EB", color="#6B7280"];
+    edge  [fontname="Helvetica", fontsize=9, color="#4B5563"];
+
+    start [label="START", shape=circle, fillcolor="#111827", fontcolor="white", width=0.6];
+    end   [label="END",   shape=doublecircle, fillcolor="#111827", fontcolor="white", width=0.5];
+    user_input;
+
+    classify_intent [label="classify_intent\nFilters + mode (engage | navigate)\n+ intent (describe | assess | explain)\ncontext: session.current.describe()", fillcolor="#BFDBFE", color="#2563EB"];
+    unclear_query   [label="unclear_query\n(specific clarification)"];
+
+    subgraph cluster_resolve {
+        label="value resolution"; style="rounded,dashed"; color="#9CA3AF"; fontsize=10;
+        complex_query; embedding_lookup; improve_prompt;
+    }
+
+    subgraph cluster_engine {
+        label="OLAP engine (deterministic, no SQL from the LLM)"; style="rounded,filled"; fillcolor="#F0FDF4"; color="#16A34A"; fontsize=10;
+        build_query    [label="build_query\nFilters -> CubeQuery", fillcolor="#BBF7D0", color="#16A34A"];
+        apply_operator [label="apply_operator\ndrill_down | roll_up | slice | dice |\nadd | drop | replace | drill_across\non session.current", fillcolor="#BBF7D0", color="#16A34A"];
+        check_query    [label="check_query\nentities, hierarchies, allowed_aggs (R1),\ndomains (R3), grain rules", fillcolor="#BBF7D0", color="#16A34A"];
+        run_query      [label="run_query\nplanner -> compiler (Ibis) -> executor\nResult + Provenance", fillcolor="#BBF7D0", color="#16A34A"];
+        update_session [label="update_session\npush step, state = navigate", fillcolor="#BBF7D0", color="#16A34A"];
+    }
+
+    ask_user [label="ask_user\nambiguity: Issue.choices\nerror: what is possible", fillcolor="#FED7AA", color="#EA580C"];
+
+    subgraph cluster_fallback {
+        label="free-SQL fallback (PlanningError / outside the cube model)"; style="rounded,dashed"; color="#9CA3AF"; fontsize=10;
+        generate_sql; validate_sql [label="validate_sql\nEXPLAIN + semantic_validator"]; execute_query;
+    }
+
+    subgraph cluster_insight {
+        label="insights"; style="rounded"; color="#16A34A"; fontsize=10;
+        scan        [label="proactive_scan\ninsight.scan -> ranking.select\n<= 2 insights, none already reported", fillcolor="#BBF7D0", color="#16A34A"];
+        investigate [label="investigate\nLLM picks the next tool\n(where? why?) or stops", fillcolor="#FED7AA", color="#EA580C"];
+        tools       [label="engine_tools (ToolNode)\ndiff | explain_by_context |\nfind_anomalies | compare | drill_down", fillcolor="#BBF7D0", color="#16A34A"];
+    }
+
+    build_claims [label="build_claims\nResult + insights -> Claims\n(numbers filled by code)", fillcolor="#BBF7D0", color="#16A34A"];
+    narrate      [label="narrate\nanswer + chart spec from claims only\n(was generate_response)", fillcolor="#BFDBFE", color="#2563EB"];
+    claim_check  [label="claim_check\nevery number matches a claim", fillcolor="#BBF7D0", color="#16A34A"];
+    validate_chart_spec [label="validate_chart_spec", fillcolor="#BFDBFE", color="#2563EB"];
+    suggest_next [label="suggest_next\nfollow-up operators as options", fillcolor="#FED7AA", color="#EA580C"];
+
+    // entry
+    start -> user_input -> classify_intent;
+    classify_intent -> unclear_query [label="no metric"];
+    unclear_query -> end;
+    classify_intent -> complex_query [label="free-text\nfilter value"];
+    complex_query -> embedding_lookup -> improve_prompt;
+    improve_prompt -> classify_intent [label="no match", style=dashed, constraint=false];
+
+    // into the engine
+    classify_intent -> build_query [label="engage"];
+    improve_prompt -> build_query [label="engage"];
+    classify_intent -> apply_operator [label="navigate"];
+    improve_prompt -> apply_operator [label="navigate"];
+    build_query -> check_query;
+    apply_operator -> check_query;
+    apply_operator -> ask_user [label="OperatorError", style=dashed];
+    check_query -> classify_intent [label="error, retry\n(Issue.message)", style=dashed, color="#DC2626", fontcolor="#DC2626", constraint=false];
+    check_query -> ask_user [label="error after retries |\nambiguity to ask"];
+    ask_user -> end;
+    check_query -> run_query [label="ok / defaults filled"];
+    run_query -> generate_sql [label="PlanningError", style=dashed];
+    run_query -> update_session;
+
+    // fallback
+    generate_sql -> validate_sql;
+    validate_sql -> generate_sql [label="retry", style=dashed];
+    validate_sql -> execute_query [label="ok"];
+    execute_query -> update_session;
+
+    // insights
+    update_session -> scan;
+    scan -> investigate [label="explain intent |\ninsight selected"];
+    scan -> build_claims [label="nothing to investigate"];
+    investigate -> tools [label="tool call"];
+    tools -> investigate [label="result\n(steps left)", style=dashed];
+    investigate -> build_claims [label="done | budget spent"];
+
+    // answer
+    build_claims -> narrate -> claim_check;
+    claim_check -> narrate [label="mismatch", style=dashed, color="#DC2626", fontcolor="#DC2626", constraint=false];
+    claim_check -> validate_chart_spec [label="ok"];
+    validate_chart_spec -> narrate [label="chart retry", style=dashed, constraint=false];
+    validate_chart_spec -> suggest_next;
+    suggest_next -> end;
+
+    state_note [shape=note, style=filled, fillcolor="#FFFBEB", color="#D97706", fontsize=9,
+                label="new AgentState keys:\nsession (Session), cube_query, result,\ninsights, tool_steps, claims"];
+    state_note -> update_session [style=dotted, color="#D97706", arrowhead=vee];
+}
