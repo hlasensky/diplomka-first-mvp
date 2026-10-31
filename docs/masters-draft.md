@@ -14,6 +14,18 @@
 
 ### Existující nástroje a platformy
 
+### OLAP a vícerozměrný datový model
+
+Úvod do OLAP stručně, 1–1,5 strany.
+
+#### Průzkum datové kostky řízený výjimkami a míry zajímavosti
+
+#### Vysvětlování agregovaných hodnot a jejich změn
+
+#### Analýza řízená záměrem a konverzační OLAP
+
+### Existující nástroje pro OLAP nad daty z IoT
+
 ## Velké jazykové modely pro práci s daty
 
 ### Převod přirozeného jazyka na dotazy a volání nástrojů
@@ -26,33 +38,33 @@
 
 ### Halucinace a ověřitelnost výstupů
 
-## OLAP a jeho využití pro analýzu časových řad
-
-### Vícerozměrný datový model a operace OLAP
-
-### Databázové systémy pro časové řady
-
-### Naváděná analýza a vysvětlování v OLAP
-
-#### Průzkum datové kostky řízený výjimkami a míry zajímavosti
-
-#### Vysvětlování agregovaných hodnot a jejich změn
-
-#### Analýza řízená záměrem a konverzační OLAP
-
 ## Analýza požadavků
 
-### Aplikační doména a datové zdroje
+### Datová sada a požadavky na data
+
+Vlastní datová sada (BeeObserver + kontext): proč je dostatečně složitá, požadavky na data, IoT zařízení.
 
 ### Cíloví uživatelé a scénáře užití
 
 ### Požadované operace OLAP nad časovými řadami
 
+### Uložení dat v databázi časových řad a relační databázi
+
+Požadavky na systém, když jsou data v databázi časových řad i v relační databázi; ověření, zda to jde a jak.
+
 ### Požadavky na analýzu augmentovanou pomocí jazykových modelů
+
+### Analýza jazykových modelů
+
+Co model musí umět a proč: tool calling, strukturovaný výstup, vícekrokové plánování, délka kontextu, věrnost číslům, jazyk, lokální provoz a cloud. Na konci kritéria výběru, kandidátní modely a co se u nich měří (navazuje na srovnání modelů v testování).
 
 ### Nefunkční požadavky
 
 ## Návrh platformy pro vykonávání a vysvětlování dotazů
+
+### Návrh interakce s jazykovým modelem
+
+Celý průběh komunikace uživatel – LLM – engine.
 
 ### Architektura platformy
 
@@ -64,9 +76,15 @@
 
 ### Integrace jazykových modelů a volba mezi lokálními a cloudovými modely
 
+Výběr konkrétních modelů, přepínání backendu, degradace podle schopností, nástroje podle modelu.
+
+### Návrh interaktivních vizualizací
+
 ### Uživatelské rozhraní
 
 ## Implementace
+
+### Sestavení datové sady
 
 ## Testování a vyhodnocení
 
