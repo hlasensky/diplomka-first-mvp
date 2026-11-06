@@ -14,8 +14,11 @@ Identifikace hodnot, které se výrazně odchylují od očekávání daného mod
 - [[liuElephantRoomReliable2024]] — C2–C4: benchmark TSB-AD (1070 řad, 40 algoritmů); doporučuje metriku VUS-PR, point adjustment zvýhodňuje náhodné skóre, statistické metody často vedou.
 - [[zhouCanLLMsUnderstand2025]] — C3, C7: LLM detekují jednoduché anomálie zero-shot (lépe z obrázku), CoT nepomáhá; důkaz pro jemné reálné anomálie chybí (C8).
 - [[sengerWeightTemperatureHumidity2024]] — C7: prahové vyřazení chybných hodnot senzorů (váha mimo −50..150 kg, teplota mimo −40..85 °C, vlhkost mimo 0–100) a vyřazení skoků ve váze nad 0,3 kg/min (zásahy včelaře).
+- [[hadjurIntelligentEfficientBeehive2022]] — C4: detekce stavů úlu v přehledu: fuzzy logika nad teplotami (normální/abnormální/úhyn, F1 98 %), LSTM autoenkodéry detekují všechna rojení, ale spouštějí je i zásahy včelaře; ID3 přes 95 % vs. prahová metoda nejvýše 89 %.
 - [[alnegheimishLargeLanguageModels2024]] — C4, C7: detekce z reziduí mezi signálem a předpovědí (vyhlazení EWMA, práh čtyři směrodatné odchylky); na 11 datasetech (NASA, Yahoo S5, NAB) vede AER (F1 0,753), LLM přístup SigLLM dosahuje 0,525.
 - [[chatterjeeIoTAnomalyDetection2022]] — C2: čtyři kategorizace metod v IoT (metoda, aplikace, typ anomálie bodová/kontextová/kolektivní, latence online/offline); C5: chybějící anotace, drift dat, více typů senzorů.
+- [[meikleApplicationContinuousMonitoring2015]] — C3, C5: rojení je vidět v denních detrendovaných datech váhy a jako pokles teploty a vlhkosti v úlu (Ferrari et al. 2008); jde o review, ne o metodu detekce.
+- [[zacepinsChallengesDevelopmentPrecision2015]] — C4: pravidla DSS v precizním včelařství dělí na individuální (jedno včelstvo) a diferenciální (srovnání se včelstvy na stejném místě, např. jen jedno včelstvo bez přírůstku váhy mezi dvěma nocemi = nespecifikovaný problém).
 
 ## Napětí
 - [[liuElephantRoomReliable2024]] C4 vs. [[alnegheimishLargeLanguageModels2024]] C7: Liu uvádí, že na jednorozměrném TSB-AD tvoří víc než polovinu 12 nejlepších metod statistické přístupy a jednodušší architektury překonávají transformery; u Alnegheimish vede model hlubokého učení AER a statistické ARIMA a MP jsou až za ním. Liší se benchmark (TSB-AD vs. NASA/Yahoo S5/NAB) i metrika (VUS-PR vs. F1 se započtením částečné detekce).

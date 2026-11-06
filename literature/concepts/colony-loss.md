@@ -12,6 +12,8 @@ aliases: [colony losses, winter losses, winter colony loss, colony mortality, zt
 - [[Infobrief2020_29Jahresruckblick]] — C1, C2: Auswinterungsquote jaro 2020 ca. 85 % (~15 % ztrát za zimu 2019/20); pozdně letní a podzimní ztráty 2020 3,9 % (ze součtů) až 5,0 % (průměr ztrátovostí); prognóza zimy 2020/21 ca. 15 %.
 - [[Infobrief2022_10Honigernte]] — C1, C2: zima 2021/22 v Německu 20,9 % ze součtů (Verlust²) / 22,4 % jako průměr individuálních ztrát (Verlust¹), 10 492 hlášení, 137 145 zazimovaných včelstev; srovnání 2020/21 14,5 / 12,9 % a 2019/20 16,5 / 14,7 %.
 - [[sengerWeightTemperatureHumidity2024]] — C5, C6: dataset BeeObserver obsahuje úhyn včelstva jako událost z prohlídek (sloupce died.*) a samostatné 3měsíční úseky senzorových dat před úhynem a srovnávací úseky bez něj.
+- [[meikleApplicationContinuousMonitoring2015]] — C4: průběžné vážení zachytilo opouštění úlu (Buchmann a Thoenes ho spojili s napadením roztočem Acarapis woodi) a rojení.
+- [[zacepinsChallengesDevelopmentPrecision2015]] — C4: úhyn či zmizení včelstva lze ze senzorů rozpoznat podle teploty a vlhkosti blízké okolí, konstantní váhy, žádného letu a žádného zvuku či vibrací.
 
 ## Napětí
 - [[grayHoneyBeeColony2022]] C2 vs. [[Infobrief2022_10Honigernte]] C2: zima 2019/20 v Německu 18,4 % (COLOSS, publikovaný průzkum) vs. 14,7 % ze součtů / 16,5 % průměr individuálních ztrát (průzkum FZ Mayen); obojí z dotazníku mezi včelaři, liší se vzorek a zpracování – do dat brát jednu řadu konzistentně.

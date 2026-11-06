@@ -8,6 +8,7 @@ Autonomní systémy postavené na velkých jazykových modelech, které z dotazu
 ## Sources
 - [[wengDataLabUnifiedPlatform2025]] — C1, C3: DataLab spojuje víceagentní framework s proxy agentem a notebook; dotaz se přes znalostní graf a JSON DSL převádí na SQL/Vega-Lite; C4, C5: doménové znalosti a výběr kontextu podle DAG buněk zlepšují přesnost a šetří tokeny.
 - [[liuLLMassistedConversationalNavigation2026]] — C3: LLM omezené na odhad preferencí a vysvětlení, všechny výpočty a přístup k datům má deterministický cube engine; LLM vidí jen popisy schématu a předpočítané statistiky.
+- [[leiSpider20Evaluating2025]] — C2, C6: agentní nastavení Spider 2.0 (codebase, dokumentace, rozhraní databáze, DBT projekty); úspěšnost klesá u vnořených sloupců (10,34 %), externích dokumentů (11,54 %) a DBT projektů (12,82 %).
 
 ## Napětí
 - [[liuLLMassistedConversationalNavigation2026]] C3 vs. [[wengDataLabUnifiedPlatform2025]] C3: NavLLM záměrně nenechává LLM generovat dotazy (jediný halucinovaný token v text-to-SQL může dát neplatný dotaz) a omezuje ho na skóre a vysvětlení; DataLab nechává LLM překládat dotaz do DSL a z něj na SQL/Vega-Lite a chyby krotí validací proti JSON Schema.

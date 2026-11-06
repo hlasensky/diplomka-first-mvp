@@ -18,6 +18,7 @@ On-Line Analytical Processing: analýza dat organizovaných do vícerozměrné k
 - [[jensenTimeSeriesManagement2017]] — C8: navrhuje datovou kostku jako rozhraní pro analýzu vícerozměrných (senzorových) časových řad v distribuovaném TSMS, protože ji datoví analytici znají.
 - [[dobsonReferenceArchitectureModel2018]] — C2–C3: referenční architektura (data lake → ETL → datový sklad → OLAP) a čtyři DFM schémata pro senzorová data (měření, údržba, kontrola stavu, zpráva) včetně kontextu měření.
 - [[romeroNeedReferenceAlgebra2007]] — C2–C3: referenční sada OLAP operátorů (Selection, Roll-up/Drill-down, ChangeBase, Drill-across, Projection, množinové operace) a jejich společné jádro napříč algebrami; C4–C5: převod na omezenou podmnožinu relační algebry.
+- [[malinowskiOLAPHierarchiesConceptual2004]] — C1: konceptuální klasifikace hierarchií dimenzí (jednoduché symetrické/asymetrické/generalizované, vícenásobné, paralelní; striktní vs. nestriktní); C2: nestriktní hierarchie s vazbou M:N mezi úrovněmi, řešitelná bridge tabulkou.
 
 ## Související
 - [[conversational-olap]]

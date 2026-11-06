@@ -8,5 +8,7 @@ Hodnocení použitelnosti systému s uživateli: objektivní (efektivita, úspě
 ## Sources
 - [[lewisSystemUsabilityScale2018]] — C1–C2: SUS jako nejpoužívanější standardizovaný dotazník vnímané použitelnosti (10 položek, skóre 0–100); C3–C4: spolehlivost (alfa kolem 0,91) a validita; C5–C6: normy pro interpretaci skóre (Sauro–Lewis CGS, průměr 68 = C, 80 = A−).
 - [[silvaUserCentricGuidelinesChatbot2024]] — C4: validace návrhových doporučení dotazníkem podle TAM (Likert 1–5, 66 respondentů, Fisherův exaktní test podle zkušenosti) – měří vnímanou užitečnost a snadnost použití, ne použitelnost systému.
+- [[carrollMakingUseScenarioBased2000]] — C2: scénáře užití se v HCI používají k plánování a popisu testovacích úloh pro hodnocení a ke specifikaci cílů použitelnosti (jen zmínka s odkazem, ne metodika testování).
 
 ## Související
+- [[scenario-based-design]]

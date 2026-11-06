@@ -8,6 +8,7 @@ Vlastnost míry vícerozměrných dat, že její sumarizace (agregace přes dime
 ## Sources
 - [[lenzSummarizabilityOLAPStatistical1997]] — C4, C5, C6: tři nutné podmínky sumarizovatelnosti: disjunktnost, úplnost a typová kompatibilita (flow/stock/value-per-unit × temporální/netemporální dimenze × funkce).
 - [[romeroNeedReferenceAlgebra2007]] — C4–C5: neomezený kartézský součin nezachová disjunktnost při agregaci a manipulace celou relační algebrou může zavést problémy s agregací.
+- [[malinowskiOLAPHierarchiesConceptual2004]] — C1: OLAP nástroje obvykle zvládají jen hierarchie zajišťující sumarizovatelnost, což motivuje klasifikaci složitějších (mj. nestriktních) hierarchií.
 
 ## Napětí
 
