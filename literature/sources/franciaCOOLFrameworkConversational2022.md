@@ -5,7 +5,7 @@ authors: Francia, Matteo; Gallinucci, Enrico; Golfarelli, Matteo
 year: 2022
 venue: Information Systems 104, 101752
 kind: journal
-status: candidate
+status: confirmed
 verified: true
 precteno: prolet
 chapters: []

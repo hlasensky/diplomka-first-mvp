@@ -5,7 +5,7 @@ authors: Senger, Diren; Gruber, Clemens; Kluss, Thorsten; Johannsen, Carolin
 year: 2024
 venue: Data in Brief 52, 110015
 kind: journal
-status: candidate
+status: confirmed
 verified: true
 precteno: prolet
 chapters: []
