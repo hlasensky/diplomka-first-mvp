@@ -537,6 +537,7 @@ def cmd_lint(bib: dict, res: Result) -> None:
             res.add("WARN", "CONFIRMED_UNREAD", f"{key}: confirmed, ale precteno: {read}")
         if fm.get("status") == "confirmed" and not section(text, "Citovat pro"):
             res.add("INFO", "NO_CITE_FOR", f"{key}: confirmed, ale „Citovat pro“ je prázdné")
+        tool_level = str(fm.get("uroven")) == "nastroje"
         if key in bib:
             e = bib[key]
             if not e.get("year"):
@@ -547,9 +548,10 @@ def cmd_lint(bib: dict, res: Result) -> None:
             zl = re.search(r"items/([A-Z0-9]*)\)", text)
             if zm and zl and zl.group(1) != zm.group(1):
                 res.add("ERROR", "ZOTERO_LINK", f"{key}: odkaz do Zotera {zl.group(1)} ≠ příloha {zm.group(1)}")
-            if not pdf_path(e):
+            if not pdf_path(e) and not tool_level:
                 res.add("WARN", "PDF_MISSING", f"{key}: PDF z bib `file` neexistuje")
-        if not (FULLTEXT / f"{key}.txt").exists():
+        if not (FULLTEXT / f"{key}.txt").exists() and not tool_level:
+            # tool/dataset notes (uroven: nastroje) have no fulltext by design (see ingest skill)
             res.add("ERROR", "NO_FULLTEXT", f"{key}: chybí fulltext")
         claim_ids = {c.cid for c in parse_claims(text)}
         fm_concepts = fm.get("concepts") or []
