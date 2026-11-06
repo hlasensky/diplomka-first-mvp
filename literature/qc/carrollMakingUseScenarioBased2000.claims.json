@@ -1,0 +1,66 @@
+{
+  "citekey": "carrollMakingUseScenarioBased2000",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 54,
+          "quote": "In scenario-based design, descriptions of how people accomplish tasks are a primary working design representation."
+        },
+        {
+          "page": 55,
+          "quote": "Such descriptions, often called scenarios, support reasoning about situations of use, even before those situations are actually created."
+        },
+        {
+          "page": 56,
+          "quote": "Every scenario involves at least one agent and at least one goal."
+        },
+        {
+          "page": 56,
+          "quote": "Particular actions and events can facilitate, obstruct, or be irrelevant to given goals."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "63294ab238f0"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 61,
+          "quote": "They are widely used for planning and describing evaluation test tasks (Roberts and Moran 1983)"
+        },
+        {
+          "page": 63,
+          "quote": "a particular usage experience that could be prototyped and tested. At the same time,"
+        },
+        {
+          "page": 63,
+          "quote": "in the sense that they are deliberately incomplete and easily revised or elaborated."
+        },
+        {
+          "page": 66,
+          "quote": "They describe systems in terms of the work that people will try to do as they make use of those systems."
+        },
+        {
+          "page": 67,
+          "quote": "All stakeholders speak the language of scenarios. Thus, employing scenarios as a focal design representation facilitates participatory design"
+        },
+        {
+          "page": 69,
+          "quote": "And they describe designs at multiple levels of detail and with respect to multiple perspectives."
+        },
+        {
+          "page": 70,
+          "quote": "Each of these variations in resolution and perspective is a permutation of a single underlying use scenario."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "d6ceed4397da"
+    }
+  },
+  "stamped": "2026-11-06"
+}

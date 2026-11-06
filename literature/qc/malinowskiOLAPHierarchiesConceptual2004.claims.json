@@ -1,0 +1,54 @@
+{
+  "citekey": "malinowskiOLAPHierarchiesConceptual2004",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Usually, OLAP tools only cope with hierarchies that ensure summarizability or that can be transformed so that summarizability conditions hold"
+        },
+        {
+          "page": 2,
+          "quote": "we adopt a conceptual approach and propose an extension of the ER model for representing hierarchies appearing in real-world applications as well as a categorization of such hierarchies"
+        },
+        {
+          "page": 4,
+          "quote": "Simple hierarchies can be further categorized into symmetric, asymmetric, and generalized hierarchies."
+        },
+        {
+          "page": 11,
+          "quote": "Moreover, for each of these simple hierarchies, another specialization can be applied, making them strict or non-strict."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "bb9d336d1963"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "a many-to-many cardinality between parent and child levels is very common in real-life applications: e.g., an employee working in several departments"
+        },
+        {
+          "page": 7,
+          "quote": "it is called strict if all cardinalities are one-to-many. The fact that a hierarchy is strict or not is orthogonal to its type."
+        },
+        {
+          "page": 7,
+          "quote": "Since at the instance level, a child member may have more than one parent member, the members of the hierarchy form a graph"
+        },
+        {
+          "page": 7,
+          "quote": "For example, using a bridge table [9], transforming the non-strict hierarchy into a strict hierarchy [15], or changing the model into the dimensional normal form proposed by [10]."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3c7dd9567cdd"
+    }
+  },
+  "stamped": "2026-11-06"
+}
