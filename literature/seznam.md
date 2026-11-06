@@ -29,7 +29,7 @@ Bez těchto zdrojů nelze obhájit přínos práce ani splnit zadání. Řazeno 
 15. Francia, M., Gallinucci, E., Golfarelli, M. — COOL: A Framework for Conversational OLAP, Information Systems 104:101752, 2022 DOI: https://doi.org/10.1016/j.is.2021.101752 https://www.sciencedirect.com/science/article/pii/S0306437921000211 Nejbližší prior work. Musíš přesně vědět, co dělá a co nedělá.
 16. VOOL — přirozenojazyková vokalizace výsledků OLAP sessions Information Systems, 2025 https://dl.acm.org/doi/10.1016/j.is.2024.102496 Přímý předchůdce pilíře 3. Převezmi jejich evaluační protokol.
 17. Liu, X., Yang, Y. — LLM-Assisted Conversational Navigation over Multidimensional Data Cubes (NavLLM) Expert Systems With Applications 328:132958, 2026 DOI: https://doi.org/10.1016/j.eswa.2026.132958 Plná verze s formalizací a vyhodnocením. Demo: Liu, X., Liu, R., Yang, Y. — NavLLM, EDBT 2026, s. 740–743 DOI: https://doi.org/10.48786/edbt.2026.69 Volné PDF dema: https://backend.orbit.dtu.dk/ws/portalfiles/portal/437649807/paper-316.pdf
-18. ChartInsighter — redukce halucinací při shrnutí grafů časových řad IEEE TVCG, 2025 https://ieeexplore.ieee.org/document/11113164 Preprint: https://arxiv.org/abs/2501.09349 Metodika proti halucinacím při popisu časových řad = přímo pilíř 3.
+18. ChartInsighter — redukce halucinací při shrnutí grafů časových řad IEEE TVCG 31(6):3733–3745, 2025 DOI: https://doi.org/10.1109/TVCG.2025.3567122 https://ieeexplore.ieee.org/document/11113164 Preprint: https://arxiv.org/abs/2501.09349 Metodika proti halucinacím při popisu časových řad = přímo pilíř 3.
 19. Yao, S. et al. — ReAct: Synergizing Reasoning and Acting in Language Models ICLR 2023 arXiv: https://arxiv.org/abs/2210.03629 Projekt: https://react-lm.github.io/ Tvůj drill-down agent je v podstatě ReAct smyčka. Primární zdroj pro návrhové rozhodnutí.
 20. BIRD — benchmark pro Text-to-SQL nad rozsáhlými reálnými databázemi NeurIPS 2023 https://arxiv.org/abs/2305.03111 DOI: https://doi.org/10.52202/075280-1835
 21. Lei, F. et al. — Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-SQL Workflows ICLR 2025 (Oral) arXiv: https://arxiv.org/abs/2411.07763 Na realistických schématech padá execution accuracy z ~91 % (Spider 1.0) a ~73 % (BIRD) na ~21 %. Musíš explicitně vymezit podmínky, za nichž platí tvoje očekávaná přesnost.
@@ -41,12 +41,15 @@ Bez těchto zdrojů nelze obhájit přínos práce ani splnit zadání. Řazeno 
 ÚROVEŇ 2 — DŮLEŽITÉ (číst metodu a related work)
 IoT a správa časových řad
 26. Atzori, L., Iera, A., Morabito, G. — The Internet of Things: A Survey Computer Networks 54(15):2787–2805, 2010 ⚠ https://doi.org/10.1016/j.comnet.2010.05.010 — ověřit Historicky nejcitovanější survey IoT. Pro vymezení pojmu a vizí; technické detaily ber z položky 8.
+100. John, P., Hynek, J., Hruška, T., Valný, M. — Application of Time Series Database for IoT Smart City Platform [NOVÉ, 5. 11. 2026] Smart City Symposium Prague (SCSP) 2023, IEEE DOI: https://doi.org/10.1109/SCSP58044.2023.10146237 Práce skupiny vedoucího: databáze časových řad v IoT platformě pro smart city. Opora pro uložení dat v TSDB.
+101. Dobson, S., Golfarelli, M., Graziani, S., Rizzi, S. — A Reference Architecture and Model for Sensor Data Warehousing [NOVÉ, 5. 11. 2026] IEEE Sensors Journal 18(18):7659–7670, 2018 DOI: https://doi.org/10.1109/JSEN.2018.2861327 Referenční architektura a multidimenzionální model pro datový sklad nad senzorovými daty. Opora pro existující přístupy k OLAP nad IoT daty a pro datový model.
 Monitoring úlů (precision beekeeping) [NOVÉ, rev. 4]
 27. Zacepins, A. et al. — Challenges in the Development of Precision Beekeeping [NOVÉ, rev. 4] Biosystems Engineering 130:60–71, 2015 ⚠ https://doi.org/10.1016/j.biosystemseng.2014.12.001 — ověřit Doména: co senzory v úlu měří a jak interpretovat signály (rojení, zimování).
 28. Meikle, W. G., Holst, N. — Application of Continuous Monitoring of Honeybee Colonies [NOVÉ, rev. 4] Apidologie 46:10–22, 2015 ⚠ https://doi.org/10.1007/s13592-014-0298-x — ověřit Interpretace váhy a teploty úlu v čase: denní cyklus váhy, snůška, teplota plodiště. Podklad pro význam anomálií.
 29. Hadjur, H., Ammar, D., Lefèvre, L. — Toward an Intelligent and Efficient Beehive: A Survey of Precision Beekeeping Systems and Services [NOVÉ, rev. 4] Computers and Electronics in Agriculture 192:106604, 2022 ⚠ https://doi.org/10.1016/j.compag.2021.106604 — ověřit Přehled IoT systémů pro monitoring úlů. Spojuje bod 1 zadání s doménou dat.
 Vizualizace časových řad
 30. Aigner, W., Miksch, S., Schumann, H., Tominski, C. — Visualization of Time-Oriented Data Springer, 2011 (2. vydání 2023 ⚠ ověřit) ⚠ https://doi.org/10.1007/978-0-85729-079-3 — ověřit Standardní monografie k bodu 2 zadání. Taxonomie vizualizací časových dat; z přehledu technik (TimeViz Browser) si vyber ty relevantní pro senzorová data. Online katalog technik: https://browser.timeviz.net/
+98. Bach, B., Freeman, E., Abdul-Rahman, A., Turkay, C., Khan, S., Fan, Y., Chen, M. — Dashboard Design Patterns [NOVÉ, 5. 11. 2026] IEEE TVCG 29(1):342–352, 2023 (VIS 2022) DOI: https://doi.org/10.1109/TVCG.2022.3209448 Popisy vzorů: https://dashboarddesignpatterns.github.io 42 návrhových vzorů a 6 žánrů dashboardů z korpusu 144 dashboardů, model kompromisů abstrakce – plocha – stránky – interakce. Opora pro návrh vizualizací a rozhraní.
 Vysvětlování anomálií a dotazů
 31. Yan, S. et al. — CMMD: Cross-Metric Multi-Dimensional Root Cause Analysis ACM SIGKDD 2022, s. 4310–4320 ⚠ https://dl.acm.org/doi/10.1145/3534678.3539236 — ověřit Preprint: https://arxiv.org/abs/2203.11141 ⚠ ověřit
 32. Roy, S., Suciu, D. — A Formal Approach to Finding Explanations for Database Queries ACM SIGMOD 2014, s. 1579–1590 DOI: https://doi.org/10.1145/2588555.2588578 Volné PDF: https://homes.cs.washington.edu/~suciu/main_explanation.pdf Formální rámec intervence: vysvětlení = odebrání n-tic, které významně mění výsledek dotazu.
@@ -56,6 +59,7 @@ Provenance [NOVÉ, rev. 4]
 Klasická OLAP explorace
 35. Sathe, G., Sarawagi, S. — Intelligent Rollups in Multidimensional OLAP Data VLDB 2001, s. 531–540 Volné PDF: https://repository.ias.ac.in/128421
 36. Francia, M., Marcel, P., Peralta, V., Rizzi, S. — Enhancing Cubes with Models to Describe Multidimensional Data Information Systems Frontiers, 2021 ⚠ https://doi.org/10.1007/s10796-021-10147-3 — ověřit Implementace operátoru describe z Intentional Analytics Model. Sesterský článek k položce 4.
+103. Romero, O., Abelló, A. — On the Need of a Reference Algebra for OLAP [NOVÉ, 5. 11. 2026] DaWaK 2007, LNCS 4654, s. 99–110 DOI: https://doi.org/10.1007/978-3-540-74553-2_10 Srovnání multidimenzionálních algeber a návrh společné sady OLAP operátorů. Opora pro vrstvu analytických operací.
 Proaktivní insighty [NOVÉ, rev. 4]
 37. Tang, B., Han, S., Yiu, M. L., Ding, R., Zhang, D. — Extracting Top-K Insights from Multi-dimensional Data [NOVÉ, rev. 4] ACM SIGMOD 2017 DOI: https://doi.org/10.1145/3035918.3035922 Automatické hledání zajímavých pozorování v kostce. Opora pro proaktivní hlášení anomálií.
 38. Ding, R. et al. — QuickInsights: Quick and Automatic Discovery of Insights from Multi-Dimensional Data [NOVÉ, rev. 4] ACM SIGMOD 2019 ⚠ https://doi.org/10.1145/3299869.3314037 — ověřit Proaktivní insighty nasazené v Power BI. Srovnání pro proaktivní režim.
@@ -65,6 +69,7 @@ Automatizovaná explorace dat
 Detekce anomálií v časových řadách
 41. Liu, Q., Paparrizos, J. — The Elephant in the Room: Towards A Reliable Time-Series Anomaly Detection Benchmark (TSB-AD) NeurIPS 2024, Datasets and Benchmarks Track Volné PDF: https://proceedings.neurips.cc/paper_files/paper/2024/file/c3f3c690b7a99fba16d0efd35cb83b2c-Paper-Datasets_and_Benchmarks_Track.pdf Stránka konference: https://neurips.cc/virtual/2024/poster/97690 Kód a data: https://pypi.org/project/TSB-AD/ 1070 časových řad ze 40 datasetů. Určí ti evaluační metriku (VUS-PR, nikoli F1 s point-adjustem) a doloží, že statistický detektor pro MVP stačí. Číst před návrhem detektoru. [rev. 4: sníženo z úrovně 1 — hlavně argument pro metriku VUS-PR]
 42. Wu, R., Keogh, E. — Current Time Series Anomaly Detection Benchmarks are Flawed and are Creating the Illusion of Progress IEEE TKDE 35(3):2421–2429, 2023 Preprint: https://arxiv.org/abs/2009.13807 ⚠ ověřit Proč nesmíš evaluovat s point-adjust protokolem.
+102. Chatterjee, A., Ahmed, B. S. — IoT Anomaly Detection Methods and Applications: A Survey [NOVÉ, 5. 11. 2026] Internet of Things 19:100568, 2022 DOI: https://doi.org/10.1016/j.iot.2022.100568 Přehled metod a aplikací detekce anomálií v datech z IoT; doplňuje obecný přehled Blázquez-García (13).
 LLM a časové řady
 43. Gruver, N. et al. — Large Language Models Are Zero-Shot Time Series Forecasters NeurIPS 2023 arXiv: https://arxiv.org/abs/2310.07820 Jak LLM zpracovávají číselné sekvence serializované jako text; vliv tokenizace čísel. Doplňuje položku 7.
 44. Jin, M. et al. — Time-LLM: Time Series Forecasting by Reprogramming Large Language Models ICLR 2024 arXiv: https://arxiv.org/abs/2310.01728 Reprezentativní zástupce přístupu „adaptace LLM na časové řady". Pro vymezení: ty LLM nepoužíváš jako prediktor, ale jako orchestrátor a vypravěče.
@@ -96,6 +101,8 @@ Evaluace modelů
 62. LLM-as-a-Judge EMNLP 2025 https://aclanthology.org/2025.emnlp-main.138/
 63. Zheng, L. et al. — Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena NeurIPS 2023, Datasets and Benchmarks Track arXiv: https://arxiv.org/abs/2306.05685 Původní zdroj metody.
 64. Liang, P. et al. — Holistic Evaluation of Language Models (HELM) [NOVÉ] Transactions on Machine Learning Research, 2023 arXiv: https://arxiv.org/abs/2211.09110 Rámec pro vícekriteriální srovnání modelů (přesnost, efektivita, robustnost). Převezmi strukturu metrik pro bod 6b zadání.
+Návrh rozhraní a konverzace [NOVÉ, 5. 11. 2026]
+99. Silva, G. R. S., Canedo, E. D. — Towards User-Centric Guidelines for Chatbot Conversational Design [NOVÉ, 5. 11. 2026] International Journal of Human–Computer Interaction 40(2):98–120, 2024 (online 2022) DOI: https://doi.org/10.1080/10447318.2022.2118244 Systematická rešerše 40 uživatelských studií o praktikách textových chatbotů (přirozenost, transparentnost, emocionalita). Opora pro návrh konverzace s LLM; pozor, jde o chatboty před LLM (rešerše do 2/2022).
 Uživatelské testování
 65. Brooke, J. — SUS: A „Quick and Dirty" Usability Scale In: Jordan, P. W. et al. (eds.), Usability Evaluation in Industry, Taylor & Francis, 1996, s. 189–194 ⚠ ověřit stránky Původní zdroj dotazníku SUS. Cituj spolu s položkou 21.
 66. Likert, R. — A Technique for the Measurement of Attitudes Archives of Psychology 22(140):1–55, 1932 ⚠ ověřit Původní zdroj Likertovy škály, kterou zadání výslovně požaduje.
@@ -136,11 +143,11 @@ Datasety a datové zdroje citovat s verzí a datem přístupu. Dokumentace nást
 91. Metabase https://www.metabase.com/ Produktová stránka — pouze zmínka o existujícím nástroji v přehledu, nikoli zdroj.
 
 MAPOVÁNÍ NA BODY ZADÁNÍ
-Bod 1 — IoT, chytrá zařízení, časové řady: 8, 9, 10, 11, 12, 13, 14, 26, 27, 28, 29, 71, 72
-Bod 2a — vizualizace a nástroje pro analýzu časových řad: 30, 57, 58, 75, 76, 90
+Bod 1 — IoT, chytrá zařízení, časové řady: 8, 9, 10, 11, 12, 13, 14, 26, 27, 28, 29, 71, 72, 100, 102
+Bod 2a — vizualizace a nástroje pro analýzu časových řad: 30, 57, 58, 75, 76, 90, 98
 Bod 2b — LLM nad daty: 6, 7, 16, 19, 20, 21, 22, 43, 44, 45, 46, 47, 48, 61, 81, 97
-Bod 3 — OLAP nad časovými řadami, požadavky na LLM augmentaci: 1, 2, 3, 4, 5, 15, 17, 24, 35, 36, 37, 38, 39, 40, 67, 68
-Bod 4 — návrh platformy, vysvětlování dotazů, lokální vs. cloudové modely: 19, 25, 34, 56, 83, 90
+Bod 3 — OLAP nad časovými řadami, požadavky na LLM augmentaci: 1, 2, 3, 4, 5, 15, 17, 24, 35, 36, 37, 38, 39, 40, 67, 68, 100, 101, 103
+Bod 4 — návrh platformy, vysvětlování dotazů, lokální vs. cloudové modely: 19, 25, 34, 56, 83, 90, 98, 99, 103
 Bod 6a — uživatelské testování, scénáře, Likertova škála: 23, 65, 66
 Bod 6b — srovnání modelů (výkonnost, kvalita analýzy): 41, 42, 62, 63, 64, 84
 

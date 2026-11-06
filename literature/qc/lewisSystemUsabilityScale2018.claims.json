@@ -1,0 +1,198 @@
+{
+  "citekey": "lewisSystemUsabilityScale2018",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "The System Usability Scale (SUS) is the most widely used standardized questionnaire for the assessment of perceived usability."
+        },
+        {
+          "page": 2,
+          "quote": "Sauro and Lewis (2009) reported that the SUS accounted for 43% of post-study questionnaire usage in industrial usability studies."
+        },
+        {
+          "page": 2,
+          "quote": "I decided, with the blessing of engineering management at Digital Equipment Co. Ltd (DEC; where I developed SUS), that it was probably something that could be used by other organizations"
+        },
+        {
+          "page": 2,
+          "quote": "There are no fees required to use the SUS. “The only prerequisite for its use is that any published report should acknowledge the source of the measure” (Brooke, 1996, p. 194)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "bef77e6abc61"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "with that adjustment differing for the odd- and even-numbered items (respectively, the positive- and negative-tone items)."
+        },
+        {
+          "page": 3,
+          "quote": "For the odd-numbered items, subtract 1 from the raw score, and for the even-numbered items, subtract the raw score from 5. Compute the sum of the adjusted scores, then multiply by 2.5 to get the standard SUS score."
+        },
+        {
+          "page": 4,
+          "quote": "The key takeaway from this research was to use “awkward” in place of “cumbersome” in Item 8 (as shown in Figure 1)."
+        },
+        {
+          "page": 7,
+          "quote": "we recommend that user experience practitioners and researchers treat the SUS as a unidimensional measure of perceived usability, and no longer routinely compute or report Usability and Learnability subscales."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b5c25de606c8"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "guidelines for acceptable values of coefficient alpha in the development of standardized questionnaires, with an acceptable range from 0.70 to 0.95"
+        },
+        {
+          "page": 4,
+          "quote": "based on more than 2300 completed SUS questionnaires collected over more than 200 studies"
+        },
+        {
+          "page": 5,
+          "quote": "The SUS had an acceptable level of reliability (coefficient alpha of 0.91)."
+        },
+        {
+          "page": 7,
+          "quote": "For this body of research, estimates of reliability using coefficient alpha ranged from 0.83 to 0.97, averaging around 0.91."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9016ae92d39d"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "They reported a large and statistically significant correlation of 0.82 between the SUS and the adjective rating scale (evidence of concurrent validity)."
+        },
+        {
+          "page": 7,
+          "quote": "Correlations with the objective metric of successful task completions (success rate) ranged from 0.22 to 0.50."
+        },
+        {
+          "page": 7,
+          "quote": "There was evidence of significant sensitivity of the SUS to independent variables such as different products/systems, changes to products, amount of experience with a product/system, personality type, application type, and platform type (phone vs. tablet)."
+        },
+        {
+          "page": 7,
+          "quote": "Of particular interest to researchers and practitioners is the robust sensitivity to the amount (duration and/or frequency) of experience users have with the products and systems they rated."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "487852da87ec"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "With this combined data set from 446 studies and over 5000 individual SUS responses, Sauro (2011) used a logarithmic transformation on reflected scores to normalize the distribution, then computed percentile ranks for the entire range of SUS scores."
+        },
+        {
+          "page": 5,
+          "quote": "Note that the average score in the data used to create the Sauro–Lewis CGS was 68, which was by design the exact center of the CGS (a grade of C)"
+        },
+        {
+          "page": 5,
+          "quote": "It addresses the weakness of “OK” in the adjective scale because a 50 would receive an F (clearly deficient) while the lowest value in the range for C (an average experience) is 65."
+        },
+        {
+          "page": 5,
+          "quote": "the CGS is consistent with an industrial practice that has become increasingly common of interpreting a mean SUS of at least 80 (A−) as indicative of an"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b96e4ba27d9e"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "Several lines of research have shown, however, that different types of products and interfaces differ significantly in perceived usability."
+        },
+        {
+          "page": 6,
+          "quote": "For many projects, setting a SUS benchmark of 80 (A−) is reasonable and achievable."
+        },
+        {
+          "page": 6,
+          "quote": "When possible, practitioners should use a combination of comparison with norms and competitive evaluation when assessing the quality of their products."
+        },
+        {
+          "page": 6,
+          "quote": "Practitioners should also exercise some caution when using data from within-subjects studies as benchmarks"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4ba22ba70451"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "Sauro and Lewis (2011) administered a retrospective survey using the standard and positive versions of the SUS (n = 213) across seven websites. The reliability (coefficient alpha) of both questionnaires was high (Standard: 0.92; Positive: 0.96)."
+        },
+        {
+          "page": 8,
+          "quote": "but estimated that about 17% of the completed standard questionnaires contained mistakes. They also reported that three of 27 SUS data sets (11%)"
+        },
+        {
+          "page": 9,
+          "quote": "As expected, all nine-item variants of the SUS correlated significantly with the standard SUS (all r > 0.99). Dropping one item had no appreciable effect on scale reliability, with all values of coefficient alpha ranging from 0.90 to 0.91."
+        },
+        {
+          "page": 13,
+          "quote": "When these processes are not in place or would be impossible to implement (e.g., unmoderated remote usability studies or surveys), researchers should consider using the positive version (as shown in Figure 2)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "eb2517679dea"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "including Arabic, Slovene, Polish, Italian, Persian, and Portuguese. Table 3 summarizes the basic psychometric findings from that body of research. The average estimate of reliability across these studies was about 0.81"
+        },
+        {
+          "page": 11,
+          "quote": "found a strong positive correlation of 0.623, meaning SUS scores explained about 39% of the variability in responses to the likelihood-to-recommend question"
+        },
+        {
+          "page": 12,
+          "quote": "In the recent database assembled by Lewis & Sauro, In press, the overall SUS mean was 70.8."
+        },
+        {
+          "page": 13,
+          "quote": "it is important to include other metrics in a battery designed to assess the broader construct of user experience."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b14d3d6b3af8"
+    }
+  },
+  "stamped": "2026-11-05"
+}

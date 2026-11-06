@@ -1,0 +1,126 @@
+{
+  "citekey": "johnApplicationTimeSeries2023",
+  "claims": {
+    "C1": {
+      "verdict": "partial",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "On the other hand, in many cases, the user may want to get aggregated data. An example of this situation is when the user wants to display a large segment of data."
+        },
+        {
+          "page": 1,
+          "quote": "Loading the raw data without aggregating them can result in the user UI taking too long to load, which can cause the user to stop using the page entirely"
+        },
+        {
+          "page": 1,
+          "quote": "A correctly selected aggregation function can reduce the number of points with no or acceptable accuracy loss"
+        },
+        {
+          "page": 2,
+          "quote": "Time series optimizations are commonly implemented in NoSQL systems rather than traditional relational databases."
+        }
+      ],
+      "note": "Článek zmírňuje: uživatel agregovaná data „may want“ (ne „potřebuje“) a načítání surových dat „can result“ v pomalém UI (ne „zpomaluje“); zařazení dat jako časových řad začíná na s. 1 a pokračuje na s. 2 – to sedí.",
+      "fix": "Data ze smart city lze klasifikovat jako časové řady; uživatel může v mnoha případech chtít agregovaná data, protože načítání surových dat při zobrazení dlouhého úseku může vést k pomalému načítání UI, a vhodná agregační funkce sníží počet bodů bez ztráty nebo s přijatelnou ztrátou přesnosti; optimalizace pro časové řady jsou běžněji implementovány v NoSQL než v relačních databázích. (s. 1, §I; s. 2, §I)",
+      "claim_sha": "d5b1d8f46cf2"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "insertion of a new value, querying a time segment without an aggregation, querying a time segment with an aggregation, and querying the last element currently stored."
+        },
+        {
+          "page": 3,
+          "quote": "A small test file (with a raw size of around 30 MB) was selected to filter out database systems that are very slow and thus unsuitable. All tests were run 20 times, and individual results were averaged."
+        },
+        {
+          "page": 3,
+          "quote": "but with a more extensive test file (more than 500 thousand records with a total size of around 350 MB)."
+        },
+        {
+          "page": 3,
+          "quote": "The dataset was created from multiple RHF1S001 sensors obtained over a year. The dataset was supplied by Logimic with a total size of 163 MB with around 670 thousand items."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "c980abc1de0b"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "MongoDB and InfluxDB fared much better, providing significantly more performance than both DynamoDB and PostgreSQL."
+        },
+        {
+          "page": 3,
+          "quote": "the time needed to complete the query changed from 2699 ms to 4338 ms in the case of Mongo DB version 5 without and with time series mode, respectively."
+        },
+        {
+          "page": 3,
+          "quote": "MongoDB, in default document mode, often offered better performance than InfluxDB."
+        },
+        {
+          "page": 4,
+          "quote": "In the case of the 350 MB dataset, the total database size was 787 MB in the case of PostgreSQL, which is more than double the size of uncompressed MongoDB version 5 at 265 MB."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "488d552bd70b"
+    },
+    "C4": {
+      "verdict": "partial",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "The effectiveness of InfluxDB was demonstrated in a case study that was done in cooperation with Logimic, where InfluxDB replaced the existing DynamoDB database."
+        },
+        {
+          "page": 4,
+          "quote": "DynamoDB currently continues to be used for managing configurations and other metadata."
+        },
+        {
+          "page": 4,
+          "quote": "The cost of InfluxDB and DynamoDB combined was reduced to around 40% of the cost of DynamoDB in at 1. January 2022."
+        },
+        {
+          "page": 5,
+          "quote": "Logimic currently stores metadata of the sensors in PostgreSQL."
+        }
+      ],
+      "note": "S. 4 popisuje PostgreSQL pro metadata senzorů jen v minulém čase (architektura před přechodem); že tam metadata senzorů jsou i nyní, říká až necitovaná s. 5 (§VI).",
+      "fix": "Případová studie Logimic: InfluxDB nahradil DynamoDB pro časové řady (DynamoDB zůstal pro konfiguraci a další metadata, metadata senzorů jsou v PostgreSQL); náklady InfluxDB a DynamoDB dohromady klesly asi na 40 % nákladů DynamoDB k 1. 1. 2022. (s. 4, §V; s. 5, §VI)",
+      "claim_sha": "0bb1a4e338ce"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "InfluxDB does not allow mixing numerical and string data types in a single field or storing nested documents and provides no optimizations for accessing the last inserted element."
+        },
+        {
+          "page": 5,
+          "quote": "The current architecture may cause the UI to be slow as the sensor device eui needs to be queried from the relational database before querying the time series data."
+        },
+        {
+          "page": 5,
+          "quote": "The combination of AWS Lambda functions and RESTful API can result in a sub-optimal performance caused by cold starts."
+        },
+        {
+          "page": 5,
+          "quote": "Cold starts can be an obstacle, primarily on systems and endpoints with low traffic."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a1b2b6b1ba3e"
+    }
+  },
+  "stamped": "2026-11-05"
+}

@@ -1,0 +1,114 @@
+{
+  "citekey": "chatterjeeIoTAnomalyDetection2022",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "Despite the fact that this is not a systematic review paper, we did follow many of the techniques, but with some variations."
+        },
+        {
+          "page": 6,
+          "quote": "of the remaining 194 manuscripts were examined to identify papers relevant to the scope of this review."
+        },
+        {
+          "page": 5,
+          "quote": "A total of 2242 articles were collected, which were published between January 2019 and July 2021."
+        },
+        {
+          "page": 5,
+          "quote": "IEEE, Elsevier, Springer, and MDPI account for 76.1 percent of all recent publications."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "bfc96ab040ab"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "An IoT anomaly detection method is classified into four categories by combining the classifications from previously published articles"
+        },
+        {
+          "page": 3,
+          "quote": "The third subcategory is machine learning and deep learning models, which have increased in publication frequency in recent years."
+        },
+        {
+          "page": 4,
+          "quote": "The three routes of anomaly categorization by an application are constructive, destructive, and data cleaning."
+        },
+        {
+          "page": 4,
+          "quote": "One of the most frequently encountered types is the circumstance-specific type, which is the point, contextual, and collective."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "0ee43f95bb6e"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Anomalies are rare events or observations that deviate significantly from conventional behavior or patterns observed in a single data point, a specific context or slice of time"
+        },
+        {
+          "page": 2,
+          "quote": "In principle, anomalies result from external factors, such as sensor failure or external attack"
+        },
+        {
+          "page": 2,
+          "quote": "One such example is a change in household occupancy, which results in a change in electricity demand"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4600e79d22d6"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "The vast majority of those publications are in areas such as network and infrastructure security, sensor monitoring, smart home, and smart city applications"
+        },
+        {
+          "page": 12,
+          "quote": "there is no single best generic algorithm for the problem but rather a number of methods specific to a particular application."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "dafc18b7b5b5"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 12,
+          "quote": "Obtaining labeled training data is time-consuming, expensive, and not always possible."
+        },
+        {
+          "page": 12,
+          "quote": "As a result, a self-supervised, semi-supervised, and unsupervised algorithm, especially as an online approach, that can achieve detection accuracy comparable to that of supervised approaches is desirable."
+        },
+        {
+          "page": 12,
+          "quote": "It is preferable for an anomaly detection model to take a more proactive strategy to adapt to incoming data or concept drifts."
+        },
+        {
+          "page": 13,
+          "quote": "A robust detection technique that utilizes data augmentation in model training and software testing is required for applications with insufficient data."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a6044863748f"
+    }
+  },
+  "stamped": "2026-11-05"
+}

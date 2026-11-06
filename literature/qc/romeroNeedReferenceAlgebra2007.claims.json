@@ -1,0 +1,118 @@
+{
+  "citekey": "romeroNeedReferenceAlgebra2007",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "although multidimensionality (i.e. to model in terms of facts and dimensions) has been widely accepted as the best solution to DW modelling, there is no such agreement about the set of operators to handle multidimensional data"
+        },
+        {
+          "page": 1,
+          "quote": "a reference set of operators would help to develop design methodologies oriented to improve querying, better and accurate indexing techniques as well as to facilitate query optimization"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "8cb84a14e981"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "a Dimension contains a hierarchy of Levels representing different granularities (or levels of detail) to study data, and a Level contains Descriptors"
+        },
+        {
+          "page": 2,
+          "quote": "Next, we present our reference multidimensional operations set that was proved to be closed, complete and minimal (see [5] for further information)"
+        },
+        {
+          "page": 2,
+          "quote": "it can only be applied if we previously performed a Roll-up and did not lose the correspondences between cells"
+        },
+        {
+          "page": 2,
+          "quote": "We consider Union, Difference and Intersection as the most relevant ones"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "19cae648e28d"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "Table 1. Summary of the comparison between multidimensional algebras"
+        },
+        {
+          "page": 10,
+          "quote": "Firstly, Selection, Roll-up and Drill-down operators are considered in every algebra"
+        },
+        {
+          "page": 10,
+          "quote": "Projection, Drill-across and Set Operations are included in most of the algebras"
+        },
+        {
+          "page": 10,
+          "quote": "Finally, changeBase is also partially considered in most of the algebras"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "791c2eb65551"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "since a “Cartesian Product” without restrictions is meaningless in the multidimensional model, as discussed in [18]"
+        },
+        {
+          "page": 8,
+          "quote": "we express the multidimensional Selection in terms of the relational algebra as σDescriptors . – Similarly, the multidimensional Projection operator is equivalent to the relational one restricted to Measures"
+        },
+        {
+          "page": 9,
+          "quote": "In terms of this grouping algebra, a Roll-up operator consists of a proper “group by” operation along with an “aggregation” of data"
+        },
+        {
+          "page": 9,
+          "quote": "A consistent Drill-across typically consists of a “Join” between two multidimensional tables sharing the same multidimensional space"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b99694b548e0"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "This section aims to justify the necessity of a semantic layer (the multidimensional algebra) on the top of an RDBMS (i.e. the relational algebra)"
+        },
+        {
+          "page": 10,
+          "quote": "either would not conform a Cube (since the whole relational algebra is not closed with regard to the multidimensional model) or would introduce aggregation problems ([18])"
+        },
+        {
+          "page": 10,
+          "quote": "In other words, the multidimensional algebra represents the proper subset of the relational algebra applicable to multidimensionality"
+        },
+        {
+          "page": 11,
+          "quote": "we have shown that this common set of multidimensional operators can be expressed as a proper subset of the relational algebra"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "50cc12ef3bf1"
+    }
+  },
+  "stamped": "2026-11-05"
+}

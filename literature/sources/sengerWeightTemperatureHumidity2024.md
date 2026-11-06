@@ -9,7 +9,7 @@ status: candidate   # confirmed | candidate | rejected
 verified: false     # true = tvrzení ověřená proti PDF mnou
 precteno: ne         # ne | abstrakt | uvod-zaver | prolet | cele – jak daleko jsem paper četl (mění jen já)
 chapters: []
-concepts: [hive-monitoring, internet-of-things, colony-loss, anomaly-detection]
+concepts: [hive-monitoring, internet-of-things, colony-loss, anomaly-detection, time-series-database]
 uroven: 1
 ---
 

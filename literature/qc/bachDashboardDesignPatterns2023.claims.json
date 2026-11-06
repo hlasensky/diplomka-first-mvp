@@ -1,0 +1,194 @@
+{
+  "citekey": "bachDashboardDesignPatterns2023",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "We gathered a corpus of 144 dashboards by starting with the 83 dashboards collected by Sarikaya et al. [44] but discarding three due to lack of clarity or context."
+        },
+        {
+          "page": 3,
+          "quote": "We then added 64 new dashboards found on news websites and personal applications. 36 of these dashboards were related to Covid-19 due to recent public interest."
+        },
+        {
+          "page": 3,
+          "quote": "Three of the authors then created independent coding schemes by qualitatively analyzing the dashboards in the corpus using the constant comparative method [22]. Where available, we coded the interactive version of the dashboard (61%)."
+        },
+        {
+          "page": 3,
+          "quote": "These schemes were refined and consolidated with the help of another three additional coders not involved in the initial scheme."
+        },
+        {
+          "page": 3,
+          "quote": "Our final coding describes 42 design patterns, grouped into eight categories, which are divided as follows:"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "f5cb9e3c6ca6"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "we found detailed data sets (94%) which provide the most complete view. Aggregation (67%), filtering (42%), and derived values (69%) provide purposeful summaries of data"
+        },
+        {
+          "page": 3,
+          "quote": "Thresholds (21%) indicate states and values that bear some meaning, such as ‘good’ or ‘bad’."
+        },
+        {
+          "page": 3,
+          "quote": "A single value (88%) of a larger data set an be shown, e.g., the most recent value from a time series."
+        },
+        {
+          "page": 3,
+          "quote": "We found 9% of dashboards showed no meta information."
+        },
+        {
+          "page": 3,
+          "quote": "update information (64%/73%) with timestamps; and annotations (10%), which includes extra graphical embellishments added by the designer"
+        },
+        {
+          "page": 3,
+          "quote": "For example, tables (42%, Fig. 2(d)-middle), lists (9%), and detailed visualizations (88%) can provide very detailed information"
+        },
+        {
+          "page": 3,
+          "quote": "Miniature charts (21%), on the contrary, are small and concise visualizations without axis descriptions, labels, or tickmarks."
+        },
+        {
+          "page": 3,
+          "quote": "Trend-arrows (13%) are small arrows pointing up/down and are used to indicate the direction of change in a data value."
+        },
+        {
+          "page": 3,
+          "quote": "Finally, numbers (62%) are numerical representations of individual values, placed prominently on a dashboard"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "8b8a15d24f30"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "Coding was done by two independent coders coding each dashboard independently. We disagreed on 32 dashboards (22%) but resolved all disagreement in discussion"
+        },
+        {
+          "page": 5,
+          "quote": "Static Dashboard (21%)—By static dashboard, we refer to the traditional notion of a dashboard as a static (no-interaction), single page"
+        },
+        {
+          "page": 5,
+          "quote": "Analytic dashboards (73%)—This genre is what Few would call a Faceted Analytic Display [21]."
+        },
+        {
+          "page": 5,
+          "quote": "Analytic dashboards generally use complete visualizations and tables to show larger and more detailed data sets . Many of these views are fully interactive, providing for exploration , navigation , and drilldown ."
+        },
+        {
+          "page": 5,
+          "quote": "Magazine Dashboards (2%)—Many dashboards relating to Covid-19, climate change, politics, etc were created by news agencies and similar media outlets."
+        },
+        {
+          "page": 5,
+          "quote": "Infographic Dashboards (6%)—We also found examples of"
+        },
+        {
+          "page": 6,
+          "quote": "Repository Dashboards (17%)—We found several examples that list a"
+        },
+        {
+          "page": 6,
+          "quote": "Embedded Mini Dashboards (4%)—Some dashboards were found to be embedded into other applications such as news websites."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "1188f102c95b"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "From an information-theoretic perspective, a dashboard encodes a data space that is smaller than the data space of the data to be displayed."
+        },
+        {
+          "page": 6,
+          "quote": "Consider a time series representing the daily number of positive test cases for Covid-19 during a period of 500 days."
+        },
+        {
+          "page": 6,
+          "quote": "They all lose information, but in different ways: the line chart visualization may lose information through its limited height"
+        },
+        {
+          "page": 6,
+          "quote": "Reducing one of the parameters (screenspace, abstraction, number of pages, interaction) requires an increase in one of multiple of the other parameters."
+        },
+        {
+          "page": 6,
+          "quote": "Such parameters can be, e.g., abstraction, screenspace, number of pages, and interactivity. In a design process, the goal is to minimize each of these parameters."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "de15540eef7d"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "The workshop ran for 2 weeks and was open to everyone with a dashboard design task at hand."
+        },
+        {
+          "page": 7,
+          "quote": "The entire workshop was held on Zoom, encouraging participants to work on their design mockups asynchronously"
+        },
+        {
+          "page": 7,
+          "quote": "We had 23 participants in total from diverse backgrounds, including data science, medicine, psychology, economics, bioinformatics, design, etc."
+        },
+        {
+          "page": 7,
+          "quote": "About half of the participants had prior experience of one to several years in dashboard design with Power BI and Tableau."
+        },
+        {
+          "page": 7,
+          "quote": "Information overload was a frequent topic related to what information to include in a dashboard and how much information to include."
+        },
+        {
+          "page": 8,
+          "quote": "limit down [the design complexity] from endless design options to 2-3 good candidates"
+        },
+        {
+          "page": 8,
+          "quote": "In the end, I used [the patterns] as a ‘check-list’ to review my design decisions.”[P5]"
+        },
+        {
+          "page": 9,
+          "quote": "We highlight that any design pattern collection (Sect. 2.3) is highly qualitative in that it aims ideation and describing applicable solutions"
+        },
+        {
+          "page": 9,
+          "quote": "Our patterns and their frequencies (reported as % in Sect. 3) are representative for the dashboards we analyzed."
+        },
+        {
+          "page": 9,
+          "quote": "Eventually, the scope of this paper is not to suggest ‘good designs’, but to inform future studies."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "dc8ad2225bca"
+    }
+  },
+  "stamped": "2026-11-05"
+}

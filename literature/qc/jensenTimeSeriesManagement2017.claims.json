@@ -1,0 +1,194 @@
+{
+  "citekey": "jensenTimeSeriesManagement2017",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "For example, the sensors on a Boeing 787 produce upwards of half a terabyte of data per flight"
+        },
+        {
+          "page": 1,
+          "quote": "they are unsuitable to handle the velocity and volume of the time series produced by the large scale sensor"
+        },
+        {
+          "page": 1,
+          "quote": "analysis of the collected time series often requires exporting the data to another application such as R or SPSS"
+        },
+        {
+          "page": 2,
+          "quote": "this past generation of TSMSs are unable to process the amount of time series data produced today, as support for parallel query processing is limited and the capability to utilize distributed computing is non-existing"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3185805421d3"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "For this paper we define a TSMS as any system developed or extended for storing and querying data in the form of time series."
+        },
+        {
+          "page": 1,
+          "quote": "Time series are finite or unbounded sequences of data points in increasing order by time."
+        },
+        {
+          "page": 1,
+          "quote": "TSMS is one among multiple names for these systems commonly used in the literature, another common name is Time Series Database."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "12e0da4f69cc"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "we present a thorough analysis and classification of TSMSs developed through academic or industrial research and documented through publications"
+        },
+        {
+          "page": 2,
+          "quote": "we primarily analyze systems designed for storing numerous time series persistently, allowing the system to support aggregate analysis of multiple data streams over time"
+        },
+        {
+          "page": 2,
+          "quote": "An unstructured search using Google Scholar was performed to provide an overview of what research is performed in the area of TSMSs"
+        },
+        {
+          "page": 11,
+          "quote": "Yang et al. implemented the open-source system Druid [56] as a distributed TSMS for efficiently ingesting time series in the form of events from log files"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "cd109fbabcfc"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "The TSMSs were organized into three categories based on how the data processing and storage components are connected"
+        },
+        {
+          "page": 5,
+          "quote": "The first type of systems are those designed for collecting, analyzing and reacting to data from IoT devices"
+        },
+        {
+          "page": 5,
+          "quote": "Maturity: The maturity of the system based on a three level scale"
+        },
+        {
+          "page": 6,
+          "quote": "For this survey we differentiate between approximation implemented as simple aggregates without guaranteed error bounds, and AQP utilizing either mathematical models or sampling to provide query results with precision guarantees"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "21e162fab47c"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "As a downside a system with an internal data store cannot utilize existing infrastructure such as a distributed DBMS or a DFS that already are deployed."
+        },
+        {
+          "page": 9,
+          "quote": "Existing DBMS and DFS deployments can be reused and knowledge about how to configure the system for a particular workload can still be applied."
+        },
+        {
+          "page": 9,
+          "quote": "the choice of DBMS will restrict how data is stored and force the processing component to respect that data model"
+        },
+        {
+          "page": 14,
+          "quote": "decisions made about the RDBMS implementation can restrict what changes can be made, and functionality such as transactions add unnecessary overhead if the time series is immutable"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4cabe51fe417"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "First, only WearDrive [32] is distributed and is specialized for use with wearable devices."
+        },
+        {
+          "page": 14,
+          "quote": "none of the systems implement an entirely new data storage layer, and instead to varying degrees reuse existing systems for example MySQL, HDFS and Couchbase"
+        },
+        {
+          "page": 18,
+          "quote": "systems built as extensions to existing RDBMSs are few and all extend a RDBMS with support for AQP through the use of mathematical models"
+        },
+        {
+          "page": 18,
+          "quote": "However none of the RDBMS systems are distributed, limiting their ability to scale."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "bede9a4817fa"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "none of the three general purpose TSMS, tsdb [30], Plato [38] and PhilDB [43], support stream processing"
+        },
+        {
+          "page": 16,
+          "quote": "Despite all of surveyed TSMSs in this section extend an RDBMS with AQP functionality, none of the systems implement functionality for stream processing."
+        },
+        {
+          "page": 18,
+          "quote": "only a limited number of systems provide any capabilities for stream processing to support transformation of the data as it is being ingested"
+        },
+        {
+          "page": 18,
+          "quote": "it is uncommon to have an interface for domain experts to extend the systems with additional user-defined methods or models optimized for a particular domain or data set"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "0e7ff38748ad"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 18,
+          "quote": "The future research directions proposed by experts in the field are primarily focused on the need for a TSMS with a storage solution and query processor developed from the ground up for time series"
+        },
+        {
+          "page": 16,
+          "quote": "Traditional RDBMSs support functionality unnecessary for processing time series, such as the ability to delete and update arbitrary values"
+        },
+        {
+          "page": 17,
+          "quote": "The end result of the research we propose is a distributed TSMS with a physical layer storing time series as mathematical models"
+        },
+        {
+          "page": 18,
+          "quote": "As future work we propose that a TSMS that inherently provides a data cube as the means for analyzing multi-dimensional time series be developed."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b50e11bca6e7"
+    }
+  },
+  "stamped": "2026-11-05"
+}

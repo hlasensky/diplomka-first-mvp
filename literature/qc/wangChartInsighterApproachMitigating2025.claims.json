@@ -1,0 +1,198 @@
+{
+  "citekey": "wangChartInsighterApproachMitigating2025",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "These studies have primarily focused on basic chart analysis [28], [40], often overlooking a more in-depth exploration of trend analysis, data relationships, and detailed reasoning."
+        },
+        {
+          "page": 1,
+          "quote": "existing research [40], [52] frequently encounters hallucination issues, such as numerical calculation errors and incorrect trend judgments"
+        },
+        {
+          "page": 1,
+          "quote": "LLMs often lack deep logical reasoning about data context and the relationships between different data dimensions [17]."
+        },
+        {
+          "page": 1,
+          "quote": "analyzing time-series data necessitates mathematical computations to identify data features and trends to recognize patterns within the data, where LLMs often fall short [61]."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "f9ad6b24c65a"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "we conducted tests using four state-of-the-art LLMs: GPT-4 [3], Claude-3 [4], GPT-4o [41], and LLaMA-3.170B [12]. We sourced 20 time-series line charts from real-world datasets"
+        },
+        {
+          "page": 4,
+          "quote": "We prompted LLMs to generate L1-L3 summaries, using Vega-Lite specification [46] and data table as the input."
+        },
+        {
+          "page": 4,
+          "quote": "resulting in a total of 80 summaries, containing 1083 sentences in total, and among them, 199 instances of hallucinations were identified."
+        },
+        {
+          "page": 4,
+          "quote": "We have identified a total of 10 types of hallucinations in Fig. 3. We found that none of the hallucinations occurred in the L1 summary element generation based on our test."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "031743877ce2"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "Extremum Error: 12.6% of 199 instances of hallucination erroneous statements include it."
+        },
+        {
+          "page": 5,
+          "quote": "The rarity of this error stems not from the fact that the LLM has strong numerical computation capabilities, but from the fact that it rarely includes insights that require numerical calculations in its summaries"
+        },
+        {
+          "page": 5,
+          "quote": "Detail Omission: We identified 22.1% instances of this error, making it the most common."
+        },
+        {
+          "page": 5,
+          "quote": "Statistics indicate that among all types of hallucinations, the most common ones are Detail Omission, for which it is challenging for LLMs to generate a comprehensive summary"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "ea74efff0a73"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "In Uni-Insighter, we have designed Numerical Pattern Analysis Module to divide long time-series data into smaller data patches."
+        },
+        {
+          "page": 8,
+          "quote": "Users can input a vega-lite specification and data table to generate a summary."
+        },
+        {
+          "page": 6,
+          "quote": "We empirically set the repeating times to three to ensure a balanced outcome. It then applies Majority Vote to filter and validate the generated trend description"
+        },
+        {
+          "page": 7,
+          "quote": "Uni-Insighter first invokes Numerical Pattern Analysis Module to analyze the data, generating a JSON (Fig. 4(a))."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "30a765595ef8"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "This iterative process continues until Multi-Insighter determines that no new insights remain uncovered."
+        },
+        {
+          "page": 7,
+          "quote": "To address these issues, we focus specifically on detecting and correcting Extremum Error and Proportion Perception Error in the summary."
+        },
+        {
+          "page": 7,
+          "quote": "However, if the data insights conveyed in sentences differ, LLM revises the original sentences."
+        },
+        {
+          "page": 11,
+          "quote": "with most charts completed in 2-3 iterations. To prevent inefficient iterations, we set a maximum of 5 iterations"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "022f9b6a85f4"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "summaries including a total of 2693 sentences. For a given chart, we generate 4 summaries: one gold summary created manually"
+        },
+        {
+          "page": 8,
+          "quote": "includes data, Vega-Lite specification, chart image, a gold summary created manually, and three summaries generated by GPT-4, VL2NL, and ChartInsighter."
+        },
+        {
+          "page": 8,
+          "quote": "covering domains such as economics, environment, and energy, with 25 charts for each of three complexity levels: simple, moderate, and complex."
+        },
+        {
+          "page": 9,
+          "quote": "We explained the types of hallucinations and their definitions to 6 participants, who then performed a sentence-by-sentence review of each generated summary, annotating instances of hallucinations."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "caef782de375"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "Table I shows the average ratings for the 3 summary groups. ChartInsighter received the highest rating of 3.79, indicating it meets user needs most effectively."
+        },
+        {
+          "page": 10,
+          "quote": "The Hallucination Rate is determined by the ratio of the number of hallucinations to the total number of sentences. It should be noted that the Hallucination Rate may exceed 1"
+        },
+        {
+          "page": 9,
+          "quote": "we compared it against a gold summary, GPT-4 (our base model), and VL2NL (which also uses Vega-Lite specification input and generates L1-L2 content summaries)"
+        },
+        {
+          "page": 10,
+          "quote": "The observed median execution time for the 75 charts was 87.23 s (± 36.1 s), with a maximum of 171 seconds and a minimum of 18 seconds."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "fe6b12bb6ba7"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 11,
+          "quote": "However, only a portion of the hallucinations are mitigated, and other types persist."
+        },
+        {
+          "page": 11,
+          "quote": "providing backing data leads to more effective summaries compared to other forms of input [24], [52]. Based on this, we use a combination of raw data and visualization specification as inputs"
+        },
+        {
+          "page": 11,
+          "quote": "Our summaries focus on L1L3 content, which can be detected through visual and data dimensions. Integrating L4 content requires domain-specific knowledge."
+        },
+        {
+          "page": 12,
+          "quote": "Although we cannot currently support realtime chart generation, the waiting time of the cold start for generative tasks"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "ba20300fbeaf"
+    }
+  },
+  "stamped": "2026-11-05"
+}

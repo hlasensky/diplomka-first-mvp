@@ -7,7 +7,7 @@ venue: Information Systems 104, 101752
 kind: journal
 status: candidate
 verified: true
-precteno: proleteno
+precteno: prolet
 chapters: []
 concepts:
   - conversational-olap

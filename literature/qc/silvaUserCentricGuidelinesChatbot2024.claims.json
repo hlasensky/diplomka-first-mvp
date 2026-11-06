@@ -1,0 +1,122 @@
+{
+  "citekey": "silvaUserCentricGuidelinesChatbot2024",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "We conducted a Systematic Literature Review (SLR) following the protocol of Barbara and Charters (2007) to unveil chatbot conversational design practices and their impacts on users."
+        },
+        {
+          "page": 7,
+          "quote": "until February 2022, resulting in a total of 1101 papers (196 from ACM, 171 from IEEE, and 734 from Scopus) as seen in Figure 1. We had to remove 163 duplicated studies, leaving 938 papers"
+        },
+        {
+          "page": 7,
+          "quote": "quality assessment of 234 papers (70 from ACM, 38 from IEEE, and 126 from Scopus), which resulted in the removal of 194 works and the final number of 40 selected papers"
+        },
+        {
+          "page": 7,
+          "quote": "In QA3, we opted for excluding studies with less than 40 participants based on the recommendation of the Nielsen Norman Group"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "6991f7b9da4d"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "Acknowledging misunderstandings and suggesting solutions are ways of leading users out of a conversation breakdown"
+        },
+        {
+          "page": 9,
+          "quote": "justifications and explanations are fundamental for users to understand why they receive some information, instruction, or recommendation from the chatbot"
+        },
+        {
+          "page": 9,
+          "quote": "disclosing identity combined with showing what the chatbot is capable of and communicating its weaknesses can produce trust levels corresponding to that of"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "19624dc751e9"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 11,
+          "quote": "This model starts by separating the purpose of chatbots and linking them to what should be the type of relationship that has to be built with the user."
+        },
+        {
+          "page": 11,
+          "quote": "The selected studies revealed that naturalness is essential in all of these use cases. Transparency is critical when the chatbot needs to be competent and effective, whereas emotionality is more important when a more profound connection is necessary"
+        },
+        {
+          "page": 12,
+          "quote": "Regarding what Chatbots should avoid, machine-like typeface came from the findings of Candello et al. (2017), and forcing errors from findings of"
+        },
+        {
+          "page": 12,
+          "quote": "hiding non-human identity has worse effects than disclosing it when the user finds out it is being deceived"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "82b419836c11"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "This validation aims to assess the guide’s clarity and usefulness rather than the guidelines’ effectiveness"
+        },
+        {
+          "page": 14,
+          "quote": "around 89% of respondents agreed on some level that the proposed guide would induce greater user satisfaction (QU3) and 83% that it would induce greater user engagement (QU4)"
+        },
+        {
+          "page": 15,
+          "quote": "Around 86% of respondents agreed on some level that the guidelines are clear and understandable (QEU2)."
+        },
+        {
+          "page": 16,
+          "quote": "indicating that participants’ previous experience with chatbots did not have a significant influence on their responses."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "62a9bb6dc303"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 17,
+          "quote": "The oldest paper selected for the SLR is from 2017, which aligns with the public release of chatbot development platforms for developers."
+        },
+        {
+          "page": 18,
+          "quote": "The first threat is the use of an automatic search only, which can result in missing primary studies."
+        },
+        {
+          "page": 18,
+          "quote": "respondents’ commitment to reading the whole guide carefully since their reading was unsupervised"
+        },
+        {
+          "page": 18,
+          "quote": "we only considered positive outcomes in our search string since including negative keywords would make the string too big"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "bd2ab432bc60"
+    }
+  },
+  "stamped": "2026-11-05"
+}

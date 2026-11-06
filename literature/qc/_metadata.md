@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-10-30
+generated: 2026-11-05
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -13,5 +13,5 @@ generated: 2026-10-30
 
 | citekey | rok | venue | stránky | DOI | ověřeno v |
 |---|---|---|---|---|---|
-| liuLLMassistedConversationalNavigation2026 | 2026 | Expert Systems with Applications | 132958 | 10.1016/j.eswa.2026.132958 | Crossref, Semantic Scholar |
+| romeroNeedReferenceAlgebra2007 | 2007 | Data {{Warehousing}} and {{Knowledge Dis | 99-110 | 10.1007/978-3-540-74553-2_10 | Crossref, Semantic Scholar |
 

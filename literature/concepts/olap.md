@@ -15,6 +15,9 @@ On-Line Analytical Processing: analýza dat organizovaných do vícerozměrné k
 - [[franciaVOOLModularInsightbased2025]] — C2, C4: insighty popisují výsledek dotazu v OLAP session a moduly zohledňují operátor (roll-up, drill-down, slice-and-dice), kterým vznikl z předchozího dotazu.
 - [[lenzSummarizabilityOLAPStatistical1997]] — C1: sumarizace v OLAP a statistických databázích je korektní jen za určitých podmínek; nesumarizovatelnou operaci je třeba uživateli ohlásit.
 - [[liuLLMassistedConversationalNavigation2026]] — C1, C2: navigace v kostce jako průchod grafem pohledů, jehož hrany jsou primitivní OLAP akce (drill-down, roll-up, slice, dice); ruční navigace v exponenciálně velkém prostoru pohledů je podle autorů hlavní problém.
+- [[jensenTimeSeriesManagement2017]] — C8: navrhuje datovou kostku jako rozhraní pro analýzu vícerozměrných (senzorových) časových řad v distribuovaném TSMS, protože ji datoví analytici znají.
+- [[dobsonReferenceArchitectureModel2018]] — C2–C3: referenční architektura (data lake → ETL → datový sklad → OLAP) a čtyři DFM schémata pro senzorová data (měření, údržba, kontrola stavu, zpráva) včetně kontextu měření.
+- [[romeroNeedReferenceAlgebra2007]] — C2–C3: referenční sada OLAP operátorů (Selection, Roll-up/Drill-down, ChangeBase, Drill-across, Projection, množinové operace) a jejich společné jádro napříč algebrami; C4–C5: převod na omezenou podmnožinu relační algebry.
 
 ## Související
 - [[conversational-olap]]

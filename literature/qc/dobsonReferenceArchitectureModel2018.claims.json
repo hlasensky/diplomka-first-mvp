@@ -1,0 +1,118 @@
+{
+  "citekey": "dobsonReferenceArchitectureModel2018",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Much of the value of sensor data comes from examining the trends and variations that occur over long timescales"
+        },
+        {
+          "page": 1,
+          "quote": "we mean that it must be possible to retrieve the details of the sensors, their installation and operation, as well as simply their data"
+        },
+        {
+          "page": 1,
+          "quote": "both through mechanical ageing and (in many cases) chemical and physical changes in the transducer itself, both of which lead to decalibration"
+        },
+        {
+          "page": 2,
+          "quote": "However, these techniques have been applied in the context of sensor networking only to a limited extent, and mostly with a small attention to data modeling issues."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "898d43687953"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "The users of the proposed architecture can be grouped into three main agents"
+        },
+        {
+          "page": 4,
+          "quote": "Every event sent by a device in the sensor network to the analytical system is processed in either a streaming or a batch fashion as appropriate."
+        },
+        {
+          "page": 4,
+          "quote": "the data in the data lake is used to feed the DW through the ETL process. Once in the DW, the events become also available to BI users by means of OLAP analysis tools."
+        },
+        {
+          "page": 5,
+          "quote": "provides OLAP processing on top of these (and other) storage and processing solutions. In particular, it is the first engine in the Hadoop ecosystem natively optimized for OLAP workload"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "6d6a178d4ef1"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "substituting a faulty temperature sensor S1 at some time with a new sensor S2 would result in two different instances of Physical Device (S1 and S2) both corresponding to the same instance of Logical Device"
+        },
+        {
+          "page": 6,
+          "quote": "Figure 3 uses the Dimensional Fact Model (DFM) to show the four multidimensional schemata derived from the domain model presented in section III-B."
+        },
+        {
+          "page": 6,
+          "quote": "those whose dynamic nature makes them suitable to be modeled as facts are Measurement, Maintenance Operation, Status Check, and Message."
+        },
+        {
+          "page": 7,
+          "quote": "Each measurement event is described by two measures and is defined by six dimensions. The two measures are Value and Accuracy"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "77c1bc3efffc"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "We consider the cases of air quality monitoring at an industrial facility (see section V-A), and of landslide risk management in Italy"
+        },
+        {
+          "page": 9,
+          "quote": "Figure 4 shows a basic star schema implementation of the multidimensional schemata proposed in section IV accompanied by a (fictitious) sample of data."
+        },
+        {
+          "page": 10,
+          "quote": "The pivot table on top shows the weekly average levels of pollution alongside some weather measurements (average wind speed and temperature)."
+        },
+        {
+          "page": 10,
+          "quote": "deployed on a rockslide in central Italy, gathered both operational data (e.g., communication statistics) and measurements of natural phenomena (e.g., ground movement) in the time period from February to October 2013."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9423742e8dbb"
+    },
+    "C5": {
+      "verdict": "partial",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "Figure 4 shows a basic star schema implementation of the multidimensional schemata proposed in section IV accompanied by a (fictitious) sample of data."
+        },
+        {
+          "page": 11,
+          "quote": "We intend in future work to validate these ideas more thoroughly against real-world deployments."
+        }
+      ],
+      "note": "Obsah sedí, ale tvrzení o dvou případových studiích nemá oporu na citovaných s. 9 ani 11; je na necitované s. 2 (§I), resp. s. 8 (§V).",
+      "fix": "C5: Model je ilustrován na dvou případových studiích; ukázková data ve scénáři kvality ovzduší jsou podle autorů fiktivní a autoři chtějí v budoucnu myšlenky důkladněji ověřit na reálných nasazeních. (s. 2, §I; s. 9, §V-A; s. 11, §VI)",
+      "claim_sha": "e2101f099f40"
+    }
+  },
+  "stamped": "2026-11-05"
+}

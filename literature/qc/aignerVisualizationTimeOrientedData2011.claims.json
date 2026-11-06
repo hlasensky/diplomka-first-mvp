@@ -1,0 +1,126 @@
+{
+  "citekey": "aignerVisualizationTimeOrientedData2011",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 60,
+          "quote": "as Frank (1998) states, there is nothing like a single correct model or taxonomy of time"
+        },
+        {
+          "page": 61,
+          "quote": "Discrete time domains are based on a smallest possible unit (e.g., seconds or milliseconds as in UNIX time) and they are the most commonly used time models in information systems"
+        },
+        {
+          "page": 64,
+          "quote": "Arrangement: linear vs. cyclic As the third design aspect, we look at the arrangement of the time domain."
+        },
+        {
+          "page": 65,
+          "quote": "Viewpoint: ordered vs. branching vs. multiple perspectives The fourth subdivision is concerned with the views of time that are modeled."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3cac9099a8fa"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 65,
+          "quote": "The combination of periodic and linear progression denoted by the term serial periodic data (e.g., monthly temperature averages over a couple of years) is much more common."
+        },
+        {
+          "page": 98,
+          "quote": "Although peaks in time can be recognized easily when examining this representation, the cyclic behavior of the data, however, can only be guessed"
+        },
+        {
+          "page": 98,
+          "quote": "The right spiral representation in Figure 4.8 is adequately parameterized with a cycle length of 28 days, which immediately reveals the periodic pattern present in the data."
+        },
+        {
+          "page": 98,
+          "quote": "in addition to using the right kind of representation of time (linear vs. cyclic), it is also necessary to find an appropriate parametrization of the visual representation"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "344a55aa756e"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 67,
+          "quote": "granularities can be thought of as (human-made) abstractions of time in order to make it easier to deal with time in every-day life"
+        },
+        {
+          "page": 68,
+          "quote": "Most information systems that deal with time-oriented data are based on a discrete time model that uses a fixed smallest granularity also known as bottom granularity"
+        },
+        {
+          "page": 70,
+          "quote": "Instant and interval are primitives that belong to the first group, i.e., they are located on a fixed position along the time domain."
+        },
+        {
+          "page": 74,
+          "quote": "If there is no complete or exact information about time specifications or if time primitives are converted from one granularity to another, uncertainties are introduced"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "c12e6052f88d"
+    },
+    "C4": {
+      "verdict": "partial",
+      "evidence": [
+        {
+          "page": 76,
+          "quote": "Due to the given data domain we distinguish between quantitative and qualitative variables."
+        },
+        {
+          "page": 77,
+          "quote": "Compared to univariate data, for which many methods have been developed, the range of methods applicable for multivariate data is significantly smaller."
+        },
+        {
+          "page": 78,
+          "quote": "Internal time describes when the information contained in the data is valid."
+        },
+        {
+          "page": 79,
+          "quote": "Dynamic data that change at high rate are often referred to as streaming data."
+        }
+      ],
+      "note": "Kniha neztotožňuje dynamická netemporální data se streamovanými; streamovaná jsou jen ta, která se mění vysokou rychlostí, a zachovává se pouze aktuální stav (zbytek tvrzení sedí, vč. 'dynamic temporal data are beyond the scope of this book' na s. 79).",
+      "fix": "C4: Data vázaná na čas charakterizují měřítkem (kvantitativní / kvalitativní), referenčním rámcem (abstraktní / prostorová), druhem (události / stavy) a počtem proměnných (jednorozměrná / vícerozměrná; pro vícerozměrná data je metod výrazně méně). Podle vnitřního času (kdy informace platí) a vnějšího času (jak se datová sada vyvíjí) rozlišují statická netemporální, statická temporální (běžné časové řady, na které míří většina technik), dynamická netemporální (uchovává se jen aktuální stav; rychle se měnící se nazývají streamovaná data; techniky hlavně pro monitorování) a dynamická temporální (bitemporální, např. denně doplňovaná zdravotní či klimatická data) – ta jsou mimo rozsah knihy. (s. 76–77, s. 78–79 | tišt. 62–63, 64–65; §3.2, §3.3)",
+      "claim_sha": "947f92bdfc51"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 84,
+          "quote": "a structure that is geared to three practical questions that are sufficiently specific for researchers and at the same time easy to understand for practitioners"
+        },
+        {
+          "page": 90,
+          "quote": "Note that the presence or absence of interaction facilities to navigate in time has no influence on whether a visualization approach is categorized as static or dynamic."
+        },
+        {
+          "page": 113,
+          "quote": "On top of this, there exists no visualization technique that is capable of handling all of the different aspects simultaneously"
+        },
+        {
+          "page": 160,
+          "quote": "Therefore, we use the categories provided in the side-bar to structure the survey."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "acfcb12a1ef4"
+    }
+  },
+  "stamped": "2026-11-05"
+}

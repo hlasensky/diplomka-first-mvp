@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-10-30
+generated: 2026-11-05
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -13,8 +13,8 @@ generated: 2026-10-30
 
 | úroveň | položek | v Zoteru | poznámka | čteno víc než abstrakt | čteno celé | ověřeno |
 |---|---|---|---|---|---|---|
-| 1 povinné | 25 | 18 | 17 | 1 | 1 | 1 |
-| 2 důležité | 42 | 2 | 2 | 0 | 0 | 0 |
+| 1 povinné | 25 | 21 | 21 | 2 | 1 | 1 |
+| 2 důležité | 48 | 9 | 9 | 0 | 0 | 0 |
 | 3 doplňkové | 21 | 5 | 5 | 0 | 0 | 0 |
 | nástroje a data | 9 | 0 | 0 | 0 | 0 | 0 |
 
@@ -35,20 +35,20 @@ generated: 2026-10-30
 | 11 | Al-Fuqaha, A. et al. — Internet of Things: A Survey on Enabling Technologies, Protocols, a… | [[al-fuqahaInternetThingsSurvey2015]] | candidate · čteno: ne · QC PASS s varováními |
 | 12 | Hyndman, R. J., Athanasopoulos, G. — Forecasting: Principles and Practice, 3. vydání [NOVÉ… | – | chybí v Zoteru |
 | 13 | Blázquez-García, A. et al. — A Review on Outlier/Anomaly Detection in Time Series Data [PO… | [[blazquez-garciaReviewOutlierAnomaly2021]] | candidate · čteno: ne · QC PASS |
-| 14 | Jensen, S. K., Pedersen, T. B., Thomsen, C. — Time Series Management Systems: A Survey IEE… | – | chybí v Zoteru |
-| 15 | Francia, M., Gallinucci, E., Golfarelli, M. — COOL: A Framework for Conversational OLAP, I… | [[franciaCOOLFrameworkConversational2022]] | candidate · čteno: ne · QC PASS s varováními |
+| 14 | Jensen, S. K., Pedersen, T. B., Thomsen, C. — Time Series Management Systems: A Survey IEE… | [[jensenTimeSeriesManagement2017]] | candidate · čteno: ne · QC PASS |
+| 15 | Francia, M., Gallinucci, E., Golfarelli, M. — COOL: A Framework for Conversational OLAP, I… | [[franciaCOOLFrameworkConversational2022]] | candidate · čteno: prolet · QC PASS s varováními |
 | 16 | VOOL — přirozenojazyková vokalizace výsledků OLAP sessions Information Systems, 2025 https… | [[franciaVOOLModularInsightbased2025]] | candidate · čteno: ne · QC PASS |
-| 17 | Liu, X., Yang, Y. — LLM-Assisted Conversational Navigation over Multidimensional Data Cube… | liuNavLLMInteractiveLLMAssisted2026 | k ingestu |
-| 18 | ChartInsighter — redukce halucinací při shrnutí grafů časových řad IEEE TVCG, 2025 https:/… | – | chybí v Zoteru |
+| 17 | Liu, X., Yang, Y. — LLM-Assisted Conversational Navigation over Multidimensional Data Cube… | [[liuLLMassistedConversationalNavigation2026]] | candidate · čteno: ne · QC FAIL |
+| 18 | ChartInsighter — redukce halucinací při shrnutí grafů časových řad IEEE TVCG 31(6):3733–37… | [[wangChartInsighterApproachMitigating2025]] | candidate · čteno: ne · QC FAIL |
 | 19 | Yao, S. et al. — ReAct: Synergizing Reasoning and Acting in Language Models ICLR 2023 arXi… | [[yaoReActSynergizingReasoning2023a]] | candidate · čteno: ne · QC PASS s varováními |
 | 20 | BIRD — benchmark pro Text-to-SQL nad rozsáhlými reálnými databázemi NeurIPS 2023 https://a… | [[liCanLLMAlready2023a]] | candidate · čteno: ne · QC PASS s varováními |
 | 21 | Lei, F. et al. — Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-S… | – | chybí v Zoteru |
 | 22 | Schulhoff, S. et al. — The Prompt Report: A Systematic Survey of Prompt Engineering Techni… | – | chybí v Zoteru |
-| 23 | Lewis, J. R. — The System Usability Scale: Past, Present, and Future [NOVÉ] International … | – | chybí v Zoteru |
+| 23 | Lewis, J. R. — The System Usability Scale: Past, Present, and Future [NOVÉ] International … | [[lewisSystemUsabilityScale2018]] | candidate · čteno: ne · QC PASS |
 | 24 | Lenz, H.-J., Shoshani, A. — Summarizability in OLAP and Statistical Data Bases [NOVÉ, rev.… | [[lenzSummarizabilityOLAPStatistical1997]] | candidate · čteno: ne · QC PASS |
 | 25 | Buneman, P., Khanna, S., Tan, W.-C. — Why and Where: A Characterization of Data Provenance… | [[bunemanWhyWhereCharacterization2001]] | candidate · čteno: ne · QC PASS |
 
-### Úroveň 2 důležité (42)
+### Úroveň 2 důležité (48)
 
 | č. | položka | citekey | stav |
 |---|---|---|---|
@@ -56,7 +56,7 @@ generated: 2026-10-30
 | 27 | Zacepins, A. et al. — Challenges in the Development of Precision Beekeeping [NOVÉ, rev. 4]… | – | chybí v Zoteru |
 | 28 | Meikle, W. G., Holst, N. — Application of Continuous Monitoring of Honeybee Colonies [NOVÉ… | – | chybí v Zoteru |
 | 29 | Hadjur, H., Ammar, D., Lefèvre, L. — Toward an Intelligent and Efficient Beehive: A Survey… | – | chybí v Zoteru |
-| 30 | Aigner, W., Miksch, S., Schumann, H., Tominski, C. — Visualization of Time-Oriented Data S… | – | chybí v Zoteru |
+| 30 | Aigner, W., Miksch, S., Schumann, H., Tominski, C. — Visualization of Time-Oriented Data S… | [[aignerVisualizationTimeOrientedData2011]] | candidate · čteno: ne · QC FAIL |
 | 31 | Yan, S. et al. — CMMD: Cross-Metric Multi-Dimensional Root Cause Analysis ACM SIGKDD 2022,… | – | chybí v Zoteru |
 | 32 | Roy, S., Suciu, D. — A Formal Approach to Finding Explanations for Database Queries ACM SI… | – | chybí v Zoteru |
 | 33 | AXIS — vysvětlitelná detekce anomálií v časových řadách pomocí LLM arXiv 2025 https://arxi… | – | chybí v Zoteru |
@@ -94,6 +94,12 @@ generated: 2026-10-30
 | 65 | Brooke, J. — SUS: A „Quick and Dirty" Usability Scale In: Jordan, P. W. et al. (eds.), Usa… | – | chybí v Zoteru |
 | 66 | Likert, R. — A Technique for the Measurement of Attitudes Archives of Psychology 22(140):1… | – | chybí v Zoteru |
 | 97 | Weng, L. et al. — DataLab: A Unified Platform for LLM-Powered Business Intelligence IEEE I… | [[wengDataLabUnifiedPlatform2025]] | candidate · čteno: ne · QC PASS s varováními |
+| 98 | Bach, B., Freeman, E., Abdul-Rahman, A., Turkay, C., Khan, S., Fan, Y., Chen, M. — Dashboa… | [[bachDashboardDesignPatterns2023]] | candidate · čteno: ne · QC PASS |
+| 99 | Silva, G. R. S., Canedo, E. D. — Towards User-Centric Guidelines for Chatbot Conversationa… | [[silvaUserCentricGuidelinesChatbot2024]] | candidate · čteno: ne · QC PASS s varováními |
+| 100 | John, P., Hynek, J., Hruška, T., Valný, M. — Application of Time Series Database for IoT S… | [[johnApplicationTimeSeries2023]] | candidate · čteno: ne · QC FAIL |
+| 101 | Dobson, S., Golfarelli, M., Graziani, S., Rizzi, S. — A Reference Architecture and Model f… | [[dobsonReferenceArchitectureModel2018]] | candidate · čteno: ne · QC FAIL |
+| 102 | Chatterjee, A., Ahmed, B. S. — IoT Anomaly Detection Methods and Applications: A Survey [N… | [[chatterjeeIoTAnomalyDetection2022]] | candidate · čteno: ne · QC PASS |
+| 103 | Romero, O., Abelló, A. — On the Need of a Reference Algebra for OLAP [NOVÉ, 5. 11. 2026] D… | [[romeroNeedReferenceAlgebra2007]] | candidate · čteno: ne · QC PASS |
 
 ### Úroveň 3 doplňkové (21)
 
