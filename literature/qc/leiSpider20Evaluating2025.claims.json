@@ -1,0 +1,194 @@
+{
+  "citekey": "leiSpider20Evaluating2025",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Notably, methods based on GPT-4 achieved execution accuracy of 91.2% and 73.0% on the classic benchmarks Spider 1.0"
+        },
+        {
+          "page": 1,
+          "quote": "they often use non-industrial databases with few tables and columns, featuring simplistic SQL and questions that fall short of real-world complexity and overlook diverse SQL dialects"
+        },
+        {
+          "page": 2,
+          "quote": "database systems, each with its own unique SQL dialects, introducing a wide range of SQL syntax and functions."
+        },
+        {
+          "page": 2,
+          "quote": "schemas with thousands of columns and complex nested structures. Moreover, real-world text-to-SQL workflows require the utilization of project codebases, external knowledge, and various contexts to construct intricate SQL queries across multiple steps"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a77ada962923"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "We introduce Spider 2.0, an evaluation framework comprising 632 real-world text-to-SQL workflow problems derived from enterprise-level database use cases."
+        },
+        {
+          "page": 2,
+          "quote": "the databases in Spider 2.0 are sourced from industrial applications (e.g. Google Analytics and Salesforce) and feature massive schema items (an average of 812 columns)"
+        },
+        {
+          "page": 3,
+          "quote": "Spider 2.0-lite’s database is hosted on diverse databases like Spider 2.0, while Spider 2.0-snow is entirely hosted on Snowflake, with a greater focus on text-to-SQL generation."
+        },
+        {
+          "page": 6,
+          "quote": "For Spider 2.0, we use the Success Rate (SR) metric, which measures the proportion of task instances successfully completed. For Spider 2.0-lite and Spider 2.0-snow, the output for each task must be an SQL"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "40e2382170c4"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "each database must contain more than 200 columns or have a nested schema structure. After filtering, we select 74 BigQuery, 54 Snowflake, 30 SQLite, 40 DuckDB, 10 PostgreSQL, and 5 ClickHouse databases."
+        },
+        {
+          "page": 3,
+          "quote": "Ultimately, we retain 547 high-quality SQL queries and 78 DBT projects."
+        },
+        {
+          "page": 4,
+          "quote": "84.2% of the examples underwent surface-level rewriting, while 42% experienced semantic-level rewriting."
+        },
+        {
+          "page": 5,
+          "quote": "following the second round of iteration with the second validators, only 5% of the examples contain errors. Then we correct all errors and refine all annotations"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "bb5b681a1311"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Our evaluations indicate that based on o1-preview, our code agent framework successfully solves only 21.3% of the tasks"
+        },
+        {
+          "page": 1,
+          "quote": "Notably, methods based on GPT-4 achieved execution accuracy of 91.2% and 73.0% on the classic benchmarks Spider 1.0"
+        },
+        {
+          "page": 6,
+          "quote": "with a peak success rate of 23.77% on Spider 2.0-snow and 23.40% on Spider 2.0-lite, indicating significant potential for further improvement."
+        },
+        {
+          "page": 7,
+          "quote": "Success rate (SR) of different frameworks and models on Spider 2.0."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b0e639bd7981"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "The highest performing method, DAIL-SQL + GPT-4o, achieves an EX of only 5.68%, which is markedly lower compared to its score of 86.6% on Spider 1.0 and"
+        },
+        {
+          "page": 7,
+          "quote": "with an EX score of only 0.73%, which further reveals the significant complexity gap between Spider 2.0-lite and the current text-to-SQL corpus."
+        },
+        {
+          "page": 7,
+          "quote": "For Spider 2.0-snow, even the best method achieves only 2.20% EX, highlighting the increased challenge due to SQL dialect differences."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "7dd925936fc9"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "stored in array, dict formats within a single column. This poses"
+        },
+        {
+          "page": 8,
+          "quote": "amples out of full dataset that accounts for just 11.54%"
+        },
+        {
+          "page": 8,
+          "quote": "The failure case shows that the model cannot combine complex document with schema information and convert it into SQL query"
+        },
+        {
+          "page": 8,
+          "quote": "project tasks is poor, solving only 12.82% of tasks with just 10"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "7739e9901a5a"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "We conduct a detailed analysis of the errors encountered by both code agent frameworks on randomly sampled 300 examples"
+        },
+        {
+          "page": 8,
+          "quote": "demands that challenge the models’ capabilities: 1) Dialect function usage (10.3%)."
+        },
+        {
+          "page": 9,
+          "quote": "Wrong schema linking (27.6%). This category includes errors with wrong tables and columns. For column linking errors (16.6%), the average number of columns per database in Spider 2.0-lite far exceeds those in other benchmarks (over 755 compared to approximately 54"
+        },
+        {
+          "page": 9,
+          "quote": "JOIN errors (8.3%). While foreign keys represent known schema relationships essential for valid SQL JOIN operations, databases in BigQuery often lack explicit foreign key."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "6834153ff46b"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "they require significant improvement in order to achieve adequate performance for real-world enterprise usage."
+        },
+        {
+          "page": 9,
+          "quote": "EX for DAIL-SQL on Spider 2.0-lite under few-shot setting with manually selected demonstrations."
+        },
+        {
+          "page": 10,
+          "quote": "As shown in Tab. 10, providing oracle SQL function documentation results in only a slight improvement in model performance."
+        },
+        {
+          "page": 10,
+          "quote": "However, the critical challenge lies in accurately utilizing these functions to reflect user intentions"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2dde59bd5163"
+    }
+  },
+  "stamped": "2026-11-06"
+}

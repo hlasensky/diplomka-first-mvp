@@ -1,0 +1,126 @@
+{
+  "citekey": "gengJSONSchemaBenchRigorousBenchmark2025",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "We pair the benchmark with the existing official JSON Schema Test Suite and evaluate six state-of-the-art constrained decoding frameworks"
+        },
+        {
+          "page": 3,
+          "quote": "a collection of 10K real-world JSON schemas from various sources, Organized into 10 datasets of varying complexity and diversity"
+        },
+        {
+          "page": 4,
+          "quote": "We start with the 6K JSON schemas collected by Baazizi et al. [2021] from publicly available GitHub repositories"
+        },
+        {
+          "page": 5,
+          "quote": "with GitHub-Ultra serving as an aspirational target for future advancements"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "8ad8491669be"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "We used Llama-3.1-8B-Instruct with the Llamacpp inference engine as backend for Outlines, Guidance, and Llamacpp."
+        },
+        {
+          "page": 6,
+          "quote": "While Outlines and Llamacpp demonstrate substantially lower throughput than the LM-only approach, Guidance achieves even higher efficiency"
+        },
+        {
+          "page": 6,
+          "quote": "Outlines, which converts JSON schemas into regular-expression based constraints, has significantly higher compilation time."
+        },
+        {
+          "page": 7,
+          "quote": "we add an additional experiment with the Hugging Face Transformers inference engine for XGrammar and Guidance. All values are median of the result samples."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9209bb18187e"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "We use greedy decoding with zero-temperature, performing a single generation run, and enforce a 40-second timeout for grammar compilation and an additional 40 seconds for generation."
+        },
+        {
+          "page": 8,
+          "quote": "Guidance shows the highest empirical coverage on six out of the eight datasets, with Llamacpp taking the lead on the remaining two"
+        },
+        {
+          "page": 8,
+          "quote": "LM-only exhibits the lowest compliance rate, highlighting its unreliability as a standalone solution. While closed-source implementations have low empirical coverage, they have very high compliance rates"
+        },
+        {
+          "page": 9,
+          "quote": "Empirical coverage between Open Source engines and OpenAI/Gemini are not directly comparable due to differences in the underlying model"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "47660758f46c"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "The test suite organizes its test cases into 45 categories, each of which corresponds to a feature of JSON Schema"
+        },
+        {
+          "page": 10,
+          "quote": "Guidance outperforms other engines at all coverage levels, achieving full coverage on 13 categories and moderate coverage on 21."
+        },
+        {
+          "page": 10,
+          "quote": "Llamacpp and XGrammar have full coverage on only one category and moderate coverage on five and three categories, respectively, while Outlines has no full coverage on any category"
+        },
+        {
+          "page": 10,
+          "quote": "In contrast, XGrammar minimizes compilation errors but shows the highest number of under-constrained failures, indicating a trade-off favoring permissiveness."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "49b2180e89d0"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 11,
+          "quote": "For our experiments, we use the Llama-3.1-8B-Instruct model to measure task performance."
+        },
+        {
+          "page": 11,
+          "quote": "The outputs for all three tasks are structured as JSON objects with two fields: \"reasoning\" and \"answer\""
+        },
+        {
+          "page": 12,
+          "quote": "The results in Table 8 show that the constrained decoding, regardless of the framework, achieves higher performance than the unconstrained setting."
+        },
+        {
+          "page": 12,
+          "quote": "We believe this may be attributed to its token-healing implementation"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "167e5627e136"
+    }
+  },
+  "stamped": "2026-11-06"
+}

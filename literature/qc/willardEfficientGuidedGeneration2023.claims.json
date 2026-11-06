@@ -1,0 +1,122 @@
+{
+  "citekey": "willardEfficientGuidedGeneration2023",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Most implementations of guided generation bias the score values used to determine the probabilities of the tokens in an LLM’s vocabulary."
+        },
+        {
+          "page": 2,
+          "quote": "A common and sufficient approach involves repeated evaluations over the entire vocabulary in order to determine which tokens are valid–according to the constraints and previously sampled tokens–and setting the probabilities of invalid tokens to zero."
+        },
+        {
+          "page": 2,
+          "quote": "This approach entails a fixed O(N ) cost for each token generated, where N is the size of the LLM’s vocabulary."
+        },
+        {
+          "page": 4,
+          "quote": "partial matching or parsing can be performed from the start of the sampled sequence on each iteration, but this has a cost that grows at least linearly"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "204a8850a320"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "These FSM states can then be tracked during the LLM token sampling process in Algorithm 2 and used to efficiently continue the state machine without reading from the beginning of the growing sample sequence each time."
+        },
+        {
+          "page": 6,
+          "quote": "The important part is that we consider starting in every viable FSM state, because the strings in the vocabulary could match arbitrary parts of a regular expression"
+        },
+        {
+          "page": 7,
+          "quote": "connecting FSM states and sets of elements of the vocabulary that will be accepted by the FSM in those states."
+        },
+        {
+          "page": 8,
+          "quote": "Algorithm 4 Construct a map from FSM states to subsets of V"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "964a45aa54a0"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "Using a hash-map for σ can make the m step in Algorithm 2 cost only O(1) on average."
+        },
+        {
+          "page": 7,
+          "quote": "since σ is constructed outside of the token sampling procedure, its run-time cost is effectively irrelevant, although it theoretically requires memory equal to the number of states in the FSM"
+        },
+        {
+          "page": 2,
+          "quote": "The result is an algorithm that costs O(1) on average."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9986e80627b4"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "our indexing approach can also be extended to CFGs and LALR(1) parsers to allow for efficient guided generation according to popular data formats and programming languages (e.g. JSON, Python, SQL, etc.)."
+        },
+        {
+          "page": 14,
+          "quote": "We use pushdown automata (PDA) as a means to extend the FSM approach and address the remaining details."
+        },
+        {
+          "page": 15,
+          "quote": "the index will need to be a trie data structure in order to allow queries against the parser’s stack values."
+        },
+        {
+          "page": 16,
+          "quote": "we find that even naively constructed indices (i.e. ones containing unused and redundant parser and FSM state configurations) are still only around 50 MB."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4bd9e1f218d5"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "As of this writing, the Guidance library uses partial regular expression matching–applied from the start of the sampled sequence each time–and must iterate over the LLM’s vocabulary (N = 50, 257) on each step."
+        },
+        {
+          "page": 11,
+          "quote": "The corresponding Outlines code is as follows:"
+        },
+        {
+          "page": 12,
+          "quote": "The value of max_tokens is varied and the timings are recorded with timeit for a single loop and single repeat value (i.e. only one sample is collected for each value of max_tokens)."
+        },
+        {
+          "page": 12,
+          "quote": "Barring any configuration oversights that might be creating a large runtime discrepancy, the observed scaling in the maximum number of sampled tokens is striking"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "108836b20ed4"
+    }
+  },
+  "stamped": "2026-11-06"
+}

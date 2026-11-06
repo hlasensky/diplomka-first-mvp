@@ -1,0 +1,126 @@
+{
+  "citekey": "patilGorillaLargeLanguage2024",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "This is a challenging task even for today’s state-of-the-art LLMs such as GPT-4 largely due to their unawareness of what APIs are available and how to use them in a frequently updated tool set."
+        },
+        {
+          "page": 4,
+          "quote": "Dataset curation: 1,645 API calls. 94 from Torch Hub (exhaustive), 626 from TensorFlow Hub v2 (exhaustive) and 925 from HuggingFace (Top 20 in each domain)."
+        },
+        {
+          "page": 4,
+          "quote": "We then convert the model cards for each of these 1,645 API calls into a JSON object with the following fields:"
+        },
+        {
+          "page": 4,
+          "quote": "For each of our 1,645 API datapoints, we generate 10 instruction-API pairs by sampling 3 of 6 corresponding instruction examples in each pair (Fig. 3)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "e1367fdce931"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "We then perform standard instruction finetuning on the base LLaMA-7B model."
+        },
+        {
+          "page": 5,
+          "quote": "By augmenting the prompt with potentially incorrect documentation, but the accurate ground-truth in the LLM response, we are in-effect teaching the LLM to ‘judge’ the retriever at inference time."
+        },
+        {
+          "page": 5,
+          "quote": "In retrieval mode, the retriever (either of BM25 or GPT-Index) first retrieves the most up-to-date API documentation stored in the API Database."
+        },
+        {
+          "page": 7,
+          "quote": "During retrieval, we use the user’s query to fetch the most relevant (top-1) API. This API is concatenated with the user’s prompt to query the LLMs."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b256a6861c9c"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "We define a hallucination as an API call that is not a sub-tree of any API in the database – invoking an entirely imagined tool."
+        },
+        {
+          "page": 6,
+          "quote": "This form of hallucination is distinct from invoking an API incorrectly which we instead define as an error. So, in our evaluations, error, hallucination, and accuracy add up to one."
+        },
+        {
+          "page": 8,
+          "quote": "The accuracy from our AST subtree matching is 78%, consistent with human evaluation of 78% accuracy in calling the right API."
+        },
+        {
+          "page": 9,
+          "quote": "Table 3: Proposed AST evaluation metric has strong correlation with human evaluation Accuracy Gorilla AST metric (proposed) 0.78 Eval by Human 0.78 Code Executable (Eval by Human) 0.72"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "afba6ab4aeda"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "However, for HuggingFace, since the dataset cannot be exhaustive given the sheer number of models hosted, for all the models except Gorilla, we only check if they can provide the correct domain names."
+        },
+        {
+          "page": 7,
+          "quote": "One phenomenon we observe is that zero-shot prompting with LLMs (GPT-4/GPT-3.5) to call APIs results in dire hallucination errors."
+        },
+        {
+          "page": 8,
+          "quote": "commonly manifest in erroneous behavior such as the model invoking the AutoModel.from_pretrained(dir_name) command with arbitrary GitHub repository names."
+        },
+        {
+          "page": 8,
+          "quote": "Surprisingly, we also found that in TorchHub, HuggingFace and TensorFlow Hub, GPT-3.5 has less hallucination errors than GPT-4. This finding is also consistent for the settings when various retrieving methods are provided"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "56f200377fc8"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "Surprisingly, we find that augmenting a LLM with retrieval, does not always lead to improved performance, and can at-times hurt performance."
+        },
+        {
+          "page": 7,
+          "quote": "23.46% better in HuggingFace. However, at evaluation time, current retrievers show a significant performance gap compared to the ground-truth retriever: using GPT-Index at evaluation results in 29.20% accuracy degradation and using BM25 results in a 52.27% accuracy degradation."
+        },
+        {
+          "page": 8,
+          "quote": "Table 2: Understanding the effect of different retrieval techniques used with Gorilla"
+        },
+        {
+          "page": 10,
+          "quote": "However, Gorilla 0-shot still outperforms the 3-shot GPT models on average."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "5e93cfb15f18"
+    }
+  },
+  "stamped": "2026-11-06"
+}
