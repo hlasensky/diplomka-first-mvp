@@ -21,7 +21,7 @@ Bez těchto zdrojů nelze obhájit přínos práce ani splnit zadání. Řazeno 
 7. Alnegheimish, S. et al. — SigLLM: Large Language Models Can Be Zero-shot Anomaly Detectors for Time Series? arXiv 2024 https://arxiv.org/abs/2405.14755 ⚠ ověřit [rev. 4: povýšeno z úrovně 2 — s položkou výše odůvodňuje dělbu práce: deterministická detekce, LLM orchestruje a vysvětluje]
 8. Greengard, S. — The Internet of Things [NOVÉ, rev. 4] MIT Press, 2015, ISBN 978-026-2527-736. Základní literární pramen ze zadání. Pojmy a vize IoT pro kapitolu o chytrých zařízeních (bod 1).
 9. John, P. — Optimising processes in IoT [NOVÉ, rev. 4] Pojednání o tématu disertační práce, FIT VUT v Brně, 2024, vedoucí prof. Ing. Tomáš Hruška, CSc. Základní literární pramen ze zadání. Ukazuje, jak na IoT procesy nahlíží skupina vedoucího.
-10. Senger, D., Gruber, C., Kluss, T., Johannsen, C. — Weight, Temperature and Humidity Sensor Data of Honey Bee Colonies in Germany, 2019–2022 [NOVÉ, rev. 4] Data in Brief 52:110015, 2024 DOI: https://doi.org/10.1016/j.dib.2023.110015 Data: https://doi.org/10.5281/zenodo.10407693 Článek k hlavnímu datasetu (BeeObserver): senzory, předzpracování, inspekce, omezení.
+10. Senger, D., Gruber, C., Kluss, T., Johannsen, C. — Weight, Temperature and Humidity Sensor Data of Honey Bee Colonies in Germany, 2019–2022 [NOVÉ, rev. 4] Data in Brief 52:110015, 2024 DOI: https://doi.org/10.1016/j.dib.2023.110015 Data: viz položka 110 Článek k hlavnímu datasetu (BeeObserver): senzory, předzpracování, inspekce, omezení.
 11. Al-Fuqaha, A. et al. — Internet of Things: A Survey on Enabling Technologies, Protocols, and Applications [NOVÉ] IEEE Communications Surveys & Tutorials 17(4):2347–2376, 2015 ⚠ https://doi.org/10.1109/COMST.2015.2444095 — ověřit Hlavní zdroj pro kapitolu o IoT (bod 1 zadání). Architektura IoT, protokoly (MQTT, CoAP), aplikační domény včetně chytrých budov a energetiky.
 12. Hyndman, R. J., Athanasopoulos, G. — Forecasting: Principles and Practice, 3. vydání [NOVÉ] OTexts, 2021 Volně online: https://otexts.com/fpp3/ Teoretický základ kapitoly o časových řadách: složky (trend, sezónnost, cykly), dekompozice, stacionarita, autokorelace. Čti kapitoly 2–3 a 5; zbytek referenčně.
 13. Blázquez-García, A. et al. — A Review on Outlier/Anomaly Detection in Time Series Data [POVÝŠENO z úrovně 2] ACM Computing Surveys 54(3), 2021 Volný preprint: https://arxiv.org/abs/2002.04236 Taxonomie anomálií (bodové, subsekvenční, celé řady; uni- vs. multivariátní). Páteř teoretické části o anomáliích v časových řadách.
@@ -87,6 +87,9 @@ Agenti a prompting
 53. Shinn, N. et al. — Reflexion: Language Agents with Verbal Reinforcement Learning NeurIPS 2023 arXiv: https://arxiv.org/abs/2303.11366 Pro self-correction při chybně vygenerovaném dotazu.
 54. Schick, T. et al. — Toolformer: Language Models Can Teach Themselves to Use Tools NeurIPS 2023 arXiv: https://arxiv.org/abs/2302.04761
 55. Sahoo, P. et al. — A Systematic Survey of Prompt Engineering in Large Language Models arXiv 2024 https://arxiv.org/abs/2402.07927 ⚠ ověřit
+104. Willard, B. T., Louf, R. — Efficient Guided Generation for Large Language Models [NOVÉ, 6. 11. 2026] arXiv 2023 https://arxiv.org/abs/2307.09702 ⚠ ověřit, zda vyšlo recenzovaně. Constrained decoding (knihovna Outlines): generování podle regulárního výrazu, gramatiky nebo JSON schématu. Opora pro strukturovaný výstup (dotaz podle schématu, enumy ze sémantické vrstvy).
+105. Geng, S. et al. — JSONSchemaBench: A Rigorous Benchmark of Structured Outputs for Language Models [NOVÉ, 6. 11. 2026] arXiv 2025 https://arxiv.org/abs/2501.10868 ⚠ ověřit publikovanou verzi. Srovnání frameworků pro strukturovaný výstup (pokrytí schémat, efektivita, kvalita).
+106. Patil, S. G., Zhang, T., Wang, X., Gonzalez, J. E. — Gorilla: Large Language Model Connected with Massive APIs [NOVÉ, 6. 11. 2026] arXiv 2023 https://arxiv.org/abs/2305.15334 ⚠ ověřit publikovanou verzi. Volání API a nástrojů jazykovým modelem a chyby při něm. Opora pro požadavek na tool calling.
 Lokální a cloudové modely
 56. Frantar, E. et al. — GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers ICLR 2023 arXiv: https://arxiv.org/abs/2210.17323 Kvantizace = hlavní důvod, proč lokální modely běží na spotřebitelském HW. Potřebuješ pro zdůvodnění výběru lokálních modelů a interpretaci rozdílů v kvalitě analýzy.
 Generování textu a vizualizací nad daty
@@ -129,6 +132,9 @@ Uživatelské testování
 94. DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2021_28: Jahresrückblick: 2021 – Ein Rückblick [NOVÉ, rev. 4] Mayen, 3. 12. 2021 Míra přezimování na jaře 2021 (zima 2020/21) pro fact_country_apiculture.
 95. DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2022_10: Honigernte und Winterverluste [NOVÉ, rev. 4] Mayen, 6. 5. 2022 Zimní ztráty v Německu za zimu 2021/22 (jarní průzkum) pro fact_country_apiculture.
 96. DLR Westerwald-Osteifel, Fachzentrum Bienen und Imkerei Mayen — Infobrief Bienen@Imkerei 2022_28: Jahresrückblick: Das Bienenjahr 2022 [NOVÉ, rev. 4] Mayen, 16. 12. 2022 Podzimní ztráty 2022; jen kontext.
+107. Malinowski, E., Zimányi, E. — OLAP Hierarchies: A Conceptual Perspective [NOVÉ, 6. 11. 2026] CAiSE 2004, LNCS, s. 477–491 DOI: https://doi.org/10.1007/978-3-540-25975-6_34 ⚠ Crossref má u DOI chybný název sborníku – ověřit v Zoteru. Typy hierarchií (mj. nestriktní). Opora pro vazbu buňka–okres s váhami.
+108. Carroll, J. M. — Making Use: Scenario-Based Design of Human-Computer Interactions [NOVÉ, 6. 11. 2026] MIT Press, 2000 DOI: https://doi.org/10.7551/mitpress/4398.001.0001 Metodika návrhu založeného na scénářích. Opora pro sekci o uživatelích a scénářích užití.
+109. Nielsen, J. — Usability Engineering [NOVÉ, 6. 11. 2026] Academic Press, 1993 ⚠ ověřit vydavatele, ISBN a kapitolu o době odezvy. Limity doby odezvy pro interaktivní práci. Opora pro nefunkční požadavek na odezvu.
 
 NÁSTROJE A DATA
 Datasety a datové zdroje citovat s verzí a datem přístupu. Dokumentace nástrojů patří do implementační kapitoly.
@@ -141,14 +147,19 @@ Datasety a datové zdroje citovat s verzí a datem přístupu. Dokumentace nást
 89. Olist Brazilian E-Commerce Public Dataset [rev. 4: podmíněně] https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce Zadání požaduje data z chytrých zařízení. Olist ponechat jen pokud ho v práci použiješ jako druhou doménu pro ověření přenositelnosti. Citovat jako dataset: autor, verze, URL, datum přístupu.
 90. Použité a srovnávané nástroje — dokumentace, URL a datum přístupu Implementace: LangGraph: https://langchain-ai.github.io/langgraph/ Chainlit: https://docs.chainlit.io/ FastAPI: https://fastapi.tiangolo.com/ (Qdrant, Streamlit, Laravel, React: jen podle zvoleného UI stacku) DuckDB: https://duckdb.org/docs/ Lokální modely [NOVÉ]: Ollama: https://ollama.com/ llama.cpp: https://github.com/ggml-org/llama.cpp vLLM: https://docs.vllm.ai/ Existující nástroje pro analýzu a vizualizaci časových řad (přehled k bodu 2) [NOVÉ]: Grafana: https://grafana.com/docs/ InfluxDB: https://docs.influxdata.com/ TimescaleDB: https://docs.timescale.com/ Kibana: https://www.elastic.co/guide/en/kibana/
 91. Metabase https://www.metabase.com/ Produktová stránka — pouze zmínka o existujícím nástroji v přehledu, nikoli zdroj.
+110. Senger, D., Gruber, C., Kluss, T., Johannsen, C. — Weight, Temperature and Humidity Sensor Data of Honey Bee Colonies in Germany, 2019–2022 [dataset] [NOVÉ, 6. 11. 2026] Zenodo, 2023 DOI: https://doi.org/10.5281/zenodo.10407693 Přístup 6. 10. 2026. Samotná data k článku (položka 10).
+111. Zippenfenig, P. — Open-Meteo.com Weather API [software] [NOVÉ, 6. 11. 2026] Zenodo, 2024, verze 1.4.0 DOI: https://doi.org/10.5281/zenodo.7970649 Historical Weather API: https://open-meteo.com/en/docs/historical-weather-api Přístup 6. 10. 2026. Hodinové počasí z ERA5 pro buňky úlů; citovat spolu s ERA5 (položka 85).
+112. FAO — FAOSTAT: Crops and Livestock Products (QCL) [dataset] [NOVÉ, 6. 11. 2026] https://www.fao.org/faostat/en/#data/QCL ⚠ ověřit URL a formu citace podle FAO. Bulk: https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_All_Data_(Normalized).zip Přístup 6. 10. 2026. Počty úlů (Bees, stocks) a produkce medu (Natural honey), Německo, ročně.
+113. Statistische Ämter des Bundes und der Länder — Regionaldatenbank Deutschland, tabulky 41141-02-02-4 (Anbau auf dem Ackerland nach Fruchtarten) a 41241-01-03-4 (Hektarerträge) [dataset] [NOVÉ, 6. 11. 2026] https://www.regionalstatistik.de ⚠ ověřit formu citace. Přístup 6. 10. 2026, licence dl-de/by-2-0. Plochy (2016, 2020) a výnosy (2016–2025) plodin po okresech.
+114. Bundesamt für Kartographie und Geodäsie (BKG) — Verwaltungsgebiete 1:250 000 (VG250), Ebenen, Stand 31.12. [dataset] [NOVÉ, 6. 11. 2026] https://daten.gdz.bkg.bund.de/produkte/vg/vg250_ebenen_1231/aktuell/vg250_12-31.utm32s.gpkg.ebenen.zip ⚠ doplnit rok stavu (soubor „aktuell“). Přístup 6. 10. 2026, licence dl-de/by-2-0. Hranice okresů a spolkových zemí.
 
 MAPOVÁNÍ NA BODY ZADÁNÍ
 Bod 1 — IoT, chytrá zařízení, časové řady: 8, 9, 10, 11, 12, 13, 14, 26, 27, 28, 29, 71, 72, 100, 102
 Bod 2a — vizualizace a nástroje pro analýzu časových řad: 30, 57, 58, 75, 76, 90, 98
-Bod 2b — LLM nad daty: 6, 7, 16, 19, 20, 21, 22, 43, 44, 45, 46, 47, 48, 61, 81, 97
-Bod 3 — OLAP nad časovými řadami, požadavky na LLM augmentaci: 1, 2, 3, 4, 5, 15, 17, 24, 35, 36, 37, 38, 39, 40, 67, 68, 100, 101, 103
+Bod 2b — LLM nad daty: 6, 7, 16, 19, 20, 21, 22, 43, 44, 45, 46, 47, 48, 61, 81, 97, 104, 105, 106
+Bod 3 — OLAP nad časovými řadami, požadavky na LLM augmentaci: 1, 2, 3, 4, 5, 15, 17, 24, 35, 36, 37, 38, 39, 40, 67, 68, 100, 101, 103, 107, 110, 111, 112, 113, 114
 Bod 4 — návrh platformy, vysvětlování dotazů, lokální vs. cloudové modely: 19, 25, 34, 56, 83, 90, 98, 99, 103
-Bod 6a — uživatelské testování, scénáře, Likertova škála: 23, 65, 66
+Bod 6a — uživatelské testování, scénáře, Likertova škála: 23, 65, 66, 108, 109
 Bod 6b — srovnání modelů (výkonnost, kvalita analýzy): 41, 42, 62, 63, 64, 84
 
 VYŘAZENO
