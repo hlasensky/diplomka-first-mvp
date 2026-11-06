@@ -1,15 +1,20 @@
 ---
 citekey: sengerWeightTemperatureHumidity2024
-title: "Weight, Temperature and Humidity Sensor Data of Honey Bee Colonies in Germany, 2019–2022"
-authors: "Senger, Diren; Gruber, Clemens; Kluss, Thorsten; Johannsen, Carolin"
+title: Weight, Temperature and Humidity Sensor Data of Honey Bee Colonies in Germany, 2019–2022
+authors: Senger, Diren; Gruber, Clemens; Kluss, Thorsten; Johannsen, Carolin
 year: 2024
-venue: "Data in Brief 52, 110015"
-kind: journal   # journal | conference | preprint | book | misc
-status: candidate   # confirmed | candidate | rejected
-verified: false     # true = tvrzení ověřená proti PDF mnou
-precteno: ne         # ne | abstrakt | uvod-zaver | prolet | cele – jak daleko jsem paper četl (mění jen já)
+venue: Data in Brief 52, 110015
+kind: journal
+status: candidate
+verified: true
+precteno: prolet
 chapters: []
-concepts: [hive-monitoring, internet-of-things, colony-loss, anomaly-detection, time-series-database]
+concepts:
+  - hive-monitoring
+  - internet-of-things
+  - colony-loss
+  - anomaly-detection
+  - time-series-database
 uroven: 1
 ---
 

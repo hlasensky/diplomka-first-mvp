@@ -2,25 +2,25 @@
 
 .theme-dark, .theme-light {
   /* Core colors */
-  --background-primary: #000000;
-  --background-primary-alt: #000000;
-  --background-secondary: #000000;
-  --background-secondary-alt: #000000;
+  --background-primary: #161514;
+  --background-primary-alt: #161514;
+  --background-secondary: #161514;
+  --background-secondary-alt: #161514;
   --text-normal: #c8c1b3;
 
   /* Selection colors */
-  --text-selection: #262626;
+  --text-selection: #33302c;
 
   /* Border color */
-  --background-modifier-border: #6e6e6e;
+  --background-modifier-border: #7a7671;
 
   /* Semantic heading colors */
-  --text-title-h1: #d4544f;
-  --text-title-h2: #97aa60;
-  --text-title-h3: #e3c26a;
+  --text-title-h1: #dc5d56;
+  --text-title-h2: #a0b96c;
+  --text-title-h3: #f2d47c;
   --text-title-h4: #5f8fc4;
-  --text-title-h5: #b26e8e;
-  --text-title-h6: #b26e8e;
+  --text-title-h5: #bd7899;
+  --text-title-h6: #bd7899;
 
   /* Links and accents */
   --text-link: #5f8fc4;
@@ -37,20 +37,20 @@
   --code-normal: #6fa89b;
 
   /* Errors and success */
-  --text-error: #d4544f;
-  --text-error-hover: #d4544f;
-  --text-success: #97aa60;
+  --text-error: #dc5d56;
+  --text-error-hover: #dc5d56;
+  --text-success: #a0b96c;
 
   /* Tags */
   --tag-color: #6fa89b;
-  --tag-background: #6e6e6e;
+  --tag-background: #7a7671;
 
   /* Graph */
-  --graph-line: #6e6e6e;
+  --graph-line: #7a7671;
   --graph-node: #f4eee2;
   --graph-node-focused: #5f8fc4;
   --graph-node-tag: #6fa89b;
-  --graph-node-attachment: #97aa60;
+  --graph-node-attachment: #a0b96c;
 }
 
 /* Headers */
@@ -67,10 +67,10 @@
 }
 
 /* Syntax highlighting */
-.cm-s-obsidian span.cm-keyword { color: #d4544f; }
-.cm-s-obsidian span.cm-string { color: #97aa60; }
-.cm-s-obsidian span.cm-number { color: #e3c26a; }
-.cm-s-obsidian span.cm-comment { color: #6e6e6e; }
+.cm-s-obsidian span.cm-keyword { color: #dc5d56; }
+.cm-s-obsidian span.cm-string { color: #a0b96c; }
+.cm-s-obsidian span.cm-number { color: #f2d47c; }
+.cm-s-obsidian span.cm-comment { color: #7a7671; }
 .cm-s-obsidian span.cm-operator { color: #5f8fc4; }
 .cm-s-obsidian span.cm-def { color: #5f8fc4; }
 
