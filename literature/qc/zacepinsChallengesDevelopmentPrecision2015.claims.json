@@ -1,0 +1,126 @@
+{
+  "citekey": "zacepinsChallengesDevelopmentPrecision2015",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Recently, Precision Beekeeping (PB) or Precision Apiculture has been defined as an apiary management strategy based on the monitoring of individual bee colonies to minimise resource consumption and maximise the productivity of bees"
+        },
+        {
+          "page": 2,
+          "quote": "The aim of the proposed solution is not to replace but rather to support the beekeeper"
+        },
+        {
+          "page": 2,
+          "quote": "Precision Beekeeping can also be split and analysed in three phases: data collection (Section 2 of this article), data analysis (Section 3) and application (Section 4)"
+        },
+        {
+          "page": 2,
+          "quote": "The data analysis phase draws conclusions regarding bee colony behaviour and activity trends based on measurement data, predefined models and expert knowledge."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "c348121ac9b0"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "2) colony-level parameters (temperature, humidity, gas content, sound, video, vibration of hive and weight);"
+        },
+        {
+          "page": 2,
+          "quote": "An increase in the hive weight may be caused by rain that can be detected by video or a meteorological station."
+        },
+        {
+          "page": 3,
+          "quote": "beekeepers and researchers have tried to detect colony states such as increased food consumption, the start of brood rearing, pre-swarming states, and death of the bee colony."
+        },
+        {
+          "page": 3,
+          "quote": "Temperature sensors are usually robust and can easily survive even in the bee nest environment. Finally, the cost of temperature monitoring is relatively low."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b9fb6b07179c"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "the occurrence of swarming events through a decrease in the hive weight (Linton, 2012; Meikle et al., 2008);"
+        },
+        {
+          "page": 3,
+          "quote": "Weather influence should be taken into account because wooden boxes absorb moisture and thereby bias weight measurements"
+        },
+        {
+          "page": 3,
+          "quote": "the mass resolution for measurements made using Beewise and CAPAZ is only 100 g, which is not sufficient for monitoring colonies during the passive state (winter period)"
+        },
+        {
+          "page": 3,
+          "quote": "when nectar is not harvested and the daily changes in mass do not exceed 100 g."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "857e929b0c76"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "The disappearance or death of the bee colony can be registered if the average temperature in the hive is equal or very close to the ambient temperature"
+        },
+        {
+          "page": 6,
+          "quote": "weight remains constant, no bees enter or leave the colony, and no sound or vibration of a living colony can be detected."
+        },
+        {
+          "page": 7,
+          "quote": "We propose dividing the PB DSS rules (decisions) into two main groups: individual rules and differential rules"
+        },
+        {
+          "page": 8,
+          "quote": "unspecified problems at individual colony: no increase in weight between two nights just in one colony when other colonies at the same location have weight increase detected by scales,"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "7651746d2097"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "The currently available PB systems are not widely used, possibly due to a combination of several reasons: 1) the benefit/investment ratio is unclear; 2) the use is complicated;"
+        },
+        {
+          "page": 10,
+          "quote": "Currently, the most developed and advanced phase of PB is data collection."
+        },
+        {
+          "page": 10,
+          "quote": "in developing DSS, it is critical to 1) develop beekeeper-friendly data analysis methods through DSS and its interface"
+        },
+        {
+          "page": 10,
+          "quote": "A low probability of correct conclusions and predictions made by DSS is the highest risk factor to successful PB implementation."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2215f7d732a8"
+    }
+  },
+  "stamped": "2026-11-06"
+}

@@ -1,0 +1,122 @@
+{
+  "citekey": "hadjurIntelligentEfficientBeehive2022",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "In this paper, we describe the recent advances in precision beekeeping as systems and as services. Different types of sensors, networks, and power sources in PB are covered."
+        },
+        {
+          "page": 2,
+          "quote": "Our PB survey cites a total of 86 publications, including 7 other surveys."
+        },
+        {
+          "page": 2,
+          "quote": "Compared to other surveys, ours integrates the whole data pipeline from the design of systems and the collection of data to the underlying machine learning models."
+        },
+        {
+          "page": 3,
+          "quote": "In all PB IoT-related papers, a connected beehive consists of a standard beehive with sensors connected to a microprocessor, powered by a battery and usually connected to a network to send the collected data to a remote server."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "13554c75801a"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "As of today, professional beekeepers who choose to use technology rely on two main categories of metrics: on the one hand, the weight of the beehive, which is a good indicator of honey flow evolution and flowering."
+        },
+        {
+          "page": 2,
+          "quote": "On the other hand, internal and external temperature and humidity values can help track a colony’s health and development"
+        },
+        {
+          "page": 4,
+          "quote": "Abnormal weight variations can also be correlated to incoming swarming events"
+        },
+        {
+          "page": 4,
+          "quote": "An increase of the internal temperature can be correlated with swarming"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3eab9c4011bc"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "Overall, we focus on eight categories. Fig. 3 shows four categories of services."
+        },
+        {
+          "page": 9,
+          "quote": "Classification of health states which are defined differently in each paper: 10 papers, all using a mix of temperature, humidity, CO2 level and rain level data."
+        },
+        {
+          "page": 9,
+          "quote": "Pollen detection: 4 papers, all using image data. Tracking: 9 papers, all using image data. Queen detection: 5 papers, all using audio data."
+        },
+        {
+          "page": 9,
+          "quote": "even though existing installations for beekeepers rely on external sensors like scales, PB scientific research focuses on more complex data like images and sounds"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "381dd783aa22"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 14,
+          "quote": "the inside temperature, the ambient temperature, the difference between to two, the evolution of the inside temperature, and the season to detect normal, abnormal and death states. The model obtains a F1-score of 98%."
+        },
+        {
+          "page": 14,
+          "quote": "The results show that all swarms are detected thanks to the autoencoders method, and it is even triggered by other anomalies (mainly from beekeeper’s intervention: varroa treatment, control visit)."
+        },
+        {
+          "page": 14,
+          "quote": "In the end, over 95% of states are accurately classified. In comparison, the previously cited threshold-based method reached at most 89% of accuracy with the same dataset."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "8b383f6bdc24"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "The main challenge of data collection with the objective of building statistical models in apiculture is bias. Most of the time, the duration of the collected data ranges from a few minutes to a few days"
+        },
+        {
+          "page": 7,
+          "quote": "Research initiatives that aim at understanding the life of bees need to include at least data from an entire year"
+        },
+        {
+          "page": 14,
+          "quote": "the collection over several full seasons over different apiaries and precise labeling are necessary to produce unbiased and general biological results."
+        },
+        {
+          "page": 14,
+          "quote": "So far, most of the projects are not reproducible."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "654abb645880"
+    }
+  },
+  "stamped": "2026-11-06"
+}

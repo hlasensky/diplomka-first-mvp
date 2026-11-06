@@ -1,0 +1,126 @@
+{
+  "citekey": "meikleApplicationContinuousMonitoring2015",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "defined here as data gathered from the colony (as opposed to individual bees) hourly or more often for periods exceeding 2 days"
+        },
+        {
+          "page": 2,
+          "quote": "Sensors have been grouped here into four main types: (1) weight; (2) temperature, humidity, and gas; (3) sound and vibration; and (4) forager traffic."
+        },
+        {
+          "page": 2,
+          "quote": "variables examined in these studies can be considered either state variables (weight, temperature, humidity, gases) or rate variables (forager traffic)"
+        },
+        {
+          "page": 2,
+          "quote": "colony weight at any particular moment is merely a physical characteristic with little information on colony status per se"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "49e27dada072"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "some weather factors, such as precipitation and wind, can affect the data"
+        },
+        {
+          "page": 4,
+          "quote": "He noted the strong daily pattern of weight loss, attributed to water loss through nectar drying and respiration during the night and to departing foragers early in the morning"
+        },
+        {
+          "page": 4,
+          "quote": "followed by weight gain due to foraging from mid-morning until late evening"
+        },
+        {
+          "page": 4,
+          "quote": "Hambleton (1925) correlated ambient weather variables, including temperature, relative humidity, and hours of sunshine, with hive weight changes"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "183b56819ff9"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "Meikle et al. (2006, 2008) calculated the 25-h running average, subtracted those values from the hourly raw data to produce"
+        },
+        {
+          "page": 4,
+          "quote": "and then fit sine functions to these residuals. They showed the effects of swarming on daily detrended data, and also that an empty wooden hive has a detectable daily weight change pattern, probably due to moisture content changes in the wood"
+        },
+        {
+          "page": 5,
+          "quote": "Changes in the running average hive weight were correlated with colony growth, and the amplitude of sine waves fit to the detrended data was correlated with daily colony food demand."
+        },
+        {
+          "page": 5,
+          "quote": "provides data on colony-level weight changes but not with respect to colony component (adults, brood, and food reserves), and while detrended data shows forager activity, this data is confounded at least to some degree with water and pollen"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "994f5e54cc2a"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "Continuous weighing has been shown to provide information on weather effects (Gates 1914; Hambleton 1925; Meikle et al. 2006), colony growth and consumption (Meikle et al. 2008)"
+        },
+        {
+          "page": 5,
+          "quote": "swarming (Buchmann and Thoenes 1990; Meikle et al. 2006), hive abandonment (Thoenes and Buchmann 1992), the impact of pesticides on bee colonies, changes in nectar and pollen availability, and differences among honeybee races"
+        },
+        {
+          "page": 4,
+          "quote": "Buchmann and Thoenes (1990) introduced the use of continuous weight monitoring using a precision scale"
+        },
+        {
+          "page": 4,
+          "quote": "for a single hive and used the data to link hive abandonment to tracheal mite (Acarapis woodi Rennie) infestation"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "415f6e4babcd"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "Temperature sensors, for example, within the brood cluster, usually the warmest part of the hive (Southwick 1992), will be affected less by exterior conditions while those nearer the exterior of the hive can be expected to be affected more."
+        },
+        {
+          "page": 5,
+          "quote": "Sensors at fixed points may change over time with respect to their distance to the brood cluster as bees move and change the size of the cluster during the year and reduce or eliminate them in the winter"
+        },
+        {
+          "page": 6,
+          "quote": "Southwick and Mugaas (1971) confirmed observations by Gates (1914) that when ambient temperatures were <5 °C, decreasing ambient temperature was associated with increasing colony core temperature (mostly 20–32 °C)"
+        },
+        {
+          "page": 7,
+          "quote": "Ferrari et al. (2008) monitored sound, temperature and relative humidity for 270 hours using within-hive sensors and observed 9 swarming events among three colonies; they observed increases in sound intensity and drops in temperature and humidity during the swarming"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "0c428387eec2"
+    }
+  },
+  "stamped": "2026-11-06"
+}
