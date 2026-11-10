@@ -5,8 +5,8 @@ authors: Zacepins, Aleksejs; Brusbardis, Valters; Meitalovs, Jurijs; Stalidzans,
 year: 2015
 venue: Biosystems Engineering 130, 60–71
 kind: journal
-status: candidate
-verified: false
+status: confirmed
+verified: true
 precteno: ne
 chapters: []
 concepts:

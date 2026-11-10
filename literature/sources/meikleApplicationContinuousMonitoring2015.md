@@ -5,8 +5,8 @@ authors: Meikle, W. G.; Holst, N.
 year: 2015
 venue: Apidologie 46(1), 10–22
 kind: journal
-status: candidate
-verified: false
+status: confirmed
+verified: true
 precteno: ne
 chapters: []
 concepts:
