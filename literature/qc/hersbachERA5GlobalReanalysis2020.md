@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-11-06
+generated: 2026-11-11
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -9,11 +9,10 @@ generated: 2026-11-06
 
 Zdroj: [[hersbachERA5GlobalReanalysis2020]]
 
-**QC: FAIL** – 1 chyb, 21 varování
+**QC: PASS s varováními** – 0 chyb, 21 varování
 
 | úroveň | kód | nález |
 |---|---|---|
-| ERROR | NO_CLAIMS | poznámka nemá žádné claims |
 | WARN | PAGE_WARN | s. 4: shoda s OCR recall 0.92, pořadí 0.90, PUA 0, rozpalovaná slova 1 (tabulka/vzorec/sloupce?) – ověř v PDF, než z ní cituješ |
 | WARN | PAGE_WARN | s. 6: shoda s OCR recall 0.92, pořadí 0.89, PUA 0, rozpalovaná slova 1 (tabulka/vzorec/sloupce?) – ověř v PDF, než z ní cituješ |
 | WARN | PAGE_WARN | s. 16: shoda s OCR recall 0.78, pořadí 0.41, PUA 0, rozpalovaná slova 1 (tabulka/vzorec/sloupce?) – ověř v PDF, než z ní cituješ |
@@ -64,4 +63,12 @@ Zdroj: [[hersbachERA5GlobalReanalysis2020]]
 | 37 | WARN | 515 | 516 | 0.91 | 0.91 | 0.87 | 0.90 | 0.86 | 0/0/1 |
 | 38 | WARN | 433 | 474 | 0.83 | 0.91 | 0.80 | 0.90 | 0.84 | 0/0/1 |
 | 42 | WARN | 425 | 424 | 0.91 | 0.91 | 0.59 | 0.77 | 0.72 | 0/0/0 |
+
+### Claims
+
+| claim | verdikt | strany důkazů | citace ve fulltextu | min. shoda s OCR | poznámka ověřovatele |
+|---|---|---|---|---|---|
+| C1 | supported | 1, 2 | 2/2 | 1.00 |  |
+| C2 | supported | 1 | 2/2 | 1.00 |  |
+| C3 | supported | 10 | 2/2 | 1.00 |  |
 

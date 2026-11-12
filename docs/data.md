@@ -125,6 +125,6 @@ Původní návrh počítal s US Bee OLAP (USDA, NASS, NOAA). Jsou to ale statist
 - **Okresy:** souřadnice úlů jsou zaokrouhlené. Hlavní okres buňky je jen ten s největším podílem plochy, kontext plodin se proto váží přes `bridge_cell_district`. Buňka 49.2_6.9 leží jen z 35 % v Německu.
 - **Plodiny:** plocha řepky v okolí je úplná u 17 z 34 buněk (`share_coverage`). Plochy se počítají podle sídla podniku. Výnosy pro Berlín, Brémy a Hamburk nejsou.
 - **Zimní ztráty** pocházejí ze zdrojů ve stavu `candidate` (neověřené). Počty u zim 2019/20 a 2020/21 jsou z OCR tabulky (s. 4) a nejsou v žádném claimu. Build ověřuje, že sedí s procenty v claimu C2.
-- **Počasí:** ERA5 má rozlišení ~28 km, na místní srážky je hrubé. Alternativou jsou stanice DWD.
+- **Počasí:** ERA5 má rozlišení 31 km (Open-Meteo vrací mřížku 0,25°, tj. ~28 km v zeměpisné šířce), na místní srážky je hrubé. Alternativou jsou stanice DWD.
 - **Fenologie:** pozorují dobrovolníci a stanice je od úlu v mediánu 9–12 km. Přiřazení stanice k úlu je aproximace.
 - **Inspekce:** jsou neúplné. Když událost chybí, neznamená to, že nenastala.

@@ -103,7 +103,7 @@ tables:
     fact_weather:
         kind: fact
         grain: [cell_id, time_key]
-        description: Hourly ERA5 weather at the cell centre (about 28 km resolution).
+        description: Hourly ERA5 weather at the cell centre (31 km model resolution, 0.25° grid).
     agg_weather_daily:
         kind: aggregate
         grain: [cell_id, date]

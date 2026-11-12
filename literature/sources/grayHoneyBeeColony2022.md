@@ -1,15 +1,16 @@
 ---
 citekey: grayHoneyBeeColony2022
 title: "Honey Bee Colony Loss Rates in 37 Countries Using the COLOSS Survey for Winter 2019–2020: The Combined Effects of Operation Size, Migration and Queen Replacement"
-authors: "Gray, Alison; Adjlane, Noureddine; Arab, Alireza; Ballis, Alexis; et al. (39 autorů)"
+authors: Gray, Alison; Adjlane, Noureddine; Arab, Alireza; Ballis, Alexis; et al. (39 autorů)
 year: 2022
-venue: "Journal of Apicultural Research 62(2), pp. 204–210"
-kind: journal   # journal | conference | preprint | book | misc
-status: candidate   # confirmed | candidate | rejected
-verified: false     # true = tvrzení ověřená proti PDF mnou
-precteno: ne         # ne | abstrakt | uvod-zaver | prolet | cele – jak daleko jsem paper četl (mění jen já)
+venue: Journal of Apicultural Research 62(2), pp. 204–210
+kind: journal
+status: candidate
+verified: true
+precteno: ne
 chapters: []
-concepts: [colony-loss]
+concepts:
+  - colony-loss
 uroven: 3
 ---
 

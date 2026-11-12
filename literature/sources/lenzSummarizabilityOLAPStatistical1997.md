@@ -5,9 +5,9 @@ authors: Lenz, H.-J.; Shoshani, A.
 year: 1997
 venue: Proceedings. Ninth International Conference on Scientific and Statistical Database Management (pp. 132–143)
 kind: conference
-status: candidate
-verified: false
-precteno: ne
+status: confirmed
+verified: true
+precteno: prolet
 chapters: []
 concepts:
   - summarizability

@@ -1,0 +1,54 @@
+{
+  "citekey": "hersbachERA5GlobalReanalysis2020",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Within the Copernicus Climate Change Service (C3S), ECMWF is producing the ERA5 reanalysis"
+        },
+        {
+          "page": 2,
+          "quote": "By optimally combining observations and models, reanalyses indeed provide consistent “maps without gaps\" of ECVs"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "0a4a7574af16"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "In addition to a significantly enhanced horizontal resolution of 31 km, compared to 80 km for ERA-Interim, ERA5 has hourly output throughout"
+        },
+        {
+          "page": 1,
+          "quote": "an uncertainty estimate from an ensemble (3-hourly at half the horizontal resolution)"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "78ce4532fbbc"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "The CDS data have been converted from the native reduced-Gaussian grid to a regular latitude–longitude grid"
+        },
+        {
+          "page": 10,
+          "quote": "0.25◦ for the high-resolution deterministic reanalysis and 0.5◦ for the ensemble products"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "c4c419ee9ef5"
+    }
+  },
+  "stamped": "2026-11-11"
+}
