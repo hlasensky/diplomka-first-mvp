@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-11-06
+generated: 2026-11-13
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -13,10 +13,10 @@ generated: 2026-11-06
 
 | úroveň | položek | v Zoteru | poznámka | čteno víc než abstrakt | čteno celé | ověřeno |
 |---|---|---|---|---|---|---|
-| 1 povinné | 25 | 22 | 22 | 3 | 1 | 3 |
-| 2 důležité | 51 | 16 | 16 | 0 | 0 | 0 |
+| 1 povinné | 25 | 22 | 22 | 4 | 1 | 4 |
+| 2 důležité | 57 | 16 | 16 | 0 | 0 | 2 |
 | 3 doplňkové | 24 | 7 | 7 | 0 | 0 | 0 |
-| nástroje a data | 14 | 9 | 9 | 0 | 0 | 0 |
+| nástroje a data | 14 | 9 | 9 | 1 | 0 | 1 |
 
 ### Úroveň 1 povinné (25)
 
@@ -45,16 +45,16 @@ generated: 2026-11-06
 | 21 | Lei, F. et al. — Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-S… | [[leiSpider20Evaluating2025]] | candidate · čteno: ne · QC PASS s varováními |
 | 22 | Schulhoff, S. et al. — The Prompt Report: A Systematic Survey of Prompt Engineering Techni… | – | chybí v Zoteru |
 | 23 | Lewis, J. R. — The System Usability Scale: Past, Present, and Future [NOVÉ] International … | [[lewisSystemUsabilityScale2018]] | candidate · čteno: ne · QC PASS |
-| 24 | Lenz, H.-J., Shoshani, A. — Summarizability in OLAP and Statistical Data Bases [NOVÉ, rev.… | [[lenzSummarizabilityOLAPStatistical1997]] | candidate · čteno: ne · QC PASS |
+| 24 | Lenz, H.-J., Shoshani, A. — Summarizability in OLAP and Statistical Data Bases [NOVÉ, rev.… | [[lenzSummarizabilityOLAPStatistical1997]] | ✅ ověřeno · čteno: prolet · QC PASS |
 | 25 | Buneman, P., Khanna, S., Tan, W.-C. — Why and Where: A Characterization of Data Provenance… | [[bunemanWhyWhereCharacterization2001]] | candidate · čteno: ne · QC PASS |
 
-### Úroveň 2 důležité (51)
+### Úroveň 2 důležité (57)
 
 | č. | položka | citekey | stav |
 |---|---|---|---|
 | 26 | Atzori, L., Iera, A., Morabito, G. — The Internet of Things: A Survey Computer Networks 54… | [[atzoriInternetThingsSurvey2010]] | candidate · čteno: ne · QC PASS s varováními |
-| 27 | Zacepins, A. et al. — Challenges in the Development of Precision Beekeeping [NOVÉ, rev. 4]… | [[zacepinsChallengesDevelopmentPrecision2015]] | candidate · čteno: ne · QC PASS s varováními |
-| 28 | Meikle, W. G., Holst, N. — Application of Continuous Monitoring of Honeybee Colonies [NOVÉ… | [[meikleApplicationContinuousMonitoring2015]] | candidate · čteno: ne · QC PASS |
+| 27 | Zacepins, A. et al. — Challenges in the Development of Precision Beekeeping [NOVÉ, rev. 4]… | [[zacepinsChallengesDevelopmentPrecision2015]] | ✅ ověřeno · čteno: ne · QC PASS s varováními |
+| 28 | Meikle, W. G., Holst, N. — Application of Continuous Monitoring of Honeybee Colonies [NOVÉ… | [[meikleApplicationContinuousMonitoring2015]] | ✅ ověřeno · čteno: ne · QC PASS |
 | 29 | Hadjur, H., Ammar, D., Lefèvre, L. — Toward an Intelligent and Efficient Beehive: A Survey… | [[hadjurIntelligentEfficientBeehive2022]] | candidate · čteno: ne · QC PASS s varováními |
 | 30 | Aigner, W., Miksch, S., Schumann, H., Tominski, C. — Visualization of Time-Oriented Data S… | [[aignerVisualizationTimeOrientedData2011]] | candidate · čteno: ne · QC FAIL |
 | 31 | Yan, S. et al. — CMMD: Cross-Metric Multi-Dimensional Root Cause Analysis ACM SIGKDD 2022,… | – | chybí v Zoteru |
@@ -103,6 +103,12 @@ generated: 2026-11-06
 | 104 | Willard, B. T., Louf, R. — Efficient Guided Generation for Large Language Models [NOVÉ, 6.… | [[willardEfficientGuidedGeneration2023]] | candidate · čteno: ne · QC PASS |
 | 105 | Geng, S. et al. — JSONSchemaBench: A Rigorous Benchmark of Structured Outputs for Language… | [[gengJSONSchemaBenchRigorousBenchmark2025]] | candidate · čteno: ne · QC PASS s varováními |
 | 106 | Patil, S. G., Zhang, T., Wang, X., Gonzalez, J. E. — Gorilla: Large Language Model Connect… | [[patilGorillaLargeLanguage2024]] | candidate · čteno: ne · QC PASS |
+| 115 | Cleveland, W. S., McGill, R. — Graphical Perception: Theory, Experimentation, and Applicat… | – | chybí v Zoteru |
+| 116 | Munzner, T. — Visualization Analysis and Design [NOVÉ, 13. 11. 2026] A K Peters/CRC Press,… | – | chybí v Zoteru |
+| 117 | Healey, C. G., Enns, J. T. — Attention and Visual Memory in Visualization and Computer Gra… | – | chybí v Zoteru |
+| 118 | Isenberg, P., Bezerianos, A., Dragicevic, P., Fekete, J.-D. — A Study on Dual-Scale Data C… | – | chybí v Zoteru |
+| 119 | Cleveland, W. S., McGill, M. E., McGill, R. — The Shape Parameter of a Two-Variable Graph … | – | chybí v Zoteru |
+| 120 | Nielsen, J., Molich, R. — Heuristic Evaluation of User Interfaces [NOVÉ, 13. 11. 2026] Pro… | – | chybí v Zoteru |
 
 ### Úroveň 3 doplňkové (24)
 
@@ -139,7 +145,7 @@ generated: 2026-11-06
 |---|---|---|---|
 | 83 | Raasveldt, M., Mühleisen, H. — DuckDB: An Embeddable Analytical Database ACM SIGMOD 2019 (… | [[raasveldtDuckDBEmbeddableAnalytical2019]] | candidate · čteno: ne · QC – |
 | 84 | Lavin, A., Ahmad, S. — Evaluating Real-Time Anomaly Detection Algorithms: The Numenta Anom… | – | chybí v Zoteru |
-| 85 | Hersbach, H. et al. — The ERA5 Global Reanalysis [NOVÉ, rev. 4] Quarterly Journal of the R… | [[hersbachERA5GlobalReanalysis2020]] | candidate · čteno: ne · QC – |
+| 85 | Hersbach, H. et al. — The ERA5 Global Reanalysis [NOVÉ, rev. 4] Quarterly Journal of the R… | [[hersbachERA5GlobalReanalysis2020]] | ✅ ověřeno · čteno: prolet · QC PASS s varováními |
 | 86 | Kaspar, F. et al. — An Overview of the Phenological Observation Network and the Phenologic… | [[kasparOverviewPhenologicalObservation2015]] | candidate · čteno: ne · QC – |
 | 87 | Didan, K. — MOD13Q1 MODIS/Terra Vegetation Indices 16-Day L3 Global 250m SIN Grid [NOVÉ, r… | [[didanMOD13Q1MODISTerra2015]] | candidate · čteno: ne · QC – |
 | 88 | Zhu, Y. et al. — MSPB: A Longitudinal Multi-Sensor Dataset with Phenotypic Trait Measureme… | – | chybí v Zoteru |

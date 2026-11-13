@@ -126,3 +126,47 @@ Stručný log rozhodnutí. Data jsou popsaná v [data.md](data.md).
 - velikost rozpočtu smyčky `investigate`,
 - `ask_user` přes LangGraph `interrupt`, nebo konec turnu,
 - specifikace grafu od LLM, nebo odvozená deterministicky z tvaru dotazu.
+
+## 2026-11-13 – nezávislost na typu databáze
+
+1. **Platforma nesmí být omezená na typ databáze, ve které jsou data.** Hlavní cesta zůstává SQL, ale musí jít dotazovat i jiné typy databází, hlavně databáze časových řad.
+   - LLM dál nepíše dotazovací jazyk databáze. Vyplní `CubeQuery` a engine ho přeloží přes Ibis do dialektu backendu.
+   - Výchozí backend je DuckDB (SQL). Další backendy se přidávají změnou dialektu nebo konektoru, ne změnou agenta.
+2. **Ověřeno pro InfluxDB 3:**
+   - InfluxDB 3 používá jako dotazovací engine Apache DataFusion, takže jeho SQL je dialekt DataFusion. Hotový Ibis backend pro InfluxDB neexistuje.
+   - Postup: `ibis.to_sql(expr, dialect="datafusion")` a poslat SQL klientem `influxdb3-python`. Ibis 12 to přeloží (filtr, `GROUP BY`, `DATE_TRUNC`).
+   - **ASOF join nefunguje.** Ibis ho pro DataFusion vygeneruje jako `ASOF LEFT JOIN`, ale DataFusion 55 ho odmítne (`ParserError: Expected: JOIN, found: LEFT`).
+   - Funkce specifické pro InfluxDB (gap-filling `date_bin_gapfill`, `locf`, `interpolate`, selectory) v Ibisu nejsou. Řešení: builtin UDF v Ibisu, nebo kus SQL přes `.sql(...)`.
+   - Verze DataFusion v InfluxDB se může lišit od té, na kterou cílí Ibis. Neobvyklé konstrukce je třeba otestovat.
+   - InfluxQL Ibis negeneruje.
+3. **Priorita podle vedoucího (13. 11.):**
+   - V analýze uvést dvě možnosti: monolitická databázová vrstva, nebo vrstva, která odstíní sémantickou vrstvu od interního uložení (napsat, nebo převzít).
+   - Návrh se dvěma databázemi (relační + nerelační) může zůstat, ale implementace se deprioritizuje. Nejdřív vysvětlení a myšlenkový postup agenta nad jednou databází (DuckDB).
+   - Když jde jen o výměnu backendu v Ibisu, změna se má projevit jen v načítání dat a ve vrstvě, která Ibis používá.
+
+**Otevřené:**
+- jak engine pozná, co backend umí (ASOF join, ROLLUP, speciální funkce), a co udělá, když to neumí: náhradní SQL, výpočet v DuckDB, nebo chyba pro uživatele,
+- kterou databázi časových řad použít (InfluxDB 3, TimescaleDB, nebo jen DuckDB) a co v ní bude: jen surová minutová data, nebo i kontext,
+- jak se tvoří schéma tabulek pro Ibis u databáze bez Ibis backendu (ručně v sémantické vrstvě, nebo z `information_schema.columns`).
+
+## 2026-11-13 – dotazy specifické pro časové řady a rozdělení dat
+
+1. **LLM smí v krajním případě psát i dotaz pro konkrétní databázi.** Upřesňuje bod 1 předchozího záznamu („LLM nepíše dotazovací jazyk databáze“): platí pro hlavní cestu, ne absolutně. Žebříček eskalace, každý další stupeň jen když předchozí selže:
+   1. `CubeQuery` (engage) nebo operátor nad session (navigate),
+   2. operátor enginu pro časové řady (bod 2),
+   3. volné SQL s `semantic_validator` (dnešní fallback),
+   4. jednoduchý nativní výběr z databáze časových řad (míra, interval, tagy) a výpočet v enginu nebo DuckDB,
+   5. volný nativní dotaz (`run_native_query`). Slabý model tento nástroj nedostane.
+   - Nativní dotaz: token jen pro čtení, povinný časový rozsah, limit řádků a času; uložit jako provenance.
+   - U InfluxDB 3 cílit na SQL (DataFusion), ne na InfluxQL nebo Flux.
+2. **Operátory pro časové řady patří do enginu** (staví uživatel): převzorkování (`resample`), doplnění mezer (`gapfill`), zpoždění (`lag`), rychlost změny (`rate`), případně klouzavé okno. Engine je přeloží podle toho, co backend umí; co backend neumí, spočítá v DuckDB.
+3. **Rozdělení dat mezi dvě databáze, pokud to nebude moc práce:** minutová data (`fact_hive_minute`, 36 mil. řádků; surová data 5–10 s nejsou stažena) v databázi časových řad, hodinové a hrubší agregáty a kontext v DuckDB.
+   - Sémantická vrstva musí u každé tabulky uvést backend; engine podle toho směruje dotaz.
+   - Spojení přes obě databáze: nejdřív agregace v databázi časových řad, pak spojení v DuckDB.
+   - Priorita podle vedoucího zůstává: až po vysvětlení a myšlenkovém postupu agenta nad DuckDB.
+4. **Evaluace:** jak často a na který stupeň žebříčku agent eskaluje, úspěšnost na každém stupni, podíl claimů z nativních dotazů.
+
+**Otevřené:**
+- míra důvěry claimů podle zdroje (engine / volné SQL / nativní dotaz): zobrazit v UI, nebo jen v provenance (návrh: v UI jako nenápadné označení, sedí to na hlavní myšlenku ověřitelnosti),
+- jestli sqlglot umí dialekt DataFusion (ověřit),
+- jak popsat databázi časových řad v sémantické vrstvě (measurement, tagy, fields → dimenze a míry).

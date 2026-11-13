@@ -50,6 +50,12 @@ Monitoring úlů (precision beekeeping) [NOVÉ, rev. 4]
 Vizualizace časových řad
 30. Aigner, W., Miksch, S., Schumann, H., Tominski, C. — Visualization of Time-Oriented Data Springer, 2011 (2. vydání 2023 ⚠ ověřit) ⚠ https://doi.org/10.1007/978-0-85729-079-3 — ověřit Standardní monografie k bodu 2 zadání. Taxonomie vizualizací časových dat; z přehledu technik (TimeViz Browser) si vyber ty relevantní pro senzorová data. Online katalog technik: https://browser.timeviz.net/
 98. Bach, B., Freeman, E., Abdul-Rahman, A., Turkay, C., Khan, S., Fan, Y., Chen, M. — Dashboard Design Patterns [NOVÉ, 5. 11. 2026] IEEE TVCG 29(1):342–352, 2023 (VIS 2022) DOI: https://doi.org/10.1109/TVCG.2022.3209448 Popisy vzorů: https://dashboarddesignpatterns.github.io 42 návrhových vzorů a 6 žánrů dashboardů z korpusu 144 dashboardů, model kompromisů abstrakce – plocha – stránky – interakce. Opora pro návrh vizualizací a rozhraní.
+115. Cleveland, W. S., McGill, R. — Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods [NOVÉ, 13. 11. 2026] Journal of the American Statistical Association 79(387):531–554, 1984 ⚠ https://doi.org/10.1080/01621459.1984.10478080 — ověřit Pořadí přesnosti vizuálních kódování (poloha > délka > úhel > plocha > barva). Opora bodu „zobrazení přizpůsobené lidskému vnímání“ v požadavcích na vizualizaci. Stáhnout jako první z této skupiny.
+116. Munzner, T. — Visualization Analysis and Design [NOVÉ, 13. 11. 2026] A K Peters/CRC Press, 2014 ⚠ ověřit ISBN Rámec expresivity a efektivity kódování, pořadí vizuálních kanálů. Stáhnout spolu s 115; číst kapitoly 5 (Marks and Channels) a referenčně.
+117. Healey, C. G., Enns, J. T. — Attention and Visual Memory in Visualization and Computer Graphics [NOVÉ, 13. 11. 2026] IEEE TVCG 18(7):1170–1188, 2012 ⚠ https://doi.org/10.1109/TVCG.2011.127 — ověřit Preatentivní rysy; zvýraznění anomálie v grafu.
+118. Isenberg, P., Bezerianos, A., Dragicevic, P., Fekete, J.-D. — A Study on Dual-Scale Data Charts [NOVÉ, 13. 11. 2026] IEEE TVCG 17(12):2469–2478, 2011 ⚠ https://doi.org/10.1109/TVCG.2011.160 — ověřit Grafy se dvěma osami Y; argument pro small multiples při srovnání úlu s kontextem.
+119. Cleveland, W. S., McGill, M. E., McGill, R. — The Shape Parameter of a Two-Variable Graph [NOVÉ, 13. 11. 2026] Journal of the American Statistical Association 83(402):289–300, 1988 ⚠ https://doi.org/10.1080/01621459.1988.10478598 — ověřit Poměr stran čárového grafu a vnímání sklonu (banking to 45°). Volitelné.
+120. Nielsen, J., Molich, R. — Heuristic Evaluation of User Interfaces [NOVÉ, 13. 11. 2026] Proceedings of CHI '90, ACM, 1990, s. 249–256 ⚠ https://doi.org/10.1145/97243.97281 — ověřit Heuristiky použitelnosti (konzistence a standardy, rozpoznání místo vybavování). Opora bodů o známém vzhledu a jednotném vizuálním jazyce v návrhu UI. Stáhnout.
 Vysvětlování anomálií a dotazů
 31. Yan, S. et al. — CMMD: Cross-Metric Multi-Dimensional Root Cause Analysis ACM SIGKDD 2022, s. 4310–4320 ⚠ https://dl.acm.org/doi/10.1145/3534678.3539236 — ověřit Preprint: https://arxiv.org/abs/2203.11141 ⚠ ověřit
 32. Roy, S., Suciu, D. — A Formal Approach to Finding Explanations for Database Queries ACM SIGMOD 2014, s. 1579–1590 DOI: https://doi.org/10.1145/2588555.2588578 Volné PDF: https://homes.cs.washington.edu/~suciu/main_explanation.pdf Formální rámec intervence: vysvětlení = odebrání n-tic, které významně mění výsledek dotazu.
@@ -155,10 +161,10 @@ Datasety a datové zdroje citovat s verzí a datem přístupu. Dokumentace nást
 
 MAPOVÁNÍ NA BODY ZADÁNÍ
 Bod 1 — IoT, chytrá zařízení, časové řady: 8, 9, 10, 11, 12, 13, 14, 26, 27, 28, 29, 71, 72, 100, 102
-Bod 2a — vizualizace a nástroje pro analýzu časových řad: 30, 57, 58, 75, 76, 90, 98
+Bod 2a — vizualizace a nástroje pro analýzu časových řad: 30, 57, 58, 75, 76, 90, 98, 115, 116, 117, 118, 119
 Bod 2b — LLM nad daty: 6, 7, 16, 19, 20, 21, 22, 43, 44, 45, 46, 47, 48, 61, 81, 97, 104, 105, 106
 Bod 3 — OLAP nad časovými řadami, požadavky na LLM augmentaci: 1, 2, 3, 4, 5, 15, 17, 24, 35, 36, 37, 38, 39, 40, 67, 68, 100, 101, 103, 107, 110, 111, 112, 113, 114
-Bod 4 — návrh platformy, vysvětlování dotazů, lokální vs. cloudové modely: 19, 25, 34, 56, 83, 90, 98, 99, 103
+Bod 4 — návrh platformy, vysvětlování dotazů, lokální vs. cloudové modely: 19, 25, 34, 56, 83, 90, 98, 99, 103, 109, 120
 Bod 6a — uživatelské testování, scénáře, Likertova škála: 23, 65, 66, 108, 109
 Bod 6b — srovnání modelů (výkonnost, kvalita analýzy): 41, 42, 62, 63, 64, 84
 
