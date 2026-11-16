@@ -7,7 +7,7 @@ venue: Apidologie 46(1), 10–22
 kind: journal
 status: confirmed
 verified: true
-precteno: ne
+precteno: prolet
 chapters: []
 concepts:
   - hive-monitoring

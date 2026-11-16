@@ -28,6 +28,7 @@ views:
       - status
       - verified
       - formula.hotovo
+      - precteno
   - type: table
     name: Neověřené
     filters:

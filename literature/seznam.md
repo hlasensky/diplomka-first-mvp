@@ -57,6 +57,7 @@ Vizualizace časových řad
 119. Cleveland, W. S., McGill, M. E., McGill, R. — The Shape Parameter of a Two-Variable Graph [NOVÉ, 13. 11. 2026] Journal of the American Statistical Association 83(402):289–300, 1988 ⚠ https://doi.org/10.1080/01621459.1988.10478598 — ověřit Poměr stran čárového grafu a vnímání sklonu (banking to 45°). Volitelné.
 120. Nielsen, J., Molich, R. — Heuristic Evaluation of User Interfaces [NOVÉ, 13. 11. 2026] Proceedings of CHI '90, ACM, 1990, s. 249–256 ⚠ https://doi.org/10.1145/97243.97281 — ověřit Heuristiky použitelnosti (konzistence a standardy, rozpoznání místo vybavování). Opora bodů o známém vzhledu a jednotném vizuálním jazyce v návrhu UI. Stáhnout.
 Vysvětlování anomálií a dotazů
+121. Miller, T. — Explanation in Artificial Intelligence: Insights from the Social Sciences [NOVÉ, 15. 11. 2026] Artificial Intelligence 267:1–38, 2019 ⚠ https://doi.org/10.1016/j.artint.2018.07.007 — ověřit Jak lidé vysvětlení chápou: kontrastivní (proč X, a ne Y), selektivní (několik hlavních příčin), příčiny místo pravděpodobností, vysvětlení jako rozhovor. Rámec pro to, jak platforma podává vysvětlení (DIFF jako kontrastivní vysvětlení, strop počtu insightů, navazující otázky). Stáhnout; stačí číst kapitoly s hlavními závěry.
 31. Yan, S. et al. — CMMD: Cross-Metric Multi-Dimensional Root Cause Analysis ACM SIGKDD 2022, s. 4310–4320 ⚠ https://dl.acm.org/doi/10.1145/3534678.3539236 — ověřit Preprint: https://arxiv.org/abs/2203.11141 ⚠ ověřit
 32. Roy, S., Suciu, D. — A Formal Approach to Finding Explanations for Database Queries ACM SIGMOD 2014, s. 1579–1590 DOI: https://doi.org/10.1145/2588555.2588578 Volné PDF: https://homes.cs.washington.edu/~suciu/main_explanation.pdf Formální rámec intervence: vysvětlení = odebrání n-tic, které významně mění výsledek dotazu.
 33. AXIS — vysvětlitelná detekce anomálií v časových řadách pomocí LLM arXiv 2025 https://arxiv.org/abs/2509.24378 Jediný zdroj pokrývající průnik pilířů 2 a 3. [rev. 4: sníženo z úrovně 1 — arXiv bez recenze, nestavět na tom argument]
@@ -164,7 +165,7 @@ Bod 1 — IoT, chytrá zařízení, časové řady: 8, 9, 10, 11, 12, 13, 14, 26
 Bod 2a — vizualizace a nástroje pro analýzu časových řad: 30, 57, 58, 75, 76, 90, 98, 115, 116, 117, 118, 119
 Bod 2b — LLM nad daty: 6, 7, 16, 19, 20, 21, 22, 43, 44, 45, 46, 47, 48, 61, 81, 97, 104, 105, 106
 Bod 3 — OLAP nad časovými řadami, požadavky na LLM augmentaci: 1, 2, 3, 4, 5, 15, 17, 24, 35, 36, 37, 38, 39, 40, 67, 68, 100, 101, 103, 107, 110, 111, 112, 113, 114
-Bod 4 — návrh platformy, vysvětlování dotazů, lokální vs. cloudové modely: 19, 25, 34, 56, 83, 90, 98, 99, 103, 109, 120
+Bod 4 — návrh platformy, vysvětlování dotazů, lokální vs. cloudové modely: 19, 25, 34, 56, 83, 90, 98, 99, 103, 109, 120, 121
 Bod 6a — uživatelské testování, scénáře, Likertova škála: 23, 65, 66, 108, 109
 Bod 6b — srovnání modelů (výkonnost, kvalita analýzy): 41, 42, 62, 63, 64, 84
 

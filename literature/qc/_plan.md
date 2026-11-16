@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-11-13
+generated: 2026-11-15
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -13,8 +13,8 @@ generated: 2026-11-13
 
 | úroveň | položek | v Zoteru | poznámka | čteno víc než abstrakt | čteno celé | ověřeno |
 |---|---|---|---|---|---|---|
-| 1 povinné | 25 | 22 | 22 | 4 | 1 | 4 |
-| 2 důležité | 57 | 16 | 16 | 0 | 0 | 2 |
+| 1 povinné | 25 | 24 | 24 | 4 | 1 | 4 |
+| 2 důležité | 58 | 17 | 17 | 0 | 0 | 2 |
 | 3 doplňkové | 24 | 7 | 7 | 0 | 0 | 0 |
 | nástroje a data | 14 | 9 | 9 | 1 | 0 | 1 |
 
@@ -33,7 +33,7 @@ generated: 2026-11-13
 | 9 | John, P. — Optimising processes in IoT [NOVÉ, rev. 4] Pojednání o tématu disertační práce,… | – | chybí v Zoteru |
 | 10 | Senger, D., Gruber, C., Kluss, T., Johannsen, C. — Weight, Temperature and Humidity Sensor… | [[sengerWeightTemperatureHumidity2024]] | ✅ ověřeno · čteno: prolet · QC PASS s varováními |
 | 11 | Al-Fuqaha, A. et al. — Internet of Things: A Survey on Enabling Technologies, Protocols, a… | [[al-fuqahaInternetThingsSurvey2015]] | candidate · čteno: ne · QC PASS s varováními |
-| 12 | Hyndman, R. J., Athanasopoulos, G. — Forecasting: Principles and Practice, 3. vydání [NOVÉ… | – | chybí v Zoteru |
+| 12 | Hyndman, R. J., Athanasopoulos, G. — Forecasting: Principles and Practice, 3. vydání [NOVÉ… | [[hyndmanForecastingPrinciplesPractice2021]] | candidate · čteno: ne · QC PASS s varováními |
 | 13 | Blázquez-García, A. et al. — A Review on Outlier/Anomaly Detection in Time Series Data [PO… | [[blazquez-garciaReviewOutlierAnomaly2021]] | candidate · čteno: ne · QC PASS |
 | 14 | Jensen, S. K., Pedersen, T. B., Thomsen, C. — Time Series Management Systems: A Survey IEE… | [[jensenTimeSeriesManagement2017]] | candidate · čteno: ne · QC PASS |
 | 15 | Francia, M., Gallinucci, E., Golfarelli, M. — COOL: A Framework for Conversational OLAP, I… | [[franciaCOOLFrameworkConversational2022]] | ✅ ověřeno · čteno: prolet · QC PASS s varováními |
@@ -43,12 +43,12 @@ generated: 2026-11-13
 | 19 | Yao, S. et al. — ReAct: Synergizing Reasoning and Acting in Language Models ICLR 2023 arXi… | [[yaoReActSynergizingReasoning2023a]] | candidate · čteno: ne · QC PASS s varováními |
 | 20 | BIRD — benchmark pro Text-to-SQL nad rozsáhlými reálnými databázemi NeurIPS 2023 https://a… | [[liCanLLMAlready2023a]] | candidate · čteno: ne · QC PASS s varováními |
 | 21 | Lei, F. et al. — Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-S… | [[leiSpider20Evaluating2025]] | candidate · čteno: ne · QC PASS s varováními |
-| 22 | Schulhoff, S. et al. — The Prompt Report: A Systematic Survey of Prompt Engineering Techni… | – | chybí v Zoteru |
+| 22 | Schulhoff, S. et al. — The Prompt Report: A Systematic Survey of Prompt Engineering Techni… | [[schulhoffPromptReportSystematic2025]] | candidate · čteno: ne · QC PASS s varováními |
 | 23 | Lewis, J. R. — The System Usability Scale: Past, Present, and Future [NOVÉ] International … | [[lewisSystemUsabilityScale2018]] | candidate · čteno: ne · QC PASS |
 | 24 | Lenz, H.-J., Shoshani, A. — Summarizability in OLAP and Statistical Data Bases [NOVÉ, rev.… | [[lenzSummarizabilityOLAPStatistical1997]] | ✅ ověřeno · čteno: prolet · QC PASS |
 | 25 | Buneman, P., Khanna, S., Tan, W.-C. — Why and Where: A Characterization of Data Provenance… | [[bunemanWhyWhereCharacterization2001]] | candidate · čteno: ne · QC PASS |
 
-### Úroveň 2 důležité (57)
+### Úroveň 2 důležité (58)
 
 | č. | položka | citekey | stav |
 |---|---|---|---|
@@ -109,6 +109,7 @@ generated: 2026-11-13
 | 118 | Isenberg, P., Bezerianos, A., Dragicevic, P., Fekete, J.-D. — A Study on Dual-Scale Data C… | – | chybí v Zoteru |
 | 119 | Cleveland, W. S., McGill, M. E., McGill, R. — The Shape Parameter of a Two-Variable Graph … | – | chybí v Zoteru |
 | 120 | Nielsen, J., Molich, R. — Heuristic Evaluation of User Interfaces [NOVÉ, 13. 11. 2026] Pro… | – | chybí v Zoteru |
+| 121 | Miller, T. — Explanation in Artificial Intelligence: Insights from the Social Sciences [NO… | [[millerExplanationArtificialIntelligence2019]] | candidate · čteno: ne · QC PASS s varováními |
 
 ### Úroveň 3 doplňkové (24)
 
