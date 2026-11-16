@@ -17,6 +17,8 @@ cases:
     expected: {measures: [{measure: ndvi, agg: avg}], group_by: [month]}
   - question: "When did each forage plant start flowering on average per year?"
     expected: {measures: [{measure: bloom_doy, agg: avg}], group_by: [plant, year]}
+  - question: "When did late-ripening apple trees start flowering near the hives in 2021?"
+    expected: {measures: [{measure: bloom_doy, agg: avg}], group_by: [cell_id], filters: {plant: "apple (late ripening)", year: 2021}}
   - question: "What share of arable land is oilseed rape around each location?"
     expected: {measures: [{measure: crop_share_pct, agg: avg}], group_by: [cell_id], filters: {crop: winter_rape}}
   - question: "What is the average rapeseed yield by district?"

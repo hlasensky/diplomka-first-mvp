@@ -362,13 +362,19 @@ WHERE ndvi_raw > -3000;   -- fill value
 -- 9) PHENOLOGY: DWD annual reporters, phase 5 = beginning of flowering.
 --    Quality byte (Eintrittsdatum_QB): 1 no objection, 2 corrected, 3 objection rejected
 --    are kept; 5 doubtful and 8 incorrect are dropped.
+--    bloom_doy is computed from the date: DWD's Jultag column skips 29 February, so after it
+--    it is one day short in leap years (all 2016 and 2020 rows).
+--    Apple: the generic series (plant 310) ends in 2016, so the early (311) and late (313)
+--    ripening series are kept as two plants; early-ripening varieties flower a few days earlier.
 -- ---------------------------------------------------------------------------
 CREATE OR REPLACE TABLE dim_plant AS
 SELECT * FROM (VALUES
     (205, 'Winterraps',   'winter oilseed rape', 'crop', 'spring', true),
     (120, 'Löwenzahn',    'dandelion',           'herb', 'spring', true),
     (121, 'Robinie',      'black locust',        'tree', 'early summer', true),
-    (130, 'Sommer-Linde', 'large-leaved lime',   'tree', 'summer', true)
+    (130, 'Sommer-Linde', 'large-leaved lime',   'tree', 'summer', true),
+    (311, 'Apfel, frühe Reife', 'apple (early ripening)', 'tree', 'spring', true),
+    (313, 'Apfel, späte Reife', 'apple (late ripening)',  'tree', 'spring', true)
 ) AS t(plant_id, plant_de, plant, plant_group, flow_period, is_bee_forage);
 
 CREATE OR REPLACE TABLE dim_station AS
@@ -394,10 +400,11 @@ SELECT
     trim(column1)::INTEGER                          AS year,
     trim(column3)::INTEGER                          AS plant_id,
     strptime(trim(column5), '%Y%m%d')::DATE         AS bloom_date,
-    trim(column7)::INTEGER                          AS bloom_doy,
+    dayofyear(strptime(trim(column5), '%Y%m%d'))    AS bloom_doy,
     trim(column6)::INTEGER                          AS quality_byte
 FROM read_csv(['phenology/Winterraps.txt', 'phenology/Loewenzahn.txt',
-               'phenology/Robinie.txt', 'phenology/Sommer-Linde.txt'],
+               'phenology/Robinie.txt', 'phenology/Sommer-Linde.txt',
+               'phenology/Apfel_fruehe_Reife.txt', 'phenology/Apfel_spaete_Reife.txt'],
               delim = ';', header = false, skip = 1,
               null_padding = true, quote = '',
               columns = {'column0': 'VARCHAR', 'column1': 'VARCHAR', 'column2': 'VARCHAR',
@@ -736,6 +743,16 @@ SELECT * FROM (
            (SELECT count(*) FROM (SELECT district_id, year, crop FROM fact_crop_yield GROUP BY ALL HAVING count(*) > 1))
     UNION ALL SELECT 'dim_station grain',
            (SELECT count(*) FROM (SELECT station_id FROM dim_station GROUP BY ALL HAVING count(*) > 1))
+    UNION ALL SELECT 'fact_bloom_phenology grain',
+           (SELECT count(*) FROM (SELECT station_id, year, plant_id FROM fact_bloom_phenology GROUP BY ALL HAVING count(*) > 1))
+    UNION ALL SELECT 'agg_cell_bloom grain',
+           (SELECT count(*) FROM (SELECT cell_id, year, plant_id FROM agg_cell_bloom GROUP BY ALL HAVING count(*) > 1))
+    UNION ALL SELECT 'fact_bloom_phenology -> dim_plant',
+           (SELECT count(*) FROM fact_bloom_phenology f ANTI JOIN dim_plant p USING (plant_id))
+    UNION ALL SELECT 'every plant has phenology rows',
+           (SELECT count(*) FROM dim_plant p ANTI JOIN (SELECT DISTINCT plant_id FROM fact_bloom_phenology) f USING (plant_id))
+    UNION ALL SELECT 'bloom_date = first day of the year + bloom_doy - 1',
+           (SELECT count(*) FROM agg_cell_bloom WHERE dayofyear(bloom_date) <> bloom_doy)
     UNION ALL SELECT 'crop area: 400 districts x 2 years',
            (SELECT abs(count(DISTINCT (district_id, year)) - 800) FROM fact_crop_area)
     UNION ALL SELECT 'crop yield: 400 districts x 10 years (city states may lack rows)',

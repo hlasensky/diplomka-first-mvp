@@ -58,6 +58,13 @@ glossary:
     - term: flowering onset
       synonyms: [bloom start, start of flowering, bloom date]
       maps_to: { measure: bloom_doy }
+    - term: apple bloom
+      synonyms: [apple blossom, apple flowering, apple trees in bloom]
+      maps_to:
+          {
+              measure: bloom_doy,
+              note: "two series: plant 'apple (early ripening)' and 'apple (late ripening)'; show both unless the user names one",
+          }
     - term: oilseed rape
       synonyms: [rapeseed, canola, rape]
       maps_to: { dimension: crop, level: crop, value: winter_rape }
@@ -116,7 +123,10 @@ tables:
     fact_bloom_phenology:
         kind: fact
         grain: [station_id, year, plant_id]
-        description: Flowering onset reported by DWD volunteer observers per station (2016-2022).
+        description: >
+            Flowering onset (DWD phase 5) reported by volunteer observers per station (2016-2022) for winter
+            oilseed rape, dandelion, black locust, large-leaved lime and apple; apple has two series
+            (early and late ripening varieties) stored as two plants.
     agg_cell_bloom:
         kind: aggregate
         grain: [cell_id, year, plant_id]
@@ -702,7 +712,7 @@ dimensions:
                 {
                     label: forage plant,
                     domain: from_data,
-                    note: "English name, e.g. 'winter oilseed rape'",
+                    note: "English name, e.g. 'winter oilseed rape'; apple is split into 'apple (early ripening)' and 'apple (late ripening)'",
                 }
             flow_period: { label: typical flow period, domain: from_data }
     crop:
@@ -940,7 +950,7 @@ measures:
         label: flowering onset (day of year)
         unit: day of year
         additivity: { time: [avg, median, min, max], geography: [avg, median, min, max] }
-        description: Earlier = smaller; compare years or locations for one plant at a time.
+        description: Day of year of the date (leap years counted); earlier = smaller; compare years or locations for one plant at a time.
     n_stations:
         column: n_stations
         tables: [agg_cell_bloom]

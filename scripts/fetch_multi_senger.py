@@ -63,7 +63,8 @@ META = {
     },
     "phenology": {
         "description": "DWD phenological observations (annual reporters, historical): flowering dates of winter rape, "
-                       "black locust, small-leaved lime, dandelion; station list and phase/plant code tables.",
+                       "black locust, large-leaved lime, dandelion, apple (early and late ripening); station list and "
+                       "phase/plant code tables.",
         "license": "CC BY 4.0 (DWD Climate Data Center terms of use, May 2024)",
         "license_url": "https://opendata.dwd.de/climate_environment/CDC/Terms_of_use.pdf",
         "citation": "Deutscher Wetterdienst, Climate Data Center; Kaspar et al. (2014), Adv. Sci. Res. 11:93-99",
@@ -207,6 +208,9 @@ def phenology() -> None:
         "Robinie.txt": obs + "wild/historical/PH_Jahresmelder_Wildwachsende_Pflanze_Robinie_1935_2024_hist.txt",
         "Sommer-Linde.txt": obs + "wild/historical/PH_Jahresmelder_Wildwachsende_Pflanze_Sommer-Linde_1925_2024_hist.txt",
         "Loewenzahn.txt": obs + "wild/historical/PH_Jahresmelder_Wildwachsende_Pflanze_Loewenzahn_1925_2024_hist.txt",
+        # apple: the generic series (plant 310) ends in 2016, so the early and late ripening series are used
+        "Apfel_fruehe_Reife.txt": obs + "fruit/historical/PH_Jahresmelder_Obst_Apfel_fruehe_Reife_1929_2024_hist.txt",
+        "Apfel_spaete_Reife.txt": obs + "fruit/historical/PH_Jahresmelder_Obst_Apfel_spaete_Reife_1925_2024_hist.txt",
         "stations.txt": base + "help/PH_Beschreibung_Phaenologie_Stationen_Jahresmelder.txt",
         "phases.txt": base + "help/PH_Beschreibung_Phase.txt",
         "plants.txt": base + "help/PH_Beschreibung_Pflanze.txt",
