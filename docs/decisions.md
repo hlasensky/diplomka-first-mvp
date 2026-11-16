@@ -170,3 +170,26 @@ Stručný log rozhodnutí. Data jsou popsaná v [data.md](data.md).
 - míra důvěry claimů podle zdroje (engine / volné SQL / nativní dotaz): zobrazit v UI, nebo jen v provenance (návrh: v UI jako nenápadné označení, sedí to na hlavní myšlenku ověřitelnosti),
 - jestli sqlglot umí dialekt DataFusion (ověřit),
 - jak popsat databázi časových řad v sémantické vrstvě (measurement, tagy, fields → dimenze a míry).
+
+## 2026-11-14 – více operátorů v jednom tahu
+
+1. **`apply_operator` přijme posloupnost 1–3 operátorů.** Složené zadání („a co v roce 2021 po okresech?“ = slice + drill-down) model vyplní jedním voláním nástroje se seznamem.
+   - Engine je aplikuje postupně: `reduce(lambda q, op: op(q), ops, session.current)`; operátory jsou čisté funkce `CubeQuery -> CubeQuery`.
+   - `check_query` kontroluje jen výsledný dotaz, mezikrok smí být neplatný.
+   - Pořadí určí model; engine smí srovnat jen nezávislé kroky (filtry před změnou úrovní).
+   - `OperatorError` nese index operátoru, který selhal, aby model opravil jen ten.
+   - Session uloží jeden krok se seznamem operátorů: zpět i provenance po celých tazích.
+   - Víc než 3 operátory -> engage (nový `CubeQuery` s aktuálním dotazem jako kontextem).
+2. **Hranice vůči `investigate`:** posloupnost operátorů je jedno zadání o více částech; smyčka je pro postup, který předem neznáme.
+3. **Evaluace:** přesnost navigace na úrovni celé posloupnosti (správné operátory i pořadí).
+
+## 2026-11-15 – jabloň ve fenologii a oprava dne v roce
+
+1. **Jabloň je v `multi-senger` jako dvě rostliny:** `apple (early ripening)` (DWD 311) a `apple (late ripening)` (DWD 313). Obecná řada jabloně (310) končí rokem 2016, takže pro roky úlů 2019–2022 nemá data.
+   - Fáze 5 (začátek kvetení) má u ovoce stejný kód jako u ostatních druhů. Původní poznámka „ovoce má jiné kódy fází“ byla mylná.
+   - Odrůdové řady se neslučují: grain stanice × rok × rostlina zůstává a model porovnává vždy jednu rostlinu. Raná odrůda kvete v mediánu o 3–5 dní dřív.
+   - Pokrytí 2019–2022: obě řady u všech 34 buněk (136/136 buňka × rok do 25 km), ~760 a ~850 stanic za rok.
+   - `scripts/fetch_multi_senger.py` stahuje oba soubory z `fruit/historical` (výjimka z pravidla skillu, se souhlasem uživatele); opraven i popis (Sommer-Linde = large-leaved lime).
+2. **`bloom_doy` se počítá z data**, ne ze sloupce DWD `Jultag`, který vynechává 29. únor a v přestupných letech je po něm o 1 menší (všechny řádky 2016 a 2020).
+   - Změnilo to `agg_cell_bloom.bloom_date` za rok 2020 o +1 den (na skutečné datum) a výsledek příkladu EX6: přírůstek po začátku kvetení řepky +0,371 kg/den (dříve +0,359), před ním −0,017 (dříve −0,016). Golden snapshot EX6 aktualizován se souhlasem uživatele.
+3. **Nové kontroly v sekci 99:** grain `fact_bloom_phenology` a `agg_cell_bloom`, cizí klíč na `dim_plant`, každá rostlina má data, `bloom_date` odpovídá `bloom_doy`.

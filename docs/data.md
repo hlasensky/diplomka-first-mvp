@@ -23,7 +23,7 @@ Stahuje je `scripts/fetch_multi_senger.py` do `data/raw/multi-senger/` (mimo git
 |---|---|---|---|---|
 | `dim_geo` (okresy, spolkové země) | BKG VG250 Ebenen 31.12., GeoPackage UTM32s, licence dl-de/by-2-0 | [vg250_12-31.utm32s.gpkg.ebenen.zip](https://daten.gdz.bkg.bund.de/produkte/vg/vg250_ebenen_1231/aktuell/vg250_12-31.utm32s.gpkg.ebenen.zip) | polygon okresu / země | ✅ staženo |
 | `fact_weather` | Open-Meteo archive (ERA5, nejbližší bod) | [API](https://open-meteo.com/en/docs/historical-weather-api) | buňka × hodina | ✅ staženo (34 lokalit) |
-| `fact_bloom_phenology` + `dim_station` | DWD fenologie, Jahresmelder, fáze 5 = začátek kvetení | [data](https://opendata.dwd.de/climate_environment/CDC/observations_germany/phenology/annual_reporters/), [stanice](https://opendata.dwd.de/climate_environment/CDC/help/PH_Beschreibung_Phaenologie_Stationen_Jahresmelder.txt), [fáze](https://opendata.dwd.de/climate_environment/CDC/help/PH_Beschreibung_Phase.txt) | stanice × rok × druh | ✅ staženo (řepka, akát, lípa, pampeliška) |
+| `fact_bloom_phenology` + `dim_station` | DWD fenologie, Jahresmelder, fáze 5 = začátek kvetení | [data](https://opendata.dwd.de/climate_environment/CDC/observations_germany/phenology/annual_reporters/), [stanice](https://opendata.dwd.de/climate_environment/CDC/help/PH_Beschreibung_Phaenologie_Stationen_Jahresmelder.txt), [fáze](https://opendata.dwd.de/climate_environment/CDC/help/PH_Beschreibung_Phase.txt) | stanice × rok × druh | ✅ staženo (řepka, akát, lípa, pampeliška, jabloň raná a pozdní; jabloň z `fruit/historical`, staženo 15. 11. 2026) |
 | `fact_vegetation` | MODIS MOD13Q1 NDVI, ORNL DAAC REST | [služba](https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1252), `https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset` | buňka × 16 dní | ✅ staženo (92 termínů 2019–2022) |
 | `fact_country_apiculture` (úly, med) | FAOSTAT QCL, položky Bees (stocks) a Natural honey | [bulk zip](https://bulks-faostat.fao.org/production/Production_Crops_Livestock_E_All_Data_(Normalized).zip) | země × rok | ✅ staženo, filtr na Německo |
 | `fact_country_apiculture` (úly na farmách) | Eurostat `ef_lsk_bees` | [databrowser](https://ec.europa.eu/eurostat/databrowser/view/ef_lsk_bees/default/table) | NUTS2 × rok šetření | ❌ nepoužívá se ([rozhodnutí 9](decisions.md)): z období dat jen rok 2020 |
@@ -39,7 +39,10 @@ Pokrytí stanicemi DWD u 34 lokalit úlů, začátek kvetení v letech 2019–20
 | Akát (Robinie) | ~725 | 9 / 24 km | 32/34 |
 | Lípa (Sommer-Linde) | ~850 | 9 / 20 km | 33/34 |
 | Pampeliška (Löwenzahn) | ~990 | 9 / 20 km | 33/34 |
-| Jabloň | – | – | ovoce má jiné kódy fází, dořešit |
+| Jabloň, raná odrůda (Apfel, frühe Reife) | ~760 | 9 / 20 km | 31/34 |
+| Jabloň, pozdní odrůda (Apfel, späte Reife) | ~850 | 9 / 20 km | 31/34 |
+
+Obecná řada jabloně (kód rostliny 310) končí rokem 2016, proto se berou odrůdové řady 311 a 313 jako dvě rostliny. Fáze kvetení mají stejný kód (5) jako ostatní druhy; raná odrůda kvete v mediánu o 3–5 dní dřív. Vzdálenost = nejbližší stanice s pozorováním v letech 2019–2022 pro každou lokalitu.
 
 ## Schéma packu `multi-senger` (fact constellation)
 
@@ -58,8 +61,8 @@ Build: `DATASET=multi-senger uv run python scripts/build_db.py` (asi 20 s). Kód
 | `fact_weather` | buňka × hodina | 1 068 960 | `air_temp_c`, `precip_mm`, `rain_mm`, `wind_kmh`, `radiation_wm2`, `air_rh_pct` |
 | `agg_weather_daily` | buňka × den | 44 540 | `air_temp_avg/min/max_c`, `precip_mm`, `rain_hours`, `radiation_kwh_m2`, `wind_avg_kmh`, `air_rh_avg_pct`, `n_hours` |
 | `fact_vegetation` | buňka × 16denní kompozit | 3 128 | `ndvi` |
-| `fact_bloom_phenology` | stanice × rok × druh | 22 678 | `bloom_date`, `bloom_doy`, `quality_byte` (roky 2016–2022, QB 1/2/3) |
-| `agg_cell_bloom` | buňka × rok × druh | 930 | medián `bloom_doy` přes stanice do 25 km, `n_stations`, `nearest_station_km` |
+| `fact_bloom_phenology` | stanice × rok × druh | 34 203 | `bloom_date`, `bloom_doy` (den v roce z data), `quality_byte` (roky 2016–2022, QB 1/2/3) |
+| `agg_cell_bloom` | buňka × rok × druh | 1 406 | medián `bloom_doy` přes stanice do 25 km, `n_stations`, `nearest_station_km` |
 | `fact_crop_area` | okres × rok × plodina | 13 600 | `area_ha`, `value_status` (2016, 2020) |
 | `fact_crop_yield` | okres × rok × plodina | 40 000 | `yield_dt_ha`, `value_status` (2016–2025) |
 | `agg_cell_crop` | buňka × rok × plodina | 2 800 | `crop_share_pct`, `share_coverage`, `yield_w_dt_ha`, `yield_coverage` (vážené přes okresy buňky) |
@@ -78,8 +81,8 @@ Build: `DATASET=multi-senger uv run python scripts/build_db.py` (asi 20 s). Kód
 | `dim_bee_winter` | 5 | zimy 2018/19–2022/23, `winter_start`/`winter_end`, `has_full_hive_data` (2018/19 a 2022/23 bez úplných dat z úlů) |
 | `dim_time` | 31 440 | hodina → `date` (FK na `dim_date`), atributy dne denormalizované; jen pro hodinové fakty |
 | `dim_date` | 1 637 | den (2019-01-01 až 2023-06-25, konec = poslední inspekce) → týden → měsíc → rok; `season`, `is_beekeeping_season`, `bee_winter` (říjen–březen); pro denní fakty a data událostí |
-| `dim_station` | 6 627 | fenologická stanice DWD (`lat`, `lon`, výška, země) |
-| `dim_plant` | 4 | řepka, pampeliška, akát, lípa; skupina, období snůšky |
+| `dim_station` | 6 625 | fenologická stanice DWD (`lat`, `lon`, výška, země) |
+| `dim_plant` | 6 | řepka, pampeliška, akát, lípa, jabloň raná, jabloň pozdní; skupina, období snůšky |
 | `dim_crop` | 19 | plodina → `parent_crop`, `is_bee_forage` (plodiny jsou vnořené) |
 | `dim_event_type`, `dim_sensor_position` | 6, 6 | jako v `senger` |
 
@@ -96,7 +99,7 @@ Build: `DATASET=multi-senger uv run python scripts/build_db.py` (asi 20 s). Kód
 
 Kontrola souvislostí po buildu:
 - Venkovní senzor úlu proti ERA5: korelace 0,90 (po hodinách).
-- Řepka: v 14 dnech před začátkem kvetení v okolí je průměrný denní přírůstek −0,02 kg, ve 14 dnech po něm +0,36 kg (příklad EX6).
+- Řepka: v 14 dnech před začátkem kvetení v okolí je průměrný denní přírůstek −0,02 kg, ve 14 dnech po něm +0,37 kg (příklad EX6; po opravě dne v roce v přestupných letech 15. 11. 2026, dříve +0,36 kg).
 
 ## Pravidla slučování
 
@@ -126,5 +129,5 @@ Původní návrh počítal s US Bee OLAP (USDA, NASS, NOAA). Jsou to ale statist
 - **Plodiny:** plocha řepky v okolí je úplná u 17 z 34 buněk (`share_coverage`). Plochy se počítají podle sídla podniku. Výnosy pro Berlín, Brémy a Hamburk nejsou.
 - **Zimní ztráty** pocházejí ze zdrojů ve stavu `candidate` (neověřené). Počty u zim 2019/20 a 2020/21 jsou z OCR tabulky (s. 4) a nejsou v žádném claimu. Build ověřuje, že sedí s procenty v claimu C2.
 - **Počasí:** ERA5 má rozlišení 31 km (Open-Meteo vrací mřížku 0,25°, tj. ~28 km v zeměpisné šířce), na místní srážky je hrubé. Alternativou jsou stanice DWD.
-- **Fenologie:** pozorují dobrovolníci a stanice je od úlu v mediánu 9–12 km. Přiřazení stanice k úlu je aproximace.
+- **Fenologie:** pozorují dobrovolníci a stanice je od úlu v mediánu 9–12 km. Přiřazení stanice k úlu je aproximace. Sloupec DWD `Jultag` vynechává 29. únor, v přestupných letech je proto po něm o den menší; build počítá `bloom_doy` z data. Jabloň je jen v odrůdových řadách (raná, pozdní), obecná řada končí 2016.
 - **Inspekce:** jsou neúplné. Když událost chybí, neznamená to, že nenastala.
