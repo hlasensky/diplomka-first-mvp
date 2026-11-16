@@ -7,7 +7,9 @@ Návrh podoby rozhovoru chatbota či konverzačního agenta z pohledu uživatele
 
 ## Sources
 - [[silvaUserCentricGuidelinesChatbot2024]] — C2–C3: praktiky textových chatbotů seskupené do přirozenosti, transparentnosti (přiznat nedorozumění, zdůvodnit odpovědi, ukázat schopnosti a omezení) a emocionality plus seznam toho, čemu se vyhnout; C5: rešerše do 2/2022, tedy chatboty před LLM.
+- [[millerExplanationArtificialIntelligence2019]] — C4, C5: vysvětlení jako rozhovor podle Griceových maxim (kvalita, kvantita, relevance, způsob), použitelné i pro vizuální interakci.
 
 ## Související
 - [[conversational-olap]]
+- [[explainable-ai]]
 - [[usability-evaluation]]

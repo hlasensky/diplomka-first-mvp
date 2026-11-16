@@ -1,0 +1,174 @@
+{
+  "citekey": "schulhoffPromptReportSystematic2025",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "We present a detailed vocabulary of 33 vocabulary terms, a taxonomy of 58 LLM prompting techniques, and 40 techniques for other modalities."
+        },
+        {
+          "page": 8,
+          "quote": "we ran a systematic literature review grounded in the PRISMA process"
+        },
+        {
+          "page": 8,
+          "quote": "Our main data sources were arXiv, Semantic Scholar, and ACL."
+        },
+        {
+          "page": 8,
+          "quote": "We accumulate 4,247 unique records from which we extract 1,565 relevant records."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "92f688a1d87d"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "A prompt is an input to a Generative AI model, that is used to guide its output"
+        },
+        {
+          "page": 5,
+          "quote": "A prompt template is a function that contains one or more variables which will be replaced by some media (usually text) to create a prompt."
+        },
+        {
+          "page": 5,
+          "quote": "This prompt can then be considered to be an instance of the template."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "5b28fe5ef6be"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "This is the core intent of the prompt, sometimes simply called the \"intent\"."
+        },
+        {
+          "page": 5,
+          "quote": "Examples, also known as exemplars or shots, act as demonstrations that guide the GenAI to accomplish a task."
+        },
+        {
+          "page": 6,
+          "quote": "Role A Role, also known as a persona (Schmidt et al., 2023; Wang et al., 2023l), is a frequently discussed component"
+        },
+        {
+          "page": 6,
+          "quote": "Additional Information is sometimes called ‘context‘, though we discourage the use of this term as it is overloaded with other meanings in the prompting space"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "be7c1bcb9b4c"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "Structuring outputs may reduce performance on some tasks (Tam et al., 2024)."
+        },
+        {
+          "page": 6,
+          "quote": "flaws in Tam et al. (2024) and show that structuring outputs may actually improve performance."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3892be2d5b6f"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "A prompting technique is a blueprint that describes how to structure a prompt, prompts, or dynamic sequencing of multiple prompts."
+        },
+        {
+          "page": 7,
+          "quote": "A prompting technique may incorporate conditional or branching logic, parallelism, or other architectural considerations spanning multiple prompts."
+        },
+        {
+          "page": 7,
+          "quote": "Prompt engineering is the iterative process of developing a prompt by modifying or changing the prompting technique that you are using"
+        },
+        {
+          "page": 7,
+          "quote": "A prompt chain (activity: prompt chaining) consists of two or more prompt templates used in succession."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "91a7a48b5dee"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "We now present a comprehensive taxonomical ontology of 58 text-based prompting techniques, broken into 6 major categories (Figure 2.2)."
+        },
+        {
+          "page": 8,
+          "quote": "ICL refers to the ability of GenAIs to learn skills and tasks by providing them with exemplars and or relevant instructions within the prompt, without the need for weight updates/retraining"
+        },
+        {
+          "page": 9,
+          "quote": "Figure 2.2: All text-based prompting techniques from our dataset."
+        }
+      ],
+      "note": "Názvy šesti kategorií jsou jen v Obr. 2.2 (s. 9); zero-shot je tam číslován jako podsekce ICL (2.2.1.3), ale graficky tvoří samostatnou větev.",
+      "fix": "",
+      "claim_sha": "c7844f4c50cb"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 18,
+          "quote": "Answer engineering is the iterative process of developing or selecting among algorithms that extract precise answers from LLM outputs."
+        },
+        {
+          "page": 18,
+          "quote": "There are three design decisions in answer engineering, the choice of answer space, answer shape, and answer extractor (Figure 2.13)."
+        },
+        {
+          "page": 18,
+          "quote": "This rule is often a simple function (e.g. a regular expression), but can also use a separate LLM to extract the answer."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "f0f2b10623a0"
+    },
+    "C8": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 24,
+          "quote": "systems that serve a user’s goals via actions that engage with systems outside the"
+        },
+        {
+          "page": 24,
+          "quote": "Both symbolic (e.g. calculator, code interpreter) and neural (e.g. a separate LLM) external tools are commonly used."
+        },
+        {
+          "page": 24,
+          "quote": "is one of the simplest formulations of an agent. It contains a LLM router providing access to multiple tools."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "ab05243930cf"
+    }
+  },
+  "stamped": "2026-11-15"
+}

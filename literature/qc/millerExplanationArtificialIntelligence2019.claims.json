@@ -1,0 +1,110 @@
+{
+  "citekey": "millerExplanationArtificialIntelligence2019",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "Explanations are contrastive — they are sought in response to particular counterfactual cases, which are termed foils in this paper."
+        },
+        {
+          "page": 3,
+          "quote": "people do not ask why event P happened, but rather why event P happened instead of some event Q."
+        },
+        {
+          "page": 8,
+          "quote": "This hypothesis is backed up by research suggesting that people tend to ask questions about events or observations that they consider abnormal or unexpected from their own point of view"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "697aef8640b2"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "Explanation are selected (in a biased manner) — people rarely, if ever, expect an explanation that consists of an actual and complete cause of an event."
+        },
+        {
+          "page": 3,
+          "quote": "Humans are adept at selecting one or two causes from a sometimes infinite number of causes to be the explanation."
+        },
+        {
+          "page": 3,
+          "quote": "However, this selection is influenced by certain cognitive biases."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "626450adf053"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "referring to probabilities or statistical relationships in explanation is not as effective as referring to causes."
+        },
+        {
+          "page": 3,
+          "quote": "The most likely explanation is not always the best explanation for a person, and importantly, using statistical generalisations to explain why events occur is unsatisfying, unless accompanied by an underlying causal explanation for the generalisation itself."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "d4895c9c320f"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "Explanations are social — they are a transfer of knowledge, presented as part of a conversation2 or interaction, and are thus presented relative to the explainer’s beliefs about the explainee’s beliefs."
+        },
+        {
+          "page": 29,
+          "quote": "As such, they tend to follow basic rules of conversation, which Hilton argues are captured by Grice’s maxims of conversation [56]: (a) quality; (b) quantity; (c) relation; and (d) manner."
+        },
+        {
+          "page": 29,
+          "quote": "This contains two maxims: (a) make your contribution as informative as is required; and (b) do not make it more informative than is required."
+        },
+        {
+          "page": 29,
+          "quote": "(a) avoid obscurity of expression; (b) avoid ambiguity; (c) be brief (avoid unnecessary prolixity); and (d) be orderly."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2da65d7c9337"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 32,
+          "quote": "However, the models of Hilton [72], Antaki and Leudar [3], and Walton [183] are all independent of language."
+        },
+        {
+          "page": 32,
+          "quote": "Questions could be asked by interacting with a visual object, and answers could similarly be provided in a visual way."
+        },
+        {
+          "page": 32,
+          "quote": "a good visual explanation would display only quality explanations that are relevant and relate to the question — these are exactly Grice’s maxims."
+        },
+        {
+          "page": 32,
+          "quote": "in many scenarios, the explanation will have to be interactive and adhere to maxims of communication, irrelevant of the media used."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "c19058f0349d"
+    }
+  },
+  "stamped": "2026-11-15"
+}

@@ -1,0 +1,162 @@
+{
+  "citekey": "hyndmanForecastingPrinciplesPractice2021",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "A trend exists when there is a long-term increase or decrease in the data. It does not have to be linear."
+        },
+        {
+          "page": 13,
+          "quote": "A seasonal pattern occurs when a time series is affected by seasonal factors such as the time of the year or the day of the week. Seasonality is always of a fixed and known period."
+        },
+        {
+          "page": 13,
+          "quote": "A cycle occurs when the data exhibit rises and falls that are not of a fixed frequency."
+        },
+        {
+          "page": 13,
+          "quote": "The duration of these fluctuations is usually at least 2 years."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "ef12aec990b5"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 35,
+          "quote": "autocorrelation measures the linear relationship between lagged values of a time series."
+        },
+        {
+          "page": 38,
+          "quote": "Time series that show no autocorrelation are called white noise."
+        },
+        {
+          "page": 39,
+          "quote": "For a white noise series, we expect 95% of the spikes in the ACF to lie within"
+        },
+        {
+          "page": 39,
+          "quote": "where T is the length of the time series. It is common to plot these bounds on a graph of the ACF"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "628652dbe0de"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 50,
+          "quote": "The additive decomposition is the most appropriate if the magnitude of the seasonal fluctuations, or the variation around the trend-cycle, does not vary with the level of the time series."
+        },
+        {
+          "page": 50,
+          "quote": "appears to be proportional to the level of the time series, then a multiplicative decomposition is more appropriate."
+        },
+        {
+          "page": 50,
+          "quote": "When a log transformation has been used, this is equivalent to using a multiplicative decomposition on the original data"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "1ba02bd57a50"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 72,
+          "quote": "Unlike SEATS and X-11, STL will handle any type of seasonality, not only monthly and quarterly data."
+        },
+        {
+          "page": 72,
+          "quote": "The seasonal component is allowed to change over time, and the rate of change can be controlled by the user."
+        },
+        {
+          "page": 72,
+          "quote": "so that occasional unusual observations will not affect the estimates of the trend-cycle and seasonal components. They will, however, affect the remainder component."
+        },
+        {
+          "page": 72,
+          "quote": "it does not handle trading day or calendar variation automatically, and it only provides facilities for additive decompositions."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "329613a4ccba"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 84,
+          "quote": "We will use four simple forecasting methods as benchmarks throughout this book."
+        },
+        {
+          "page": 85,
+          "quote": "For naïve forecasts, we simply set all forecasts to be the value of the last observation."
+        },
+        {
+          "page": 85,
+          "quote": "we set each forecast to be equal to the last observed value from the same season (e.g., the same month of the previous year)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "e0a31690f642"
+    },
+    "C6": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 92,
+          "quote": "If there are correlations between innovation residuals, then there is information left in the residuals which should be used in computing forecasts."
+        },
+        {
+          "page": 92,
+          "quote": "The innovation residuals have zero mean. If they have a mean other than zero, then the forecasts are biased."
+        },
+        {
+          "page": 92,
+          "quote": "it is useful (but not necessary) for the residuals to also have the following two properties."
+        },
+        {
+          "page": 92,
+          "quote": "The innovation residuals have constant variance. This is known as “homoscedasticity”."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4571db7ceadb"
+    },
+    "C7": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 99,
+          "quote": "A prediction interval gives an interval within which we expect yt to lie with a specified probability."
+        },
+        {
+          "page": 99,
+          "quote": "For example, assuming that distribution of future observations is normal, a 95% prediction interval for the h-step forecast is"
+        },
+        {
+          "page": 99,
+          "quote": "is an estimate of the standard deviation of the h-step forecast distribution."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "d03e6cde9a6f"
+    }
+  },
+  "stamped": "2026-11-15"
+}
