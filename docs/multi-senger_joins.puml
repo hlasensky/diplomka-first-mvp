@@ -30,6 +30,9 @@ class "agg_colony_daily" as daily AGG {
 class "fact_event" as event FACT {
   úl × událost
 }
+class "agg_event_daily" as event_daily AGG {
+  úl × den inspekce
+}
 class "fact_weather" as weather FACT {
   buňka × hodina
 }
@@ -55,6 +58,7 @@ class "fact_winter_loss" as loss NAT {
 ' derivation of the hive facts (orientation only)
 minute ..> hourly : avg po hodinách
 hourly ..> daily : po dnech
+event ..> event_daily : po dnech inspekce
 
 ' same grain through dim_colony.cell_id
 hourly -right- weather : cell_id + time_key\n(R8)
@@ -63,8 +67,8 @@ daily -- bloom : cell_id + year\n1 rostlina
 daily -- crop : cell_id + year\n1 plodina (R9)
 
 ' only ASOF JOIN or EXISTS (R2)
-hourly -left[#C0392B,bold]- event : <color:#C0392B>ASOF</color>\n<color:#C0392B>time_key >= event_ts</color>
-daily -left[#C0392B,bold]- event : <color:#C0392B>ASOF</color>\n<color:#C0392B>date >= event_ts::DATE</color>
+hourly -left[#C0392B,bold]- event : <color:#C0392B>ASOF time_key >= event_ts</color>\n<color:#C0392B>jen 1 typ události</color>
+daily -left[#C0392B,bold]- event_daily : <color:#C0392B>ASOF</color>\n<color:#C0392B>date >= date</color>
 daily -[#C0392B,bold]- ndvi : <color:#C0392B>ASOF cell_id +</color>\n<color:#C0392B>date >= date</color>
 
 ' national: aggregate the colonies first (R10)

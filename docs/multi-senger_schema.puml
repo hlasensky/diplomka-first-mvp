@@ -74,6 +74,14 @@ package "Úly (BeeObserver, 2019–2022)" {
     * event_ts : TIMESTAMP
     * event_type : VARCHAR <<FK>>
   }
+  entity agg_event_daily <<aggregate>> AGG {
+    * colony_key : INTEGER <<FK>>
+    * date : DATE <<FK>>
+    --
+    n_events, event_types, cause_classes
+    first_event_ts, last_event_ts
+    __367 řádků, cíl denního ASOF__
+  }
   entity dim_sensor_position <<dim>> DIM {
     * sensor_pos
     --
@@ -208,7 +216,8 @@ package "Fenologie (DWD)" {
     * year <<FK dim_year>>
     * plant_id <<FK>>
     --
-    bloom_date, bloom_doy, quality_byte
+    bloom_date, bloom_doy (den v roce z data)
+    quality_byte
   }
   entity dim_station <<dim>> DIM {
     * station_id
@@ -221,6 +230,7 @@ package "Fenologie (DWD)" {
     --
     plant, plant_de, plant_group
     flow_period, is_bee_forage
+    __6 rostlin, jabloň raná a pozdní__
   }
 }
 
@@ -283,6 +293,8 @@ agg_colony_daily     }o--|| dim_date
 fact_event           }o--|| dim_date : event_ts::DATE
 fact_event           }o--|| dim_colony
 fact_event           }o--|| dim_event_type
+agg_event_daily      }o--|| dim_colony
+agg_event_daily      }o--|| dim_date
 
 ' geography chain
 dim_colony           }o--|| dim_cell
@@ -330,6 +342,7 @@ dim_bee_winter       ||--o{ fact_winter_loss
 fact_hive_minute     ..> fact_hive_hourly : avg po hodinách
 fact_hive_hourly     ..> agg_colony_daily : po dnech
 fact_hive_hourly     ..> fact_temperature : UNPIVOT
+fact_event           ..> agg_event_daily : po dnech inspekce
 fact_weather         ..> agg_weather_daily : po dnech
 
 @enduml
