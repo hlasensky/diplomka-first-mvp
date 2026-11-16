@@ -1,0 +1,146 @@
+// Proposed agent graph v3 (2026-11-14), successor of proposed_graph_engine.dot.
+// Changes vs. engine proposal (docs/decisions.md 2026-11-13):
+//   - time-series operators in the engine (resample, gapfill, lag, rate, rolling)
+//   - backend routing in run_query (DuckDB / time-series DB), unsupported ops computed in DuckDB
+//   - escalation ladder: CubeQuery -> TS operator -> free SQL -> native select -> free native query
+//   - claims carry their source (engine | free_sql | native) = verification level shown to the user
+//   - capability gate: weak model skips investigate
+// Layout: main path straight down the centre, escalation ladder on the right, ask_user on the left,
+// local END nodes instead of long edges.
+// Render: dot -Tsvg docs/proposed_graph_v3.dot -o docs/proposed_graph_v3.svg
+//         dot -Tpng -Gdpi=110 docs/proposed_graph_v3.dot -o docs/proposed_graph_v3.png
+digraph proposed_v3 {
+    graph [rankdir=TB, fontname="Helvetica", nodesep=0.7, ranksep=0.65, pad=0.5, newrank=true,
+           label=<<b>Proposed agent graph v3</b><br/><font point-size="11">fill = role: <font color="#C2410C">orange = LLM</font>, <font color="#15803D">green = deterministic engine</font>, grey = other &nbsp;|&nbsp; border = change: thin grey = unchanged, <font color="#2563EB">thick blue = modified</font>, <font color="#7C3AED">thick purple = new in v3</font></font>>,
+           labelloc=t, fontsize=18];
+    node  [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, margin="0.22,0.1",
+           fillcolor="#E5E7EB", color="#9CA3AF", penwidth=1];
+    edge  [fontname="Helvetica", fontsize=9, color="#4B5563"];
+
+    // role fills
+    // LLM: #FED7AA, engine: #BBF7D0, other: #E5E7EB
+    // change borders
+    // modified: color=#2563EB penwidth=2.5, new: color=#7C3AED penwidth=2.5
+
+    start [label="START", shape=circle, fillcolor="#111827", fontcolor="white", color="#111827", width=0.6];
+    end   [label="END",   shape=doublecircle, fillcolor="#111827", fontcolor="white", color="#111827", width=0.5];
+    end_unclear [label="END", shape=doublecircle, fillcolor="#111827", fontcolor="white", color="#111827", width=0.4, fontsize=9];
+    end_ask     [label="END", shape=doublecircle, fillcolor="#111827", fontcolor="white", color="#111827", width=0.4, fontsize=9];
+
+    user_input;
+    classify_intent [label="classify_intent\nmode: engage | navigate\nintent: describe | assess | explain\ncontext: session.current.describe()", fillcolor="#FED7AA", color="#2563EB", penwidth=2.5];
+    unclear_query   [label="unclear_query\nspecific clarification"];
+
+    subgraph cluster_resolve {
+        label="value resolution"; style="rounded,dashed"; color="#9CA3AF"; fontsize=10;
+        complex_query; embedding_lookup; improve_prompt;
+    }
+
+    subgraph cluster_engine {
+        label="OLAP engine  (LLM fills CubeQuery / operator args only)"; style="rounded,filled"; fillcolor="#F0FDF4"; color="#16A34A"; fontsize=10;
+        apply_operator [label="apply_operator\nsequence of 1-3 operators, applied in order,\ncheck on final query; > 3 -> engage\nOLAP: drill_down | roll_up | slice | dice | add |\ndrop | replace | drill_across | compare\nTS: resample | gapfill | lag | rate | rolling", fillcolor="#BBF7D0", color="#2563EB", penwidth=2.5];
+        build_query    [label="build_query\nLLM output -> CubeQuery\n(+ time ops: resample, window, fill)", fillcolor="#BBF7D0", color="#2563EB", penwidth=2.5];
+        check_query    [label="check_query\nentities, hierarchies, allowed_aggs (R1),\ndomains (R3), grain rules,\nTS ops only on ordered time", fillcolor="#BBF7D0", color="#2563EB", penwidth=2.5];
+        run_query      [label="run_query\nplanner -> compiler (Ibis, dialect per backend)\n-> executor;  Result + Provenance", fillcolor="#BBF7D0", color="#2563EB", penwidth=2.5];
+        update_session [label="update_session\npush step, state = navigate", fillcolor="#BBF7D0"];
+        storage [label="storage  (backend per table in semantic layer)\n\nDuckDB: aggregates (hour+), context,\ncross-DB joins, ops the TSDB lacks (ASOF)\n\ntime-series DB (optional, last):\nminute data, SQL dialect DataFusion",
+                 shape=cylinder, fillcolor="#F5F3FF", color="#7C3AED", penwidth=2.5, fontsize=10];
+    }
+
+    ask_user [label="ask_user\nambiguity: Issue.choices\nerror: what is possible\n(interrupt or end of turn - open)", fillcolor="#FED7AA"];
+
+    subgraph cluster_escalation {
+        label="escalation ladder  (next step only if the previous fails)"; style="rounded,dashed"; color="#7C3AED"; fontsize=10;
+        generate_sql  [label="3. generate_sql\nfree SQL (DuckDB dialect)", fillcolor="#FED7AA"];
+        validate_sql  [label="validate_sql\nEXPLAIN + semantic_validator"];
+        execute_query [label="execute_query\n(source = free_sql)"];
+        native_select [label="4. native_select\nsimple TSDB selection\n(measure, interval, tags)\n-> compute in engine / DuckDB", fillcolor="#FED7AA", color="#7C3AED", penwidth=2.5];
+        native_query  [label="5. run_native_query\nfree native query\n(strong models only)", fillcolor="#FED7AA", color="#7C3AED", penwidth=2.5];
+        native_guard  [label="native_guard\nread-only, time range required,\nrow + time limits, EXPLAIN / dry run;\nquery kept as provenance (source = native)", fillcolor="#BBF7D0", color="#7C3AED", penwidth=2.5];
+        ask_proxy     [label="-> ask_user\n(ladder exhausted)", style="rounded,dashed", fillcolor="white", fontsize=9];
+    }
+
+    subgraph cluster_insight {
+        label="insights"; style="rounded"; color="#16A34A"; fontsize=10;
+        scan        [label="proactive_scan\ninsight.scan -> ranking.select\n<= 2 insights, none already reported", fillcolor="#BBF7D0"];
+        capability  [label="capability_gate\nmodel calls tools reliably?", fillcolor="#BBF7D0", color="#7C3AED", penwidth=2.5];
+        investigate [label="investigate\nLLM picks next tool (where? why?)\nor stops", fillcolor="#FED7AA"];
+        budget      [label="budget\n<= 4 tool calls, <= 2 repairs\n(size open)", shape=diamond, fillcolor="#BBF7D0", color="#7C3AED", penwidth=2.5, fontsize=9];
+        tools       [label="engine_tools (ToolNode)\ndiff | explain_by_context | find_anomalies |\ncompare | drill_down | TS operators", fillcolor="#BBF7D0", color="#2563EB", penwidth=2.5];
+    }
+
+    build_claims [label="build_claims\nResult + insights -> Claims, numbers filled by code\n+ source: engine | free_sql | native", fillcolor="#BBF7D0", color="#2563EB", penwidth=2.5];
+    narrate      [label="narrate\nanswer + chart spec from claims only", fillcolor="#FED7AA"];
+    claim_check  [label="claim_check\nevery number matches a claim", fillcolor="#BBF7D0"];
+    validate_chart_spec [label="validate_chart_spec"];
+    suggest_next [label="suggest_next\nfollow-up operators as options\n(also from chart interaction)", fillcolor="#FED7AA", color="#2563EB", penwidth=2.5];
+
+    state_note [shape=note, style=filled, fillcolor="#FFFBEB", color="#D97706", fontsize=9,
+                label="AgentState keys:\nsession, cube_query, result, insights,\ntool_steps, repairs, escalation_level,\nclaims (with source)\n\nopen: show claim source in UI\n(proposal: subtle badge)"];
+
+    // ---------- layout constraints ----------
+    { rank=same; user_input; state_note; }
+    { rank=same; run_query; generate_sql; storage; }
+    { rank=same; ask_user; end_ask; }
+    { rank=same; check_query; ask_user; }
+    // left-to-right order on shared ranks
+    storage -> run_query -> generate_sql [style=invis];
+    ask_user -> end_ask [style=invis];
+    check_query -> ask_user [style=invis];
+
+    // ---------- entry ----------
+    start -> user_input -> classify_intent;
+    classify_intent -> unclear_query [label="no metric"];
+    unclear_query -> end_unclear;
+    classify_intent -> complex_query [label="free-text\nfilter value"];
+    complex_query -> embedding_lookup -> improve_prompt;
+    improve_prompt -> classify_intent [label="no match", style=dashed, constraint=false];
+
+    // ---------- main path (ladder steps 1-2) ----------
+    classify_intent -> build_query [label="1. engage"];
+    classify_intent -> apply_operator [label="1./2. navigate\n(1-3 operators)"];
+    improve_prompt -> build_query [label="engage / navigate", style=dashed];
+    build_query -> check_query;
+    apply_operator -> check_query;
+    apply_operator -> ask_user [label="OperatorError\n(index of failed op)", style=dashed];
+    check_query -> build_query [label="repair\n(Issue.message)", style=dashed, color="#DC2626", fontcolor="#DC2626", constraint=false];
+    check_query -> ask_user [label="error after repairs |\nambiguity"];
+    ask_user -> end_ask;
+    check_query -> run_query [label="ok"];
+    run_query -> storage [style=dotted, dir=both, color="#7C3AED", constraint=false];
+    run_query -> update_session [weight=10];
+
+    // ---------- escalation ladder (steps 3-5) ----------
+    run_query -> generate_sql [label="PlanningError", style=dashed];
+    generate_sql -> validate_sql;
+    validate_sql -> generate_sql [label="repair", style=dashed, constraint=false];
+    validate_sql -> execute_query [label="ok"];
+    validate_sql -> native_select [label="not expressible /\ndata only in TSDB", style=dashed, color="#7C3AED", fontcolor="#7C3AED"];
+    native_select -> native_query [label="selection not enough\n+ strong model", style=dashed, color="#7C3AED", fontcolor="#7C3AED"];
+    native_select -> native_guard;
+    native_query -> native_guard;
+    native_guard -> ask_proxy [label="rejected", style=dashed];
+    execute_query -> update_session;
+    native_guard -> update_session [label="result", color="#7C3AED", fontcolor="#7C3AED"];
+
+    // ---------- insights ----------
+    update_session -> scan [weight=10];
+    scan -> capability [label="explain intent |\ninsight selected", weight=10];
+    scan -> build_claims [label="nothing to investigate"];
+    capability -> investigate [label="yes", weight=10];
+    capability -> build_claims [label="no: deterministic\nscan + diff only", style=dashed, color="#7C3AED", fontcolor="#7C3AED"];
+    investigate -> budget [label="tool call", weight=10];
+    budget -> tools [label="steps left", weight=10];
+    tools -> investigate [label="result", style=dashed, constraint=false];
+    budget -> build_claims [label="budget spent", style=dashed];
+    investigate -> build_claims [label="done"];
+
+    // ---------- answer ----------
+    build_claims -> narrate [weight=10];
+    narrate -> claim_check [weight=10];
+    claim_check -> narrate [label="mismatch", style=dashed, color="#DC2626", fontcolor="#DC2626", constraint=false];
+    claim_check -> validate_chart_spec [label="ok", weight=10];
+    validate_chart_spec -> narrate [label="chart retry", style=dashed, constraint=false];
+    validate_chart_spec -> suggest_next [weight=10];
+    suggest_next -> end [weight=10];
+}
