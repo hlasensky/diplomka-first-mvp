@@ -170,6 +170,7 @@ Stručný log rozhodnutí. Data jsou popsaná v [data.md](data.md).
 - míra důvěry claimů podle zdroje (engine / volné SQL / nativní dotaz): zobrazit v UI, nebo jen v provenance (návrh: v UI jako nenápadné označení, sedí to na hlavní myšlenku ověřitelnosti),
 - jestli sqlglot umí dialekt DataFusion (ověřit),
 - jak popsat databázi časových řad v sémantické vrstvě (measurement, tagy, fields → dimenze a míry).
+- surová data BeeObserver (5–10 s, nestažená): kandidát pro databázi časových řad, kde by ukázala její přínos oproti DuckDB; rozhodnout po přidání InfluxDB (do té doby je práce v sekci Nepoužitá data nezmiňuje).
 
 ## 2026-11-14 – více operátorů v jednom tahu
 
@@ -193,3 +194,41 @@ Stručný log rozhodnutí. Data jsou popsaná v [data.md](data.md).
 2. **`bloom_doy` se počítá z data**, ne ze sloupce DWD `Jultag`, který vynechává 29. únor a v přestupných letech je po něm o 1 menší (všechny řádky 2016 a 2020).
    - Změnilo to `agg_cell_bloom.bloom_date` za rok 2020 o +1 den (na skutečné datum) a výsledek příkladu EX6: přírůstek po začátku kvetení řepky +0,371 kg/den (dříve +0,359), před ním −0,017 (dříve −0,016). Golden snapshot EX6 aktualizován se souhlasem uživatele.
 3. **Nové kontroly v sekci 99:** grain `fact_bloom_phenology` a `agg_cell_bloom`, cizí klíč na `dim_plant`, každá rostlina má data, `bloom_date` odpovídá `bloom_doy`.
+
+## 2026-11-21 – knihovna pro grafy v platformě
+
+1. **Grafy v platformě: Vega-Lite (v Pythonu přes Altair).**
+   - Specifikace grafu je JSON, který vzniká deterministicky v kódu z výsledku `CubeQuery`, ne od jazykového modelu. Je čitelná (pole na osách, agregace), takže ji lze ukázat v provenance a ověřit ve vyhodnocení.
+   - Výběry (`params`) vrací hodnoty dimenzí; z nich se sestaví navazující operátor nad aktuálním dotazem (interakce s grafem převedená na dotaz v kostce).
+   - Typ grafu vybírá pravidlo podle typu dimenze a míry (čas -> čára, kategorie -> sloupce, srovnání s kontextem -> small multiples místo dvou os Y); opora Cleveland a McGill 1984, Munzner 2014, Isenberg 2011 (seznam 115, 116, 118).
+2. **Zobrazení v Chainlitu:** vlastní element (custom JSX) s vega-embed; výběr pošle zpět do Pythonu jako akci.
+3. **Plotly (už v závislostech) jen jako záloha**, kdyby vlastní element nešel udělat: `cl.Plotly` funguje hned, ale kliknutí zpět do Pythonu jde špatně (neověřeno v kódu).
+4. **Obrázky do textu práce:** grafy z dat matplotlib -> PDF (vektor), diagramy PlantUML / Graphviz, snímky platformy jako PNG.
+5. Literatura: Satyanarayan et al. 2017 (Vega-Lite) přidán do `literature/seznam.md` jako položka 122.
+
+**Otevřené:** ověřit, že custom element v použité verzi Chainlitu umí poslat akci zpět (`callAction`).
+
+## 2026-11-22 – návrh ablačního vyhodnocení postupu agenta
+
+Návrh, zatím neimplementováno. Otázka: pomáhá postup brainstorm -> OLAP -> refine -> OLAP nebo test k lepším výsledkům?
+
+1. **Varianty** (stejné otázky, model, nástroje; liší se o jeden krok):
+   - A: OLAP -> odpověď (základ),
+   - B: volná smyčka se stejným rozpočtem dotazů jako E (kontrola: odděluje přínos struktury od přínosu většího počtu dotazů),
+   - C: brainstorm -> OLAP -> odpověď,
+   - D: C + refine -> OLAP,
+   - E: D + test.
+2. **Otázky se známou odpovědí** (současných 17 případů v `eval.yaml` kontroluje jen záměr dotazu):
+   - vložené anomálie v kopii databáze (hlavní zdroj, známé místo i příčina, automatické hodnocení),
+   - reálné události z `fact_event` (25 rojení, 8 úhynů, 165 medobraní); záznamy jsou neúplné, takže jen recall, ne falešné nálezy,
+   - 10–15 otevřených otázek se seznamem očekávaných zjištění sepsaným před spuštěním.
+3. **Metriky:** míra halucinací (nepodložená tvrzení na větu, čísla automaticky proti provenance), pokrytí očekávaných zjištění, nalezení příčiny mezi prvními *k* vysvětleními, vliv testu (opravené chyby / pokažené správné odpovědi), cena (dotazy, tokeny, čas).
+4. **Platnost:**
+   - otázky rozdělit na vývojové a testovací, prompty ladit jen na vývojových,
+   - aspoň 30–40 testovacích otázek, každá 3–5×,
+   - párové testy: Wilcoxon pro míry, McNemar pro nalezeno/nenalezeno, Holmova korekce,
+   - ruční hodnocení naslepo vůči variantě.
+5. **Očekávání:** čísla počítá engine, takže numerické halucinace budou nízké nejspíš ve všech variantách. Hlavní hypotézu stavět na pokrytí a nalezení příčiny.
+6. **Vztah k literatuře:** ChartInsighter porovnává celý postup se samotným GPT-4 (míra halucinací 0,14 proti 0,48, C7). Hledáním v plném textu (`ablation`, `without the`, `w/o`) se ablace po krocích nenašla; ověřit při čtení článku.
+
+**Otevřené:** jak varianty namapovat na graf agenta (`investigate`), velikost rozpočtu dotazů, realistický způsob vkládání anomálií, kolik modelů experiment pokryje.
