@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-11-15
+generated: 2026-11-25
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -13,5 +13,5 @@ generated: 2026-11-15
 
 | citekey | rok | venue | stránky | DOI | ověřeno v |
 |---|---|---|---|---|---|
-| hyndmanForecastingPrinciplesPractice2021 | 2021 | – | – | – | Semantic Scholar |
+| clevelandGraphicalPerceptionTheory1984 | 1984 | Journal of the American Statistical Asso | 531-554 | 10.1080/01621459.1984.10478080 | Crossref, Semantic Scholar |
 

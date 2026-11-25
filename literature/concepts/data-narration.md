@@ -13,3 +13,4 @@ Automatické vytvoření textového nebo mluveného popisu výsledku dotazu nad 
 - [[conversational-olap]]
 - [[interestingness]]
 - [[llm-hallucination]]
+- [[narrative-visualization]]

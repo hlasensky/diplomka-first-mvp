@@ -1,20 +1,24 @@
 ---
 type: qc
-generated: 2026-11-15
+generated: 2026-11-25
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
 
 # Seznam literatury × Zotero × vault
 
-**QC: PASS** – 0 chyb, 0 varování
+**QC: PASS s varováními** – 0 chyb, 1 varování
+
+| úroveň | kód | nález |
+|---|---|---|
+| WARN | NOT_IN_PLAN | knaflicStorytellingDataData2015: je v Zoteru, ale ne v seznamu (vyřazeno? jinak doplň do seznamu DOI) |
 
 ### Stav podle úrovní
 
 | úroveň | položek | v Zoteru | poznámka | čteno víc než abstrakt | čteno celé | ověřeno |
 |---|---|---|---|---|---|---|
-| 1 povinné | 25 | 24 | 24 | 4 | 1 | 4 |
-| 2 důležité | 58 | 17 | 17 | 0 | 0 | 2 |
+| 1 povinné | 25 | 24 | 24 | 5 | 1 | 5 |
+| 2 důležité | 61 | 22 | 22 | 1 | 0 | 2 |
 | 3 doplňkové | 24 | 7 | 7 | 0 | 0 | 0 |
 | nástroje a data | 14 | 9 | 9 | 1 | 0 | 1 |
 
@@ -39,7 +43,7 @@ generated: 2026-11-15
 | 15 | Francia, M., Gallinucci, E., Golfarelli, M. — COOL: A Framework for Conversational OLAP, I… | [[franciaCOOLFrameworkConversational2022]] | ✅ ověřeno · čteno: prolet · QC PASS s varováními |
 | 16 | VOOL — přirozenojazyková vokalizace výsledků OLAP sessions Information Systems, 2025 https… | [[franciaVOOLModularInsightbased2025]] | candidate · čteno: ne · QC PASS |
 | 17 | Liu, X., Yang, Y. — LLM-Assisted Conversational Navigation over Multidimensional Data Cube… | [[liuLLMassistedConversationalNavigation2026]] | candidate · čteno: ne · QC FAIL |
-| 18 | ChartInsighter — redukce halucinací při shrnutí grafů časových řad IEEE TVCG 31(6):3733–37… | [[wangChartInsighterApproachMitigating2025]] | candidate · čteno: ne · QC FAIL |
+| 18 | ChartInsighter — redukce halucinací při shrnutí grafů časových řad IEEE TVCG 31(6):3733–37… | [[wangChartInsighterApproachMitigating2025]] | ✅ ověřeno · čteno: prolet · QC FAIL |
 | 19 | Yao, S. et al. — ReAct: Synergizing Reasoning and Acting in Language Models ICLR 2023 arXi… | [[yaoReActSynergizingReasoning2023a]] | candidate · čteno: ne · QC PASS s varováními |
 | 20 | BIRD — benchmark pro Text-to-SQL nad rozsáhlými reálnými databázemi NeurIPS 2023 https://a… | [[liCanLLMAlready2023a]] | candidate · čteno: ne · QC PASS s varováními |
 | 21 | Lei, F. et al. — Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-S… | [[leiSpider20Evaluating2025]] | candidate · čteno: ne · QC PASS s varováními |
@@ -48,13 +52,13 @@ generated: 2026-11-15
 | 24 | Lenz, H.-J., Shoshani, A. — Summarizability in OLAP and Statistical Data Bases [NOVÉ, rev.… | [[lenzSummarizabilityOLAPStatistical1997]] | ✅ ověřeno · čteno: prolet · QC PASS |
 | 25 | Buneman, P., Khanna, S., Tan, W.-C. — Why and Where: A Characterization of Data Provenance… | [[bunemanWhyWhereCharacterization2001]] | candidate · čteno: ne · QC PASS |
 
-### Úroveň 2 důležité (58)
+### Úroveň 2 důležité (61)
 
 | č. | položka | citekey | stav |
 |---|---|---|---|
 | 26 | Atzori, L., Iera, A., Morabito, G. — The Internet of Things: A Survey Computer Networks 54… | [[atzoriInternetThingsSurvey2010]] | candidate · čteno: ne · QC PASS s varováními |
 | 27 | Zacepins, A. et al. — Challenges in the Development of Precision Beekeeping [NOVÉ, rev. 4]… | [[zacepinsChallengesDevelopmentPrecision2015]] | ✅ ověřeno · čteno: ne · QC PASS s varováními |
-| 28 | Meikle, W. G., Holst, N. — Application of Continuous Monitoring of Honeybee Colonies [NOVÉ… | [[meikleApplicationContinuousMonitoring2015]] | ✅ ověřeno · čteno: ne · QC PASS |
+| 28 | Meikle, W. G., Holst, N. — Application of Continuous Monitoring of Honeybee Colonies [NOVÉ… | [[meikleApplicationContinuousMonitoring2015]] | ✅ ověřeno · čteno: prolet · QC PASS |
 | 29 | Hadjur, H., Ammar, D., Lefèvre, L. — Toward an Intelligent and Efficient Beehive: A Survey… | [[hadjurIntelligentEfficientBeehive2022]] | candidate · čteno: ne · QC PASS s varováními |
 | 30 | Aigner, W., Miksch, S., Schumann, H., Tominski, C. — Visualization of Time-Oriented Data S… | [[aignerVisualizationTimeOrientedData2011]] | candidate · čteno: ne · QC FAIL |
 | 31 | Yan, S. et al. — CMMD: Cross-Metric Multi-Dimensional Root Cause Analysis ACM SIGKDD 2022,… | – | chybí v Zoteru |
@@ -103,13 +107,16 @@ generated: 2026-11-15
 | 104 | Willard, B. T., Louf, R. — Efficient Guided Generation for Large Language Models [NOVÉ, 6.… | [[willardEfficientGuidedGeneration2023]] | candidate · čteno: ne · QC PASS |
 | 105 | Geng, S. et al. — JSONSchemaBench: A Rigorous Benchmark of Structured Outputs for Language… | [[gengJSONSchemaBenchRigorousBenchmark2025]] | candidate · čteno: ne · QC PASS s varováními |
 | 106 | Patil, S. G., Zhang, T., Wang, X., Gonzalez, J. E. — Gorilla: Large Language Model Connect… | [[patilGorillaLargeLanguage2024]] | candidate · čteno: ne · QC PASS |
-| 115 | Cleveland, W. S., McGill, R. — Graphical Perception: Theory, Experimentation, and Applicat… | – | chybí v Zoteru |
+| 115 | Cleveland, W. S., McGill, R. — Graphical Perception: Theory, Experimentation, and Applicat… | [[clevelandGraphicalPerceptionTheory1984]] | candidate · čteno: ne · QC – |
 | 116 | Munzner, T. — Visualization Analysis and Design [NOVÉ, 13. 11. 2026] A K Peters/CRC Press,… | – | chybí v Zoteru |
-| 117 | Healey, C. G., Enns, J. T. — Attention and Visual Memory in Visualization and Computer Gra… | – | chybí v Zoteru |
-| 118 | Isenberg, P., Bezerianos, A., Dragicevic, P., Fekete, J.-D. — A Study on Dual-Scale Data C… | – | chybí v Zoteru |
+| 117 | Healey, C. G., Enns, J. T. — Attention and Visual Memory in Visualization and Computer Gra… | [[healeyAttentionVisualMemory2012]] | candidate · čteno: ne · QC PASS |
+| 118 | Isenberg, P., Bezerianos, A., Dragicevic, P., Fekete, J.-D. — A Study on Dual-Scale Data C… | [[isenbergStudyDualScaleData2011]] | candidate · čteno: ne · QC PASS |
 | 119 | Cleveland, W. S., McGill, M. E., McGill, R. — The Shape Parameter of a Two-Variable Graph … | – | chybí v Zoteru |
 | 120 | Nielsen, J., Molich, R. — Heuristic Evaluation of User Interfaces [NOVÉ, 13. 11. 2026] Pro… | – | chybí v Zoteru |
 | 121 | Miller, T. — Explanation in Artificial Intelligence: Insights from the Social Sciences [NO… | [[millerExplanationArtificialIntelligence2019]] | candidate · čteno: ne · QC PASS s varováními |
+| 122 | Satyanarayan, A., Moritz, D., Wongsuphasawat, K., Heer, J. — Vega-Lite: A Grammar of Inter… | – | chybí v Zoteru |
+| 123 | Segel, E., Heer, J. — Narrative Visualization: Telling Stories with Data [NOVÉ, 25. 11. 20… | [[segelNarrativeVisualizationTelling2010]] | candidate · čteno: ne · QC PASS |
+| 124 | Hullman, J., Diakopoulos, N. — Visualization Rhetoric: Framing Effects in Narrative Visual… | [[hullmanVisualizationRhetoricFraming2011]] | candidate · čteno: ne · QC PASS s varováními |
 
 ### Úroveň 3 doplňkové (24)
 

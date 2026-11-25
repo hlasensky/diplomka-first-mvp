@@ -11,3 +11,5 @@ Návrh dashboardu jako vizuálního rozhraní, které na omezené ploše sklád�
 ## Související
 - [[time-series-visualization]]
 - [[usability-evaluation]]
+- [[graphical-perception]]
+- [[narrative-visualization]]

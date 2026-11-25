@@ -1,0 +1,118 @@
+{
+  "citekey": "healeyAttentionVisualMemory2012",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Typically, tasks that can be performed on large multielement displays in less than 200-250 milliseconds (msec) are considered preattentive."
+        },
+        {
+          "page": 2,
+          "quote": "Since a saccade takes at least 200 msec to initiate, viewers complete the task in a single glance."
+        },
+        {
+          "page": 2,
+          "quote": "allows it to “pop out” of a display. This implies that it can be easily detected, regardless of the number of distractors."
+        },
+        {
+          "page": 2,
+          "quote": "the target is again a red circle, while the distractors are red squares. Here, the visual system identifies the target through a difference in curvature."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2217bbb266a6"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "Fig. 2. Examples of preattentive visual features, with references to papers that investigated each feature’s capabilities."
+        },
+        {
+          "page": 4,
+          "quote": "Treisman and others have used their experiments to compile a list of visual features that are detected preattentively (Fig. 2)."
+        },
+        {
+          "page": 4,
+          "quote": "It is important to note that some of these features are asymmetric. For example, a sloped line in a sea of vertical lines can be detected preattentively, but a vertical line in a sea of sloped lines cannot."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "b5c49b9e5cac"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "when a target is defined by the joint presence of two or more visual properties, it often cannot be found preattentively."
+        },
+        {
+          "page": 2,
+          "quote": "Numerous studies have shown that most conjunction targets cannot be detected preattentively. Viewers must perform a time-consuming serial search through the display to confirm its presence or absence."
+        },
+        {
+          "page": 2,
+          "quote": "If low-level visual processes can be harnessed during visualization, they can draw attention to areas of potential interest in a display. This cannot be accomplished in an ad hoc fashion, however."
+        },
+        {
+          "page": 2,
+          "quote": "must be well suited to the viewer’s analysis needs, and must not produce visual interference effects (e.g., conjunction search) that mask information."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "12cd4bf4ba97"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "during boundary detection Callaghan showed that the visual system favors color over shape [72]. Background variations in color slowed—but did not completely inhibit—a viewer’s ability to preattentively identify the presence of spatial patterns formed by different shapes"
+        },
+        {
+          "page": 7,
+          "quote": "The interference is asymmetric: random variations in shape have no effect on a viewer’s ability to see color patterns (Fig. 10b). Luminance-on-hue and hue-on-texture preferences have also been found"
+        },
+        {
+          "page": 7,
+          "quote": "Feature hierarchies suggest that the most important data attributes should be displayed with the most salient visual features"
+        },
+        {
+          "page": 14,
+          "quote": "Random variations in texture had no affect on detecting hue targets, but random variations in hue degraded performance for detecting size and density targets."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "6ffe3397b90d"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "The vision models agree that properties of color are preattentive. They do not, however, identify the amount of color difference needed to produce distinguishable colors."
+        },
+        {
+          "page": 13,
+          "quote": "the models identify numerous visual features as preattentive, but they may not define the difference needed to produce distinguishable instances of a feature."
+        },
+        {
+          "page": 13,
+          "quote": "Healey conducted a visual search experiment to determine the number of colors a viewer can distinguish simultaneously. His results showed that viewers can rapidly choose between up to seven isoluminant colors"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a8c3dd9774a5"
+    }
+  },
+  "stamped": "2026-11-25"
+}

@@ -1,0 +1,122 @@
+{
+  "citekey": "clevelandGraphicalPerceptionTheory1984",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "The theory provides a guideline for graph construction: Graphs should employ elementary tasks as high in the ordering as possible."
+        },
+        {
+          "page": 7,
+          "quote": "1. Position along a common scale 2. Positions along nonaligned scales"
+        },
+        {
+          "page": 15,
+          "quote": "The mode of graph design that we advocate is the construction of a graphical form that uses elementary perceptual tasks as high in the hierarchy as possible."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "07d658b8b5e8"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "In one experiment 55 subjects were shown the five types of graphs depicted in Figure 4."
+        },
+        {
+          "page": 10,
+          "quote": "In the second experiment 54 subjects judged the two types of graphs shown in Figure 3; one type was a pie chart and the other was an ordinary bar chart. Ten sets of five numbers that added to 100 were generated"
+        },
+        {
+          "page": 10,
+          "quote": "The instructions specifically stated that subjects were to make “a quick visual judgment and not try to make precise measurements"
+        },
+        {
+          "page": 15,
+          "quote": "For all types of judgments, subjects made visual assessments of what percentage one value was of a larger value; thus all recorded values were between 0 and 100. In both experiments there were 51 subjects with usable data."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "dcb55257f1dc"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 15,
+          "quote": "by factors varying from 1.4 to 2.5. In the second experiment, position judgments were 1.96 times as accurate as angle judgments."
+        },
+        {
+          "page": 15,
+          "quote": "for length and angle judgments is consistent bias. When the true percentages are in the range of 25-50, subjects tend to underestimate values for these types of"
+        },
+        {
+          "page": 15,
+          "quote": "along an axis perpendicular to the common scale, the accuracy decreased. Type 1 judgments had the smallest"
+        },
+        {
+          "page": 23,
+          "quote": "This suggests that the elementary task of judging position be expanded into a continuum of tasks for which accuracy is conjectured to decrease with increasing distance between the graphical elements encoding the data"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9555d3c83d97"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 16,
+          "quote": "But this is not true of the data represented in divided bar charts and pie charts; one can always represent such data along a common scale."
+        },
+        {
+          "page": 18,
+          "quote": "The remedy in this case seems simple: If differences are to be conveyed, they should also be plotted on their own Cartesian graph. This applies equally to the muchused divided line chart"
+        },
+        {
+          "page": 16,
+          "quote": "Thus the elementary task in extracting the curve differences is perceiving length. It turns out that making such length judgments is inaccurate and even more difficult than on a divided bar chart."
+        },
+        {
+          "page": 17,
+          "quote": "It is almost impossible to get even a rough idea of the behavior of the differences of the curves in the nine panels."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2a11a244e2da"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 23,
+          "quote": "Such a meaning would, of course, be ludicrous for the tentative first step in this article."
+        },
+        {
+          "page": 23,
+          "quote": "The ordering of the perceptual tasks does not provide a complete prescription for how to make a graph. Rather, it provides a set of guidelines that must be used with judgment in designing a graph."
+        },
+        {
+          "page": 24,
+          "quote": "We cannot realistically claim to have isolated 10 basic, independent perceptual tasks. Each task is really a complex set of tasks, and there is much overlap."
+        },
+        {
+          "page": 24,
+          "quote": "We have no proof that our laboratory results are realistic and work in the field, but it appears plausible that this is so."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "9e89cb630dd0"
+    }
+  },
+  "stamped": "2026-11-25"
+}

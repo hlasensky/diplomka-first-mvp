@@ -7,6 +7,7 @@ Popis původu dat a procesu, kterým se dostala do výsledku: u hodnoty vzniklé
 
 ## Sources
 - [[bunemanWhyWhereCharacterization2001]] — C2: rozlišení why- vs. where-provenance; C4, C6: why-provenance přes witness basis (invariantní vůči přepisu), where-provenance jako cesta ve zdroji, invariantní jen pro traceable dotazy (C7).
+- [[hullmanVisualizationRhetoricFraming2011]] — C3: rétorika provenience; neuvedený zdroj dat jako vynechání, nejistota vyjádřená spíš textem než vizuálně.
 
 ## Související
 - [[query-explanation]]

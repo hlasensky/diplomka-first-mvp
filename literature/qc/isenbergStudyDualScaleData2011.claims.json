@@ -1,0 +1,130 @@
+{
+  "citekey": "isenbergStudyDualScaleData2011",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "charts incorporate two different data resolutions into one chart in order to emphasize data in regions of interest or to enable the comparison of data from distant regions"
+        },
+        {
+          "page": 1,
+          "quote": "one way to overcome visual resolution limitations is to use more than one scale (number of data units per display unit) in the same chart"
+        },
+        {
+          "page": 1,
+          "quote": "Although the term dual-scale has been often used to specifically refer to superimposed charts (Fig. 1(b)), in this article we use it to refer to any chart showing two main scales."
+        },
+        {
+          "page": 1,
+          "quote": "We chose to focus on a specific subset of data charts where data points are positioned according to a two-dimensional orthogonal coordinate system."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "d25b4e9da072"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "Here both focus and context regions are drawn along the full width of the chart and share the same y-axis. Superimposed charts are commonly used when two data sets have only one axis in common."
+        },
+        {
+          "page": 4,
+          "quote": "for this chart is non-monotonic: data ordering is not preserved on the display space and simple ordinal comparisons might be more difficult."
+        },
+        {
+          "page": 4,
+          "quote": "it means that the whole display space is used but the encoding of data values is ambiguous. This might cause overlapping and legibility problems"
+        },
+        {
+          "page": 4,
+          "quote": "This type of chart however has the advantage of having more resolution than the previous charts."
+        },
+        {
+          "page": 4,
+          "quote": "as in our examples, the gain is twofold: for the same footprint D , the magnification factors M1 and M2 are doubled."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "a105fbe0e518"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "We tested five charts for which we varied the scale along the x-axis."
+        },
+        {
+          "page": 6,
+          "quote": "For each task, we presented a modulus object on the chart and asked participants to judge the relative magnitude of a stimulus object as a percentage of the modulus."
+        },
+        {
+          "page": 6,
+          "quote": "The breakpoints were located at ub = 2, ub = 5, and ub = 10."
+        },
+        {
+          "page": 7,
+          "quote": "Fifteen participants (10 male, 5 female) were recruited from our research institute."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "7cfa13e66858"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "showed that R was significantly more accurate than all other charts except for C, and all charts were more accurate than S."
+        },
+        {
+          "page": 7,
+          "quote": "Mean times were faster for R (3.2 s), followed by C (4 s), L (4.6 s), B (6 s), and S (8.1 s)."
+        },
+        {
+          "page": 8,
+          "quote": "For each task and task × location, S was always ranked last and C was always ranked first."
+        },
+        {
+          "page": 8,
+          "quote": "while for S all participants reported not to be confident about their answers."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "11cecb1e7170"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "we recommend to use the cut-out chart and avoid the superimposed chart type."
+        },
+        {
+          "page": 9,
+          "quote": "Due to the ease of implementation of the broken chart we recommend to use this chart as an alternative to the cut-out chart"
+        },
+        {
+          "page": 9,
+          "quote": "We tested the second case and also designed the chart so that there was no overlap in the units on the top and bottom axis. The results could be different for other design alternatives but we hypothesize that this would not be the case."
+        },
+        {
+          "page": 9,
+          "quote": "Our experiment explicitly compared non-interactive charts that are often seen in print."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "ad8755a658d2"
+    }
+  },
+  "stamped": "2026-11-25"
+}

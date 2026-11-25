@@ -1,0 +1,126 @@
+{
+  "citekey": "segelNarrativeVisualizationTelling2010",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "In total we analyzed 58 visualizations using the case study method illustrated in Section 3. The examples were taken from online journalism (71%), business (20%), and visualization research (9%)."
+        },
+        {
+          "page": 7,
+          "quote": "However, we do not claim that our sample is exhaustive, as we did not canvas other potential sources such as video games or e-learning tools."
+        },
+        {
+          "page": 7,
+          "quote": "We arrived at our categories after much iterative organization (e.g., affinity diagramming [1]) of individual design features."
+        },
+        {
+          "page": 7,
+          "quote": "We acknowledge there is some inevitable subjectivity when imposing a taxonomy over a diverse set of designs."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "3ad6767ff00f"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "Region (3) shows the under-utilization of strategies to engage the user in the interactive functionality. Region (4) shows the under-utilization of common storytelling techniques across narrative visualizations."
+        },
+        {
+          "page": 7,
+          "quote": "Our organization of the design space contains three divisions of features: (1) genre, (2) visual narrative tactics, and (3) narrative structure tactics."
+        },
+        {
+          "page": 7,
+          "quote": "These design strategies help orient the viewer early on (establishing shot, checklist, consistent visual platform) and allow the viewer to track his progress through the visualization (progress bar, timeline slider)."
+        },
+        {
+          "page": 7,
+          "quote": "In particular, the data shows that interactive graphs do not include sufficient commentary for narrative purposes, with little use of repetition, multimessaging"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "da3e7bd277b1"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "We found that our examples can be characterized by the 7 basic genres shown in Figure 8: magazine style, annotated chart, partitioned poster, flow chart, comic strip, slide show, and film/video/animation."
+        },
+        {
+          "page": 7,
+          "quote": "These genres are not mutually exclusive: they can function like building blocks, combining to produce more complex visual genres."
+        },
+        {
+          "page": 8,
+          "quote": "Both messaging and interactivity can be layered on top of these genres. Messaging is the use of text to provide observations and explanations about the images."
+        },
+        {
+          "page": 8,
+          "quote": "Messaging might clarify visual elements but produce clutter. Interactivity might engage the user but detract from the author's intended message."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "fffc519b6cbc"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "A purely author-driven approach has a strict linear path through the visualization, relies heavily on messaging, and includes no interactivity."
+        },
+        {
+          "page": 8,
+          "quote": "A strongly author-driven approach works best when the goal is storytelling or efficient communication."
+        },
+        {
+          "page": 8,
+          "quote": "A reader-driven approach supports tasks such as data diagnostics, pattern discovery, and hypothesis formation."
+        },
+        {
+          "page": 8,
+          "quote": "All the interactive examples in our dataset use a mix of the authordriven and reader-driven approaches."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "390f9fe66c12"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "the martini glass structure [4], following a tight narrative path early on (the stem of the glass) and then opening up later for free exploration (the body of the glass)."
+        },
+        {
+          "page": 8,
+          "quote": "This structure is the most common across the interactive visualizations we examined."
+        },
+        {
+          "page": 8,
+          "quote": "The Interactive Slideshow structure follows a typical slideshow format, but incorporates interaction mid-narrative within the confines of each slide."
+        },
+        {
+          "page": 9,
+          "quote": "data stories appear to be most effective when they have constrained interaction at various checkpoints within a narrative, allowing the user to explore the data without veering too far from the intended narrative."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "2c1253cd14ce"
+    }
+  },
+  "stamped": "2026-11-25"
+}

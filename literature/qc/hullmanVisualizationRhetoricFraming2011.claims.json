@@ -1,0 +1,126 @@
+{
+  "citekey": "hullmanVisualizationRhetoricFraming2011",
+  "claims": {
+    "C1": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "We distinguish between four editorial layers that can be used to convey meaning, including the data, visual representation, textual annotations, and interactivity."
+        },
+        {
+          "page": 3,
+          "quote": "Yet omissions, emphases, and ambiguity can be accomplished at each level."
+        },
+        {
+          "page": 3,
+          "quote": "a narrative visualization represents a sequence of choices to either add information (such as by adding suggestions of an intended message using textual annotations) or omit information"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "fcc345c5b2c6"
+    },
+    "C2": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 3,
+          "quote": "We gathered a sample of fifty-one professionally-produced narrative visualizations, many from international news outlets like the New York Times (NYT) or BBC."
+        },
+        {
+          "page": 3,
+          "quote": "In the interest of diversity we also included online visualizations from news magazines (e.g. The Economist); local news providers (e.g. annarbor.com.); political outlets"
+        },
+        {
+          "page": 3,
+          "quote": "We iteratively coded particular techniques we observed referring to this set of theories as a guide"
+        },
+        {
+          "page": 3,
+          "quote": "we decided against a formal, mutually-exclusive scheme in favor of groupings based on similarities in the underlying mechanism."
+        },
+        {
+          "page": 4,
+          "quote": "was not clearly distinguishable based on a common mechanism, but was rather comprised of methods that instead appeared to cluster based on an origin in linguistic rhetoric (3.2.5)."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "ede5b4117973"
+    },
+    "C3": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "neglecting to cite data sources or other important provenance information or defining variables ambiguously can be considered omissions."
+        },
+        {
+          "page": 4,
+          "quote": "so that higher or lower values that may be relevant but complicate the message are not shown."
+        },
+        {
+          "page": 4,
+          "quote": "Averaging techniques like mean, median, and clustering similarly substitute simpler representations for a wider range of values, as do textual and visual summaries."
+        },
+        {
+          "page": 4,
+          "quote": "Representing uncertainty can be accomplished through visual representations like error bars, yet appeared more often in our sample via textual means."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "58602ef02e45"
+    },
+    "C4": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "Default views provide an initial point of interpretation anchored to the default visual configuration."
+        },
+        {
+          "page": 6,
+          "quote": "Spatial ordering leverages reading and scanning conventions to prioritize some information [38]. Animations leverage time to suggest a story"
+        },
+        {
+          "page": 6,
+          "quote": "The top ten most prevalent techniques (ranked by frequency) were grouping by color, aggregating values, suggestive spatial mappings, goal suggestions, bolded fonts, data source citations, metaphoric statements, color mappings, apostrophe, and variable splices."
+        },
+        {
+          "page": 6,
+          "quote": "This ranking excludes several techniques that affected nearly all visualization, albeit to different degrees. These are variable selection, default views, knowledge assumptions, and visual contrasts."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "d0975491df6c"
+    },
+    "C5": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 6,
+          "quote": "(i.e. many drawn from journalism outlets), a sample from other genres of visualization would likely produce a different distribution."
+        },
+        {
+          "page": 9,
+          "quote": "In analysis we noted all possible, although not necessarily intended, framing effects of design choices."
+        },
+        {
+          "page": 9,
+          "quote": "Future studies could involve interviewing visualization creators to assess their cognizance and intentionality of these methods."
+        },
+        {
+          "page": 9,
+          "quote": "Applying a similar experimental approach to narrative visualizations is a natural parallel. Our work sets the stage for such studies by providing a taxonomy"
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "96ae15326d09"
+    }
+  },
+  "stamped": "2026-11-25"
+}
