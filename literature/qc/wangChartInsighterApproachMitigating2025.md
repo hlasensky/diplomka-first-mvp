@@ -1,6 +1,6 @@
 ---
 type: qc
-generated: 2026-11-05
+generated: 2026-11-22
 ---
 
 > Generováno `literature/tools/litqc.py`, needitovat ručně.
@@ -39,4 +39,6 @@ Zdroj: [[wangChartInsighterApproachMitigating2025]]
 | C6 | supported | 2, 8, 9 | 4/4 | 1.00 |  |
 | C7 | supported | 9, 10 | 4/4 | 1.00 |  |
 | C8 | supported | 11, 12 | 4/4 | 1.00 |  |
+| C9 | supported | 5 | 4/4 | 1.00 |  |
+| C10 | supported | 7, 8 | 4/4 | 1.00 |  |
 

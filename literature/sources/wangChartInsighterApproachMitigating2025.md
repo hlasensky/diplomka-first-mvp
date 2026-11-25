@@ -1,15 +1,19 @@
 ---
 citekey: wangChartInsighterApproachMitigating2025
 title: "ChartInsighter: An Approach for Mitigating Hallucination in Time-Series Chart Summary Generation With a Benchmark Dataset"
-authors: "Wang, Fen; Wang, Bomiao; Shu, Xueli; Liu, Zhen; Shao, Zekai; Liu, Chao; Chen, Siming"
+authors: Wang, Fen; Wang, Bomiao; Shu, Xueli; Liu, Zhen; Shao, Zekai; Liu, Chao; Chen, Siming
 year: 2025
-venue: "IEEE Transactions on Visualization and Computer Graphics 31(6)"
-kind: journal   # journal | conference | preprint | book | misc
-status: candidate   # confirmed | candidate | rejected
-verified: false     # true = tvrzení ověřená proti PDF mnou
-precteno: ne         # ne | abstrakt | uvod-zaver | prolet | cele – jak daleko jsem paper četl (mění jen já)
+venue: IEEE Transactions on Visualization and Computer Graphics 31(6)
+kind: journal
+status: confirmed
+verified: true
+precteno: prolet
 chapters: []
-concepts: [llm-hallucination, data-narration, llm-time-series, llm-agents]
+concepts:
+  - llm-hallucination
+  - data-narration
+  - llm-time-series
+  - llm-agents
 uroven: 1
 ---
 
@@ -27,6 +31,8 @@ Autoři nejdřív na 80 shrnutích grafů časových řad od čtyř LLM sestaví
 - C6: Benchmark obsahuje 75 reálných čárových grafů časových řad (po 25 jednoduchých, středních a složitých), ke každému data, Vega-Lite specifikaci, obrázek, ručně vytvořené zlaté shrnutí a shrnutí od GPT-4, VL2NL a ChartInsighteru; halucinace anotovali po větách podle taxonomie z §III-C (celkem 2693 vět). (s. 2, §I; s. 8, §V; s. 9, §V)
 - C7: Na benchmarku má ChartInsighter (základní model GPT-4) míru halucinací (počet halucinací / počet vět, může přesáhnout 1) 0,14 proti 0,48 u GPT-4 a 1,63 u VL2NL, sémantickou bohatost (podíl vět L2 a L3) 0,75 proti 0,74 a 0,33 a nejvyšší lidské hodnocení 3,79 (GPT-4 2,86, VL2NL 1,70; škála 1–5); medián doby generování přes GPT-4 API je 87,23 s (± 36,1 s) na graf, maximum 171 s, minimum 18 s. (s. 9, §VI-A; s. 10, §VI-A, §VI-B, tab. I, §VI-C)
 - C8: Omezení podle autorů: zmírněna je jen část halucinací a jiné typy přetrvávají; shrnutí pokrývají jen obsah L1–L3, kontextový obsah L4 vyžaduje doménové znalosti a zůstává výzvou; generování není v reálném čase; vstupem jsou surová data a specifikace, ne obrázek grafu, protože podle citovaného výzkumu dávají podkladová data efektivnější shrnutí než jiné formy vstupu (obrázky zmiňují jako budoucí práci). (s. 11, §VII; s. 12, §VII)
+- C9: Extremum Error a Range Error přisuzují autoři slabému sémantickému porozumění kontextu a řeší je matematickými výpočty v externím modulu; podle jejich zjištění (bez uvedeného čísla) se LLM, které přes externí nástroje generuje kód pro analýzu dat, soustředí jen na základní metriky (průměry, extrémy, míry růstu) a často nevytvoří úplné, logické shrnutí grafu, což jejich framework zmírňuje. (s. 5, §III-C)
+- C10: Rozhraní ChartInsighteru má pohled na graf, shrnutí a chat; věty s odkazem na data jsou podtržené čárkovaně a po najetí myší se v grafu zvýrazní odpovídající část. Podle autorů toto propojení pomáhá rychle přiřadit text k části grafu, zejména u složitých vícedimenzionálních grafů, výrazně snižuje čas a úsilí potřebné k jejímu nalezení a usnadňuje kontrolu možných halucinací ve shrnutí. (s. 7, §IV-D; s. 8, §IV-D, obr. 5)
 
 ## Vztah k mé práci
 

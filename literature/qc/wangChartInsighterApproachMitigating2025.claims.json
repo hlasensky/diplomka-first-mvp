@@ -192,7 +192,55 @@
       "note": "",
       "fix": "",
       "claim_sha": "ba20300fbeaf"
+    },
+    "C9": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "Other frequent errors include Extremum Error, and Range Error, stemming from poor semantic understanding of context."
+        },
+        {
+          "page": 5,
+          "quote": "To address these, we use mathematical calculations in the external module to improve data analysis accuracy."
+        },
+        {
+          "page": 5,
+          "quote": "we find that when LLMs call external tools to generate code to analyze data, they tend to focus only on basic metrics like averages, extremes, and growth rates"
+        },
+        {
+          "page": 5,
+          "quote": "often failing to provide a complete, logical chart summary, while our framework effectively mitigates this problem."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "4e31963f1a76"
+    },
+    "C10": {
+      "verdict": "supported",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "Our interface consists of 3 parts: chart view, summary view, and chat view (Fig. 5)."
+        },
+        {
+          "page": 8,
+          "quote": "Sentences containing data references are underlined with a dashed line, and when users hover over these sentences, the corresponding portion in the chart is highlighted (Fig. 5(a))."
+        },
+        {
+          "page": 8,
+          "quote": "This interactive linking design helps users quickly map the text to the relevant portions in the chart, especially in complex, multi-dimensional charts, significantly reducing the time and effort needed to locate specific chart portion."
+        },
+        {
+          "page": 8,
+          "quote": "Additionally, it facilitates checking for any potential hallucinations in the summary."
+        }
+      ],
+      "note": "",
+      "fix": "",
+      "claim_sha": "e7a7f1103655"
     }
   },
-  "stamped": "2026-11-05"
+  "stamped": "2026-11-22"
 }
